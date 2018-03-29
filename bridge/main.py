@@ -19,4 +19,3 @@ resp, meteoContent = httpObject. \
 # Process the XML Variables
 meteoHubXML = xml.etree.ElementTree.parse(meteoContent).getroot()
 
-for a
