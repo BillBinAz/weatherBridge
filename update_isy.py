@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
 import datetime
-import sys
 import xml.etree.ElementTree
 
 import httplib2
+import syslog
 
 
 def push_temp_isy(variable_type, variable_id, f_temp):
@@ -21,7 +21,7 @@ def push_temp_isy(variable_type, variable_id, f_temp):
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
 	if not str(content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
-		sys.stderr.write("Failed URL: ", url, "Response: ", content)
+		syslog.syslog(syslog.LOG_EMERG, "Failed URL: ", url, "Response: ", content)
 		print(datetime.datetime.now().time(), " - Failed URL: ", url, "Response: ", content)
 	else:
 		print(datetime.datetime.now().time(), " - Success URL: ", url)
@@ -47,7 +47,7 @@ def get_meteobridge_xml():
 	resp, content = h. \
 		request("http://meteobridge/cgi-bin/livedataxml.cgi", "GET")
 	if resp.status != 200:
-		sys.stderr.write("Bad response from meteobridge ", str(resp))
+		syslog.syslog(syslog.LOG_EMERG, "Bad response from meteobridge ", str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from meteobridge.", str(resp))
 	xml_response = xml.etree.ElementTree.fromstring(content)
 	return xml_response
@@ -66,7 +66,7 @@ def update_isy_meteobridge():
 			push_temp_isy(2, 5, ctof(sensor.get('temp')))
 		elif sensor.get('id') == "th8":
 			push_temp_isy(2, 12, ctof(sensor.get('temp')))
-	print(datetime.datetime.now().time(), " - Meteobridge data pushed.")
+	syslog.syslog(syslog.LOG_CRIT, "Meteobridge data pushed.")
 
 
 def main():
