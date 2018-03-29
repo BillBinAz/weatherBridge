@@ -1,0 +1,12 @@
+<logger>
+  <TH date="20180329172026" dew="14.4" hum="65" id="th5" lowbat="0" temp="21.2"/>
+  <THB date="20180329172119" dew="0.0" fc="-1" hum="0" id="thb0" lowbat="0" press="960.0"
+    seapress="1015.8" temp="0.0"/>
+  <TH date="20180329172108" dew="-22.2" hum="1" id="th8" lowbat="0" temp="46.6"/>
+  <TH date="20180329172057" dew="-7.7" hum="15" id="th6" lowbat="0" temp="19.7"/>
+  <TH date="20180329172109" dew="-8.8" hum="12" id="th7" lowbat="0" temp="21.9"/>
+  <TH date="20180329171942" dew="-2.1" hum="15" id="th0" lowbat="0" temp="26.7"/>
+  <WIND chill="26.7" date="20180329172116" dir="225" gust="1.8" id="wind0" lowbat="0" wind="1.4"/>
+  <RAIN date="20180329172116" delta="0.0" id="rain0" lowbat="0" rate="0.0" total="0.0"/>
+  <TH date="20180329172103" dew="-3.6" hum="20" id="th9" lowbat="0" temp="20.1"/>\n
+</logger>'
