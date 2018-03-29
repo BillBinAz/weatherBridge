@@ -1,4 +1,5 @@
 # weatherBridge
-Glue code between metrohub and metrobridge
+Python3 code to upload weather data from metrohub and metrobridge to isy994
 
-pip install httplib2
+# Dependencies
+pip3 install httplib2

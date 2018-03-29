@@ -6,7 +6,7 @@ import httplib2
 def push_temp_isy(variable_type, variable_id, f_temp):
 	#
 	# Get ISY security data
-	secret_file = open("../secret/isy994", "r")
+	secret_file = open("./secret/isy994", "r")
 	user_name = secret_file.readline().strip('\n')
 	password = secret_file.readline().strip('\n')
 
@@ -18,6 +18,8 @@ def push_temp_isy(variable_type, variable_id, f_temp):
 	resp, content = h.request(url, "GET")
 	if not str(content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
 		print("Failed URL: ", url, "Response: ", content)
+	else:
+		print("Success URL: ", url)
 
 
 def ctof(c_temp):
@@ -29,7 +31,7 @@ def ctof(c_temp):
 def get_meteobridge_xml():
 	#
 	# Get the username/password from the secret file
-	secret_file = open("../secret/meteobridge", "r")
+	secret_file = open("./secret/meteobridge", "r")
 	user_name = secret_file.readline().strip('\n')
 	password = secret_file.readline().strip('\n')
 
@@ -56,7 +58,7 @@ def update_isy_meteobridge():
 			push_temp_isy(2, 5, ctof(sensor.get('temp')))
 		elif sensor.get('id') == "th8":
 			push_temp_isy(2, 12, ctof(sensor.get('temp')))
-	print("Meteobridge data pushed")
+	print("Meteobridge data pushed.")
 
 
 def main():
