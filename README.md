@@ -2,9 +2,9 @@
 Python3 code to upload weather data from metrohub and metrobridge to isy994
 
 ## Dependencies
-python3  
-sudo apt-get install python3-pip
-pip3 install httplib2
+python3    
+sudo apt-get install python3-pip   
+pip3 install httplib2   
 
 
 ### crontab
