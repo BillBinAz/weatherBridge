@@ -6,6 +6,12 @@ import xml.etree.ElementTree
 import httplib2
 import syslog
 
+ISY_STATE = 2
+FRONT_DOOR_TEMP = 1
+BACK_YARD_TEMP = 2
+THEATER_WINDOW_TEMP = 5
+MASTER_BEDROOM_TEMP = 12
+
 
 def push_temp_isy(variable_type, variable_id, f_temp):
 	#
@@ -54,23 +60,49 @@ def get_meteobridge_xml():
 
 
 def update_isy_meteobridge():
+
 	#
 	# Process the XML Variables
 	meteobridge_xml = get_meteobridge_xml()
 	for sensor in meteobridge_xml.findall('TH'):
 		if sensor.get('id') == "th6":
-			push_temp_isy(2, 1, c_to_f(sensor.get('temp')))
-		elif sensor.get('id') == "th0":
-			push_temp_isy(2, 2, c_to_f(sensor.get('temp')))
+			push_temp_isy(ISY_STATE, FRONT_DOOR_TEMP, c_to_f(sensor.get('temp')))
 		elif sensor.get('id') == "th7":
-			push_temp_isy(2, 5, c_to_f(sensor.get('temp')))
+			push_temp_isy(ISY_STATE, THEATER_WINDOW_TEMP, c_to_f(sensor.get('temp')))
 		elif sensor.get('id') == "th8":
-			push_temp_isy(2, 12, c_to_f(sensor.get('temp')))
+			push_temp_isy(ISY_STATE, MASTER_BEDROOM_TEMP, c_to_f(sensor.get('temp')))
 	syslog.syslog(syslog.LOG_CRIT, "Meteobridge data pushed.")
+
+
+def get_meteohub_xml():
+	#
+	# get the last 5 minutes worth of data
+	date = datetime.datetime.utcnow() - datetime.timedelta(minutes=5)
+	url = "http://meteohub/meteolog.cgi?type=xml&quotes=1&mode=data&start=" + date.strftime("%Y%m%d%H%M%S")
+
+	#
+	# Pull the XML from meteobridge
+	h = httplib2.Http()
+	resp, content = h.request(url, "GET")
+	if resp.status != 200:
+		syslog.syslog(syslog.LOG_EMERG, "Bad response from meteohub " + str(resp))
+		print(datetime.datetime.now().time(), " -  Bad response from meteohub." + str(resp))
+	xml_response = xml.etree.ElementTree.fromstring(content)
+	return xml_response
+
+
+def update_isy_meteohub():
+	meteohub_xml = get_meteohub_xml()
+	for sensor in meteohub_xml.findall('TH'):
+		if sensor.get('id') == "th0":
+			temp = sensor.get('temp')
+	push_temp_isy(ISY_STATE, BACK_YARD_TEMP, c_to_f(temp))
+	syslog.syslog(syslog.LOG_CRIT, "Meteohub data pushed.")
 
 
 def main():
 	update_isy_meteobridge()
+	update_isy_meteohub()
 
 
 main()
