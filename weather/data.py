@@ -6,6 +6,7 @@ class SensorSmall(object):
 	def __init__(self):
 		self.temp = 0.0
 		self.humidity = 0.0
+		self.fan = ""
 
 
 class Sensor6In1(object):
@@ -14,6 +15,7 @@ class Sensor6In1(object):
 		self.temp = 0.0
 		self.humidity = 0.0
 		self.lux = 0
+		self.fan = ""
 
 
 class SensorMajor(object):
