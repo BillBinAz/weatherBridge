@@ -23,7 +23,7 @@ def push_temp_isy(variable_type, variable_id, f_temp):
 
 	#
 	# do a get on isy994 to update the data
-	url = "http://isy994/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(f_temp)
+	url = "http://isy994/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(round(f_temp))
 	h = httplib2.Http()
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
