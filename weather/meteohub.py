@@ -14,6 +14,8 @@ BACK_YARD_WIND = "WIND"
 BACK_YARD_WIND_ID = "wind0"
 BACK_YARD_RAIN = "RAIN"
 BACK_YARD_RAIN_ID = "rain0"
+CONTROLLER = "THB"
+CONTROLLER_ID = "thb0"
 S_OK = 200
 
 TEMPERATURE = 'temp'
@@ -25,6 +27,7 @@ WIND_DIRECTION = 'dir'
 WIND_GUST = 'gust'
 WIND_SPEED = 'wind'
 WIND_CHILL = 'chill'
+PRESSURE = 'press'
 
 
 def c_to_f(c_temp):
@@ -36,6 +39,7 @@ def c_to_f(c_temp):
 def deg_to_compass(direction):
 	#
 	# degrees to compass direction
+	compass = ""
 	degrees = float(direction)
 
 	if (degrees >= 0) and (degrees < 11.25):
@@ -95,12 +99,12 @@ def get_meteohub_xml():
 
 def get_weather(weather_data):
 	meteohub_xml = get_meteohub_xml()
+	last_sensor = None
 
 	# Temperature
 	for sensor in meteohub_xml.findall(BACK_YARD_TEMP):
 		if sensor.get('id') == BACK_YARD_TEMP_ID:
 			last_sensor = sensor
-
 	weather_data.back_yard.temp = c_to_f(last_sensor.get(TEMPERATURE))
 	weather_data.back_yard.humidity = last_sensor.get(HUMIDITY)
 	weather_data.back_yard.dew_point = c_to_f(last_sensor.get(DEP_POINT))
@@ -109,7 +113,6 @@ def get_weather(weather_data):
 	for sensor in meteohub_xml.findall(BACK_YARD_RAIN):
 		if sensor.get('id') == BACK_YARD_RAIN_ID:
 			last_sensor = sensor
-
 	weather_data.back_yard.rain_rate = last_sensor.get(RAIN_RATE)
 	weather_data.back_yard.rain_total = last_sensor.get(RAIN_TOTAL)
 
@@ -117,11 +120,16 @@ def get_weather(weather_data):
 	for sensor in meteohub_xml.findall(BACK_YARD_WIND):
 		if sensor.get('id') == BACK_YARD_WIND_ID:
 			last_sensor = sensor
-
 	weather_data.back_yard.wind_speed = last_sensor.get(WIND_SPEED)
 	weather_data.back_yard.wind_gust = last_sensor.get(WIND_GUST)
 	weather_data.back_yard.wind_direction = deg_to_compass(last_sensor.get(WIND_DIRECTION))
 	weather_data.back_yard.wind_chill = last_sensor.get(WIND_CHILL)
+
+	# Pressure
+	for sensor in meteohub_xml.findall(CONTROLLER):
+		if sensor.get('id') == CONTROLLER_ID:
+			last_sensor = sensor
+	weather_data.back_yard.pressure = last_sensor.get(PRESSURE)
 
 	return weather_data
 
