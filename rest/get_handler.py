@@ -1,20 +1,21 @@
 from flask import Flask
 
-import weather.data
-import weather.stations
+from weather import data
+from weather import stations
 
 app = Flask(__name__)
 
 
 @app.route("/")
-def sytem_check():
+def system_check():
 	return "System Up"
 
 
 @app.route("/weather")
 def get_weather():
-	data = weather.stations.get_weather_data()
-	return Flask.jsonify(data)
+	weather_data = data.WeatherData()
+	weather_data = stations.get_weather()
+	return weather_data.to_json(), 200, {'Content-Type': 'text/json; charset=utf-8'}
 
 
 if __name__ == "__main__":
