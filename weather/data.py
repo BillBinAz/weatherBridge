@@ -1,9 +1,6 @@
 import json
 
-from dataclasses import dataclass
 
-
-@dataclass
 class SensorSmall(object):
 
 	def __init__(self):
@@ -34,7 +31,6 @@ class SensorMajor(object):
 		self.rain_total = 0.0
 
 
-@dataclass
 class SensorThermostat(object):
 
 	def __init__(self):
@@ -44,7 +40,6 @@ class SensorThermostat(object):
 		self.cool_set = 0.0
 
 
-@dataclass
 class WeatherData(object):
 
 	def __init__(self):
