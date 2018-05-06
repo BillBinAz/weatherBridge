@@ -1,0 +1,37 @@
+<nodeInfo>
+    <node flag="128" nodeDefId="UZW0004">
+        <address>ZW012_1</address>
+        <name>MstrBdRmThermostat</name>
+        <family>4</family>
+        <parent type="3">60898</parent>
+        <type>4.8.6.0</type>
+        <enabled>true</enabled>
+        <deviceClass>1</deviceClass>
+        <wattage>1000</wattage>
+        <dcPeriod>60</dcPeriod>
+        <startDelay>0</startDelay>
+        <endDelay>0</endDelay>
+        <pnode>ZW012_1</pnode>
+        <sgid>1</sgid>
+        <devtype>
+            <gen>4.8.6</gen>
+            <mfg>57.17.1</mfg>
+            <cat>140</cat>
+        </devtype>
+        <ELK_ID>A03</ELK_ID>
+        <property id="ST" value="780" formatted="78.0°F" uom="17" prec="1"/>
+        <property id="CLIMD" value="2" formatted="Cool" uom="67"/>
+        <property id="CLISPC" value="780" formatted="78.0°F" uom="17" prec="1"/>
+        <property id="CLISPH" value="640" formatted="64.0°F" uom="17" prec="1"/>
+    </node>
+    <properties>
+        <property id="CLIFRS" value="0" formatted="Off" uom="80"/>
+        <property id="CLIFS" value="0" formatted="Auto" uom="68"/>
+        <property id="CLIFSO" value="0" formatted="No Override" uom="81"/>
+        <property id="CLIHCS" value="0" formatted="Idle" uom="66"/>
+        <property id="CLIMD" value="2" formatted="Cool" uom="67"/>
+        <property id="CLISPC" value="780" formatted="78.0°F" uom="17" prec="1"/>
+        <property id="CLISPH" value="640" formatted="64.0°F" uom="17" prec="1"/>
+        <property id="ST" value="780" formatted="78.0°F" uom="17" prec="1"/>
+    </properties>
+</nodeInfo>
