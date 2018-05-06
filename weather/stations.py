@@ -11,6 +11,7 @@ def get_weather():
 	cur_weather = isy994.get_weather(cur_weather)
 	cur_weather = meteohub.get_weather(cur_weather)
 	cur_weather = meteobridge.get_weather(cur_weather)
+
 	return cur_weather
 
 

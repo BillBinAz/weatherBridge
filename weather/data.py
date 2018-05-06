@@ -5,8 +5,6 @@ from dataclasses import dataclass
 
 @dataclass
 class SensorSmall(object):
-	temp: float
-	humidity: float
 
 	def __init__(self):
 		self.temp = 0.0
@@ -14,9 +12,6 @@ class SensorSmall(object):
 
 
 class Sensor6In1(object):
-	temp: float
-	humidity: float
-	lux: int
 
 	def __init__(self):
 		self.temp = 0.0
@@ -25,16 +20,6 @@ class Sensor6In1(object):
 
 
 class SensorMajor(object):
-	temp: float
-	dew_point: float
-	humidity: float
-	wind_direction: str
-	wind_speed: float
-	wind_gust: float
-	wind_chill: float
-	pressure: int
-	rain_rate: float
-	rain_total: float
 
 	def __init__(self):
 		self.temp = 0.0
@@ -51,10 +36,6 @@ class SensorMajor(object):
 
 @dataclass
 class SensorThermostat(object):
-	temp: float
-	mode: str
-	heat_set: float
-	cool_set: float
 
 	def __init__(self):
 		self.temp = 0.0
@@ -65,17 +46,6 @@ class SensorThermostat(object):
 
 @dataclass
 class WeatherData(object):
-	theater_window: SensorSmall
-	theater: Sensor6In1
-	back_yard: SensorMajor
-	master_bedroom_window: SensorSmall
-	library: SensorSmall
-	humidor: SensorSmall
-	front_door: SensorSmall
-	living_room: Sensor6In1
-	front_yard: SensorSmall
-	master_bedroom_thermostat: SensorThermostat
-	kitchen_thermostat: SensorThermostat
 
 	def __init__(self):
 		self.theater_window = SensorSmall()
