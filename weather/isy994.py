@@ -12,6 +12,13 @@ ZW_THEATER_6IN1 = "ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "ZW048_1"
 ZW_KITCHEN_THERMOSTAT = "ZW011_1"
 ZW_MASTER_THERMOSTAT = "ZW012_1"
+
+ZW_THEATER_FAN = "ZW041_1"
+ZW_LIVING_FAN = "ZW042_1"
+ZW_MASTER_FAN = "ZW043_1"
+ZW_LIBRARY_FAN = "ZW034_1"
+ZW_OFFICE_FAN = "ZW033_1"
+
 TEMPERATURE = "ST"
 CLIMATE_HEAT_POINT = "CLISPH"
 CLIMATE_COOL_POINT = "CLISPC"
@@ -93,6 +100,32 @@ def get_weather(weather_data):
 			weather_data.master_bedroom_thermostat.cool_set = format_f(sensor.get('value'))
 		elif sensor.get('id') == CLIMATE_HEAT_POINT:
 			weather_data.master_bedroom_thermostat.heat_set = format_f(sensor.get('value'))
+
+	xml_response = get_node_xml(ZW_THEATER_FAN)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.theater_window.fan = sensor.get('formatted')
+
+	xml_response = get_node_xml(ZW_LIVING_FAN)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.living_room.fan = sensor.get('formatted')
+
+	xml_response = get_node_xml(ZW_MASTER_FAN)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.master_bedroom_window.fan = sensor.get('formatted')
+
+	xml_response = get_node_xml(ZW_LIBRARY_FAN)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.library.fan = sensor.get('formatted')
+
+	xml_response = get_node_xml(ZW_OFFICE_FAN)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.front_door.fan = sensor.get('formatted')
+
 	return weather_data
 
 
