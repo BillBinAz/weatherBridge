@@ -1,3 +1,4 @@
+import datetime
 import json
 
 
@@ -56,6 +57,7 @@ class WeatherData(object):
 		self.master_bedroom_thermostat = SensorThermostat()
 		self.kitchen_thermostat = SensorThermostat()
 		self.front_yard = SensorSmall()
+		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
