@@ -37,7 +37,7 @@ def c_to_f(c_temp):
 def format_f(value):
 	#
 	# add decimal place
-	return round(float(value) / 10, 1)
+	return round(float(value) / 10.0, 1)
 
 
 def get_node_xml(node):
