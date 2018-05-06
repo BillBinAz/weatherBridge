@@ -1,0 +1,30 @@
+<nodeInfo>
+    <node flag="128" nodeDefId="UZW0044">
+        <address>ZW047_1</address>
+        <name>TheaterRm6in1</name>
+        <family>4</family>
+        <parent type="3">60898</parent>
+        <type>4.33.1.0</type>
+        <enabled>true</enabled>
+        <deviceClass>0</deviceClass>
+        <wattage>0</wattage>
+        <dcPeriod>0</dcPeriod>
+        <startDelay>0</startDelay>
+        <endDelay>0</endDelay>
+        <pnode>ZW047_1</pnode>
+        <sgid>1</sgid>
+        <devtype>
+            <gen>4.33.1</gen>
+            <mfg>134.258.100</mfg>
+            <cat>118</cat>
+        </devtype>
+        <ELK_ID>E03</ELK_ID>
+    </node>
+    <properties>
+        <property id="BATLVL" value="100" formatted="100%" uom="51"/>
+        <property id="CLIHUM" value="16" formatted="16%" uom="22"/>
+        <property id="CLITEMP" value="800" formatted="80.0°F" uom="17" prec="1"/>
+        <property id="LUMIN" value="0" formatted="0 lux" uom="36"/>
+        <property id="UV" value="0" formatted="0 UV Index" uom="71"/>
+    </properties>
+</nodeInfo>
