@@ -12,6 +12,7 @@ FRONT_DOOR_TEMP = 1
 BACK_YARD_TEMP = 2
 THEATER_WINDOW_TEMP = 5
 MASTER_BEDROOM_TEMP = 12
+TEMPERATURE_BUFFER = 4
 
 
 def push_temp_isy(variable_type, variable_id, f_temp):
@@ -20,6 +21,8 @@ def push_temp_isy(variable_type, variable_id, f_temp):
 	secret_file = open("./secret/isy994", "r")
 	user_name = secret_file.readline().strip('\n')
 	password = secret_file.readline().strip('\n')
+
+	f_temp = f_temp + TEMPERATURE_BUFFER
 
 	#
 	# do a get on isy994 to update the data
