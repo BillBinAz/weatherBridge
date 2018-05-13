@@ -12,7 +12,7 @@ FRONT_DOOR_TEMP = 1
 BACK_YARD_TEMP = 2
 THEATER_WINDOW_TEMP = 5
 MASTER_BEDROOM_TEMP = 12
-TEMPERATURE_BUFFER = 4
+TEMPERATURE_BUFFER = 3
 
 
 def push_temp_isy(variable_type, variable_id, f_temp):
