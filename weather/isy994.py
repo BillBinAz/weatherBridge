@@ -8,16 +8,18 @@ import syslog
 
 from weather import data
 
-ZW_THEATER_6IN1 = "ZW047_1"
-ZW_LIVING_ROOM_6IN1 = "ZW048_1"
-ZW_KITCHEN_THERMOSTAT = "ZW011_1"
-ZW_MASTER_THERMOSTAT = "ZW012_1"
+ZW_THEATER_6IN1 = "nodes/ZW047_1"
+ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
+ZW_KITCHEN_THERMOSTAT = "nodes/ZW011_1"
+ZW_MASTER_THERMOSTAT = "nodes/ZW012_1"
 
-ZW_THEATER_FAN = "ZW041_1"
-ZW_LIVING_FAN = "ZW042_1"
-ZW_MASTER_FAN = "ZW043_1"
-ZW_LIBRARY_FAN = "ZW034_1"
-ZW_OFFICE_FAN = "ZW033_1"
+ZW_THEATER_FAN = "nodes/ZW041_1"
+ZW_LIVING_FAN = "nodes/ZW042_1"
+ZW_MASTER_FAN = "nodes/ZW043_1"
+ZW_LIBRARY_FAN = "nodes/ZW034_1"
+ZW_OFFICE_FAN = "nodes/ZW033_1"
+
+ALARM_ZONES_CLOSED = "vars/get/2/4"
 
 TEMPERATURE = "ST"
 CLIMATE_HEAT_POINT = "CLISPH"
@@ -49,7 +51,7 @@ def get_node_xml(node):
 
 	#
 	# do a get on isy994 to update the data
-	url = "http://isy994.evilminions.org/rest/nodes/" + str(node)
+	url = "http://isy994.evilminions.org/rest/" + str(node)
 	h = httplib2.Http()
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
@@ -126,6 +128,12 @@ def get_weather(weather_data):
 		if sensor.get('id') == 'ST':
 			weather_data.front_door.fan = sensor.get('formatted')
 
+	xml_response = get_node_xml(ALARM_ZONES_CLOSED)
+	alarm_all_zones_closed = xml_response.find('val').text
+	if alarm_all_zones_closed == "1":
+		weather_data.alarm_status = "All Zones Closed"
+	else:
+		weather_data.alarm_status = "Zones Open"
 	return weather_data
 
 
