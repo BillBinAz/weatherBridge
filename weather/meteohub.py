@@ -8,13 +8,15 @@ import syslog
 
 from weather import data
 
-BACK_YARD_TEMP = "TH"
+TEMPERATURE_NODE = "TH"
 BACK_YARD_TEMP_ID = "th0"
-BACK_YARD_WIND = "WIND"
+WIND_NODE = "WIND"
 BACK_YARD_WIND_ID = "wind0"
-BACK_YARD_RAIN = "RAIN"
+RAIN_NODE = "RAIN"
 BACK_YARD_RAIN_ID = "rain0"
-CONTROLLER = "THB"
+POOL_TEMP_ID = "th1"
+SPA_TEMP_ID = "th2"
+CONTROLLER_NODE = "THB"
 CONTROLLER_ID = "thb0"
 S_OK = 200
 
@@ -101,8 +103,8 @@ def get_weather(weather_data):
 	meteohub_xml = get_meteohub_xml()
 	last_sensor = None
 
-	# Temperature
-	for sensor in meteohub_xml.findall(BACK_YARD_TEMP):
+	# Temperature - Back yard
+	for sensor in meteohub_xml.findall(TEMPERATURE_NODE):
 		if sensor.get('id') == BACK_YARD_TEMP_ID:
 			last_sensor = sensor
 	weather_data.back_yard.temp = c_to_f(last_sensor.get(TEMPERATURE))
@@ -110,14 +112,14 @@ def get_weather(weather_data):
 	weather_data.back_yard.dew_point = c_to_f(last_sensor.get(DEP_POINT))
 
 	# Rain
-	for sensor in meteohub_xml.findall(BACK_YARD_RAIN):
+	for sensor in meteohub_xml.findall(RAIN_NODE):
 		if sensor.get('id') == BACK_YARD_RAIN_ID:
 			last_sensor = sensor
 	weather_data.back_yard.rain_rate = last_sensor.get(RAIN_RATE)
 	weather_data.back_yard.rain_total = last_sensor.get(RAIN_TOTAL)
 
 	# Wind
-	for sensor in meteohub_xml.findall(BACK_YARD_WIND):
+	for sensor in meteohub_xml.findall(WIND_NODE):
 		if sensor.get('id') == BACK_YARD_WIND_ID:
 			last_sensor = sensor
 	weather_data.back_yard.wind_speed = last_sensor.get(WIND_SPEED)
@@ -126,10 +128,22 @@ def get_weather(weather_data):
 	weather_data.back_yard.wind_chill = last_sensor.get(WIND_CHILL)
 
 	# Pressure
-	for sensor in meteohub_xml.findall(CONTROLLER):
+	for sensor in meteohub_xml.findall(CONTROLLER_NODE):
 		if sensor.get('id') == CONTROLLER_ID:
 			last_sensor = sensor
 	weather_data.back_yard.pressure = last_sensor.get(PRESSURE)
+
+	# Temperature - Spa
+	for sensor in meteohub_xml.findall(TEMPERATURE_NODE):
+		if sensor.get('id') == SPA_TEMP_ID:
+			last_sensor = sensor
+	weather_data.spa.temp = c_to_f(last_sensor.get(TEMPERATURE))
+
+	# Temperature - Pool
+	for sensor in meteohub_xml.findall(TEMPERATURE_NODE):
+		if sensor.get('id') == POOL_TEMP_ID:
+			last_sensor = sensor
+	weather_data.pool.temp = c_to_f(last_sensor.get(TEMPERATURE))
 
 	return weather_data
 
