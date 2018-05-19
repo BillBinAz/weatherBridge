@@ -13,6 +13,8 @@ class Alarm(object):
 		self.offices = ""
 		self.west_wing = ""
 		self.bike_garage = ""
+		self.mc_garage = ""
+		self.main_garage = ""
 
 
 class SensorSmall(object):
