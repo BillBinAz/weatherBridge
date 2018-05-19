@@ -2,6 +2,19 @@ import datetime
 import json
 
 
+class Alarm(object):
+	def __init__(self):
+		self.status = ""
+		self.all_zones = ""
+		self.front_garage_door = ""
+		self.sliding_glass_door = ""
+		self.living_great = ""
+		self.master = ""
+		self.offices = ""
+		self.west_wing = ""
+		self.bike_garage = ""
+
+
 class SensorSmall(object):
 
 	def __init__(self):
@@ -57,8 +70,8 @@ class WeatherData(object):
 		self.master_bedroom_thermostat = SensorThermostat()
 		self.kitchen_thermostat = SensorThermostat()
 		self.front_yard = SensorSmall()
+		self.alarm = Alarm()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
-		self.alarm_status = ""
 
 	def to_json(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

@@ -29,6 +29,18 @@ TEMPERATURE_6IN1 = "CLITEMP"
 LUX_6IN1 = "LUMIN"
 HUMIDITY_6IN1 = "CLIHUM"
 
+ALARM_STATUS = "nodes/n001_hwalrm1_part1"
+ALARM_ALL_ZONES = "vars/get/2/4"
+ALARM_FRONT_GARAGE_DOOR = "nodes/n001_hwalrm1_z01"
+ALARM_SLIDING_GLASS_DOOR = "nodes/n001_hwalrm1_z02"
+ALARM_LIVING_GREAT = "nodes/n001_hwalrm1_z03"
+ALARM_MASTER = "nodes/n001_hwalrm1_z04"
+ALARM_OFFICES = "nodes/n001_hwalrm1_z05"
+ALARM_WEST_WING = "nodes/n001_hwalrm1_z06"
+ALARM_LIVING_GREAT_MOTION = "nodes/n001_hwalrm1_z07"
+ALARM_MASTER_MOTION = "nodes/n001_hwalrm1_z08"
+ALARM_BIKE_GARAGE = "nodes/n001_hwalrm1_z10"
+
 
 def c_to_f(c_temp):
 	#
@@ -129,11 +141,48 @@ def get_weather(weather_data):
 			weather_data.front_door.fan = sensor.get('formatted')
 
 	xml_response = get_node_xml(ALARM_ZONES_CLOSED)
-	alarm_all_zones_closed = xml_response.find('val').text
-	if alarm_all_zones_closed == "1":
-		weather_data.alarm_status = "All Zones Closed"
-	else:
-		weather_data.alarm_status = "Zones Open"
+	weather_data.alarm.all_zones = xml_response.find('val').text
+
+	xml_response = get_node_xml(ALARM_STATUS)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.status = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.front_garage_door = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_SLIDING_GLASS_DOOR)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.sliding_glass_door = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_LIVING_GREAT)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.living_great = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_MASTER)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.master = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_OFFICES)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.offices = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_WEST_WING)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.west_wing = sensor.get('formatted')
+
+	xml_response = get_node_xml(ALARM_BIKE_GARAGE)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.alarm.bike_garage = sensor.get('formatted')
+
 	return weather_data
 
 
