@@ -142,9 +142,6 @@ def get_weather(weather_data):
 		if sensor.get('id') == 'ST':
 			weather_data.front_door.fan = sensor.get('formatted')
 
-	xml_response = get_node_xml(ALARM_ZONES_CLOSED)
-	weather_data.alarm.all_zones = xml_response.find('val').text
-
 	xml_response = get_node_xml(ALARM_STATUS)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':

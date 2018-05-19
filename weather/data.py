@@ -5,7 +5,6 @@ import json
 class Alarm(object):
 	def __init__(self):
 		self.status = ""
-		self.all_zones = ""
 		self.front_garage_door = ""
 		self.sliding_glass_door = ""
 		self.living_great = ""
