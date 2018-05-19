@@ -72,6 +72,8 @@ class WeatherData(object):
 		self.kitchen_thermostat = SensorThermostat()
 		self.front_yard = SensorSmall()
 		self.alarm = Alarm()
+		self.pool = SensorSmall()
+		self.spa = SensorSmall()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):
