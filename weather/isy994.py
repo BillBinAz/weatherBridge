@@ -20,7 +20,8 @@ ZW_LIBRARY_FAN = "nodes/ZW034_1"
 ZW_OFFICE_FAN = "nodes/ZW033_1"
 ZW_MAIN_GARAGE = "nodes/ZW025_1"
 ZW_MC_GARAGE = "nodes/ZW049_1"
-
+ZW_SPA_PUMP = "nodes/ZW044_1"
+ZW_POOL_LIGHT = "nodes/ZW071_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
 
 TEMPERATURE = "ST"
@@ -117,6 +118,16 @@ def get_weather(weather_data):
 		elif sensor.get('id') == CLIMATE_HEAT_POINT:
 			weather_data.master_bedroom_thermostat.heat_set = format_f(sensor.get('value'))
 
+	xml_response = get_node_xml(ZW_POOL_LIGHT)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.pool.light = sensor.get('formatted')
+
+	xml_response = get_node_xml(ZW_SPA_PUMP)
+	for sensor in xml_response.find('properties').findall('property'):
+		if sensor.get('id') == 'ST':
+			weather_data.spa.pump = sensor.get('formatted')
+
 	xml_response = get_node_xml(ZW_THEATER_FAN)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':
@@ -185,15 +196,22 @@ def get_weather(weather_data):
 	xml_response = get_node_xml(ZW_MC_GARAGE)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':
-			weather_data.alarm.mc_garage = sensor.get('value')
+			if sensor.get('value') == "100":
+				weather_data.alarm.mc_garage = "1"
+			else:
+				weather_data.alarm.mc_garage = "0"
 
 	xml_response = get_node_xml(ZW_MAIN_GARAGE)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':
-			weather_data.alarm.main_garage = sensor.get('value')
+			if sensor.get('value') == "100":
+				weather_data.alarm.main_garage = "1"
+			else:
+				weather_data.alarm.main_garage = "0"
 
-	xml_response = get_node_xml(ALARM_ZONES_CLOSED)
-	weather_data.alarm.all_zones = xml_response.find('val').text
+	# All Zones Closed Variable
+	# xml_response = get_node_xml(ALARM_ZONES_CLOSED)
+	# weather_data.alarm.all_zones = xml_response.find('val').text
 
 	return weather_data
 
