@@ -38,6 +38,12 @@ def c_to_f(c_temp):
 	return round(9.0 / 5.0 * float(c_temp) + 32, 1)
 
 
+def mps_to_mph(mps):
+	#
+	# Convert from meters per second to miles per hour
+	return round(2.2369 * float(mps), 1)
+
+
 def deg_to_compass(direction):
 	#
 	# degrees to compass direction
@@ -122,8 +128,8 @@ def get_weather(weather_data):
 	for sensor in meteohub_xml.findall(WIND_NODE):
 		if sensor.get('id') == BACK_YARD_WIND_ID:
 			last_sensor = sensor
-	weather_data.back_yard.wind_speed = last_sensor.get(WIND_SPEED)
-	weather_data.back_yard.wind_gust = last_sensor.get(WIND_GUST)
+	weather_data.back_yard.wind_speed = mps_to_mph(last_sensor.get(WIND_SPEED))
+	weather_data.back_yard.wind_gust = mps_to_mph(last_sensor.get(WIND_GUST))
 	weather_data.back_yard.wind_direction = deg_to_compass(last_sensor.get(WIND_DIRECTION))
 	weather_data.back_yard.wind_chill = last_sensor.get(WIND_CHILL)
 
