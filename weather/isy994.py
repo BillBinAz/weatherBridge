@@ -190,8 +190,6 @@ def get_weather(weather_data):
 			else:
 				weather_data.alarm.mc_garage = "0"
 
-			weather_data.alarm.mc_garage = sensor.get('value')
-
 	xml_response = get_node_xml(ZW_MAIN_GARAGE)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':
