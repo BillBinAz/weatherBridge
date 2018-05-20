@@ -19,11 +19,13 @@ class Alarm(object):
 class Pool(object):
 	def __init__(self):
 		self.light = ""
+		self.temp = 0.0
 
 
 class Spa(object):
 	def __init__(self):
 		self.pump = ""
+		self.temp = 0.0
 
 
 class SensorSmall(object):
@@ -81,8 +83,8 @@ class WeatherData(object):
 		self.kitchen_thermostat = SensorThermostat()
 		self.front_yard = SensorSmall()
 		self.alarm = Alarm()
-		self.pool = SensorSmall()
-		self.spa = SensorSmall()
+		self.pool = Pool()
+		self.spa = Spa()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):
