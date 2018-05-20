@@ -16,8 +16,13 @@ class Alarm(object):
 		self.main_garage = ""
 
 
-class SensorSmall(object):
+class Pool(object):
+	def __init__(self):
+		self.light = ""
+		self.pump = ""
 
+
+class SensorSmall(object):
 	def __init__(self):
 		self.temp = 0.0
 		self.humidity = 0.0
