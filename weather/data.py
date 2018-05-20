@@ -19,6 +19,10 @@ class Alarm(object):
 class Pool(object):
 	def __init__(self):
 		self.light = ""
+
+
+class Spa(object):
+	def __init__(self):
 		self.pump = ""
 
 
