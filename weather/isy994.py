@@ -192,6 +192,9 @@ def get_weather(weather_data):
 		if sensor.get('id') == 'ST':
 			weather_data.alarm.main_garage = sensor.get('value')
 
+	xml_response = get_node_xml(ALARM_ZONES_CLOSED)
+	weather_data.alarm.all_zones = xml_response.find('val').text
+
 	return weather_data
 
 
