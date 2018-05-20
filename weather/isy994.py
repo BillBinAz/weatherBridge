@@ -186,17 +186,17 @@ def get_weather(weather_data):
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':
 			if sensor.get('value') == "100":
-				weather_data.alarm.mc_garage = "0"
-			else:
 				weather_data.alarm.mc_garage = "1"
+			else:
+				weather_data.alarm.mc_garage = "0"
 
 	xml_response = get_node_xml(ZW_MAIN_GARAGE)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == 'ST':
 			if sensor.get('value') == "100":
-				weather_data.alarm.main_garage = "0"
-			else:
 				weather_data.alarm.main_garage = "1"
+			else:
+				weather_data.alarm.main_garage = "0"
 
 	# All Zones Closed Variable
 	# xml_response = get_node_xml(ALARM_ZONES_CLOSED)
