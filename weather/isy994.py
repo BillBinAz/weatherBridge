@@ -96,16 +96,16 @@ def get_weather(weather_data):
 		elif sensor.get('id') == LUX_6IN1:
 			weather_data.living_room.lux = sensor.get('value')
 
-	xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT)
-	for sensor in xml_response.find('properties').findall('property'):
-		if sensor.get('id') == CLIMATE_MODE:
-			weather_data.kitchen_thermostat.mode = sensor.get('formatted')
-		elif sensor.get('id') == TEMPERATURE:
-			weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'))
-		elif sensor.get('id') == CLIMATE_COOL_POINT:
-			weather_data.kitchen_thermostat.cool_set = format_f(sensor.get('value'))
-		elif sensor.get('id') == CLIMATE_HEAT_POINT:
-			weather_data.kitchen_thermostat.heat_set = format_f(sensor.get('value'))
+	# xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT)
+	# for sensor in xml_response.find('properties').findall('property'):
+	# 	if sensor.get('id') == CLIMATE_MODE:
+	# 		weather_data.kitchen_thermostat.mode = sensor.get('formatted')
+	# 	elif sensor.get('id') == TEMPERATURE:
+	# 		weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'))
+	# 	elif sensor.get('id') == CLIMATE_COOL_POINT:
+	# 		weather_data.kitchen_thermostat.cool_set = format_f(sensor.get('value'))
+	# 	elif sensor.get('id') == CLIMATE_HEAT_POINT:
+	# 		weather_data.kitchen_thermostat.heat_set = format_f(sensor.get('value'))
 
 	xml_response = get_node_xml(ZW_MASTER_THERMOSTAT)
 	for sensor in xml_response.find('properties').findall('property'):
