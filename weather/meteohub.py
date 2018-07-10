@@ -44,6 +44,12 @@ def mps_to_mph(mps):
 	return round(2.2369 * float(mps), 1)
 
 
+def mm_to_inches(mm):
+	#
+	# convert from mm to inches
+	return round(float(mm) * 0.0393700787, 2)
+
+
 def deg_to_compass(direction):
 	#
 	# degrees to compass direction
@@ -121,8 +127,8 @@ def get_weather(weather_data):
 	for sensor in meteohub_xml.findall(RAIN_NODE):
 		if sensor.get('id') == BACK_YARD_RAIN_ID:
 			last_sensor = sensor
-	weather_data.back_yard.rain_rate = last_sensor.get(RAIN_RATE)
-	weather_data.back_yard.rain_total = last_sensor.get(RAIN_TOTAL)
+	weather_data.back_yard.rain_rate = mm_to_inches(last_sensor.get(RAIN_RATE))
+	weather_data.back_yard.rain_total = mm_to_inches(last_sensor.get(RAIN_TOTAL))
 
 	# Wind
 	for sensor in meteohub_xml.findall(WIND_NODE):
