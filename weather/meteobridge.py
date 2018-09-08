@@ -18,6 +18,7 @@ THEATER_WINDOW = "th6"
 FRONT_WINDOW = "th7"
 LIBRARY = "th8"
 HUMIDOR = "th9"
+SECRET_FILE = "./secret/meteobridge"
 
 
 def c_to_f(c_temp):
@@ -29,9 +30,9 @@ def c_to_f(c_temp):
 def get_meteobridge_xml():
 	#
 	# Get the username/password from the secret file
-	secret_file = open("./secret/meteobridge", "r")
-	user_name = secret_file.readline().strip('\n')
-	password = secret_file.readline().strip('\n')
+	with open(SECRET_FILE, "r") as secret_file:
+		user_name = secret_file.readline().strip('\n')
+		password = secret_file.readline().strip('\n')
 
 	#
 	# Pull the XML from meteobridge
