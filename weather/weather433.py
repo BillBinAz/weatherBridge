@@ -24,15 +24,8 @@ def c_to_f(c_temp):
 
 def get_weather(weather_data):
 	f = open("./data/weather433.json", "r")
-	sensor_json = ""
 	for line in f:
-		if line == START_JSON:
-			sensor_json = line
-		elif line == END_JSON:
-			sensor_json += line
-			parse_433_json(weather_data, sensor_json)
-		else:
-			sensor_json += line
+		parse_433_json(weather_data, line)
 
 	return weather_data
 
