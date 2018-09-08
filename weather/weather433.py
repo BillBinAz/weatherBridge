@@ -68,7 +68,7 @@ def parse_433_json(weather_data, line):
 			weather_data.front_yard.time = parsed_json[TIME]
 	except json.JSONDecodeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse weather433.json " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse weather433.json" + e.msg)
+		print(datetime.datetime.now().time(), "Unable to parse weather433.json " + e.msg)
 	finally:
 		return weather_data
 
