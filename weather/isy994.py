@@ -77,7 +77,7 @@ def get_node_xml(node):
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
 	if resp.status != 200:
-		syslog.syslog(syslog.LOG_EMERG, "Bad response from isy994 " + str(resp))
+		syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
 	xml_response = xml.etree.ElementTree.fromstring(content)
 	return xml_response
