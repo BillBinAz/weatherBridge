@@ -24,6 +24,7 @@ def c_to_f(c_temp):
 
 def get_weather(weather_data):
 	f = open("./data/weather433.json", "r")
+	sensor_json = ""
 	for line in f:
 		if line == START_JSON:
 			sensor_json = line

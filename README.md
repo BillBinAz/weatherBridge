@@ -10,6 +10,7 @@ pip3 install Flask
 ### crontab
  */5 *   *   *   *   cd /home/pi/weatherBridge && ./update_isy.py > /tmp/weatherBridge.log 2>&1
 
+
 ### On a windows box add this to a syslog.py file on the path
 
 ```syslog.py stub
