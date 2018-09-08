@@ -72,7 +72,7 @@ def get_node_xml(node):
 	resp, content = h.request(url, "GET")
 	if resp.status != 200:
 		syslog.syslog(syslog.LOG_EMERG, "Bad response from meteohub " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from meteohub." + str(resp))
+		print(datetime.datetime.now().time(), " -  Bad response from meteohub. " + str(resp))
 	xml_response = xml.etree.ElementTree.fromstring(content)
 	return xml_response
 
