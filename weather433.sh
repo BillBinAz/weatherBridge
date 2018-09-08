@@ -11,7 +11,8 @@ err() {
 cd /home/admin/weatherBridge/data
 
 # See if it is running
-if ! pgregp -x "rtl_433" > /dev/null
+if ! pgrep -x "rtl_433" > /dev/null
+then
 
     # remove the old temp file
     rm weather433.temp
