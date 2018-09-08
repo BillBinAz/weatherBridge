@@ -33,6 +33,7 @@ class SensorSmall(object):
 		self.temp = 0.0
 		self.humidity = 0.0
 		self.fan = ""
+		self.time = ""
 
 
 class Sensor6In1(object):

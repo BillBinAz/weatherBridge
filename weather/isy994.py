@@ -43,7 +43,7 @@ ALARM_WEST_WING = "nodes/n001_hwalrm1_z06"
 ALARM_LIVING_GREAT_MOTION = "nodes/n001_hwalrm1_z07"
 ALARM_MASTER_MOTION = "nodes/n001_hwalrm1_z08"
 ALARM_BIKE_GARAGE = "nodes/n001_hwalrm1_z10"
-
+SECRET_FILE = "./secret/isy994"
 
 def c_to_f(c_temp):
 	#
@@ -60,9 +60,9 @@ def format_f(value):
 def get_node_xml(node):
 	#
 	# Get ISY security data
-	secret_file = open("./secret/isy994", "r")
-	user_name = secret_file.readline().strip('\n')
-	password = secret_file.readline().strip('\n')
+	with open(SECRET_FILE, "r") as secret_file:
+		user_name = secret_file.readline().strip('\n')
+		password = secret_file.readline().strip('\n')
 
 	#
 	# do a get on isy994 to update the data
