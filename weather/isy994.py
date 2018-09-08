@@ -51,10 +51,16 @@ def c_to_f(c_temp):
 	return round(9.0 / 5.0 * float(c_temp) + 32, 1)
 
 
-def format_f(value):
+def format_f(value, source):
 	#
 	# add decimal place
-	return round(float(value) / 10.0, 1)
+	formated_value = 0
+	try:
+		formated_value = round(float(value) / 10.0, 1)
+	except:
+		syslog.syslog(syslog.LOG_EMERG, "Bad Data from isy994 " + str(value) + " " + source)
+		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
+	return formated_value
 
 
 def get_node_xml(node):
@@ -71,8 +77,8 @@ def get_node_xml(node):
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
 	if resp.status != 200:
-		syslog.syslog(syslog.LOG_EMERG, "Bad response from meteohub " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from meteohub. " + str(resp))
+		syslog.syslog(syslog.LOG_EMERG, "Bad response from isy994 " + str(resp))
+		print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
 	xml_response = xml.etree.ElementTree.fromstring(content)
 	return xml_response
 
@@ -83,7 +89,7 @@ def get_weather(weather_data):
 		if sensor.get('id') == HUMIDITY_6IN1:
 			weather_data.theater.humidity = sensor.get('value')
 		elif sensor.get('id') == TEMPERATURE_6IN1:
-			weather_data.theater.temp = format_f(sensor.get('value'))
+			weather_data.theater.temp = format_f(sensor.get('value'), 'ZW_THEATER_6IN1')
 		elif sensor.get('id') == LUX_6IN1:
 			weather_data.theater.lux = sensor.get('value')
 
@@ -92,7 +98,7 @@ def get_weather(weather_data):
 		if sensor.get('id') == HUMIDITY_6IN1:
 			weather_data.living_room.humidity = sensor.get('value')
 		elif sensor.get('id') == TEMPERATURE_6IN1:
-			weather_data.living_room.temp = format_f(sensor.get('value'))
+			weather_data.living_room.temp = format_f(sensor.get('value'), 'TEMPERATURE_6IN1')
 		elif sensor.get('id') == LUX_6IN1:
 			weather_data.living_room.lux = sensor.get('value')
 
@@ -101,22 +107,22 @@ def get_weather(weather_data):
 		if sensor.get('id') == CLIMATE_MODE:
 			weather_data.kitchen_thermostat.mode = sensor.get('formatted')
 		elif sensor.get('id') == TEMPERATURE:
-			weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'))
+			weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
 		elif sensor.get('id') == CLIMATE_COOL_POINT:
-			weather_data.kitchen_thermostat.cool_set = format_f(sensor.get('value'))
+			weather_data.kitchen_thermostat.cool_set = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
 		elif sensor.get('id') == CLIMATE_HEAT_POINT:
-			weather_data.kitchen_thermostat.heat_set = format_f(sensor.get('value'))
+			weather_data.kitchen_thermostat.heat_set = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
 
 	xml_response = get_node_xml(ZW_MASTER_THERMOSTAT)
 	for sensor in xml_response.find('properties').findall('property'):
 		if sensor.get('id') == CLIMATE_MODE:
 			weather_data.master_bedroom_thermostat.mode = sensor.get('formatted')
 		elif sensor.get('id') == TEMPERATURE:
-			weather_data.master_bedroom_thermostat.temp = format_f(sensor.get('value'))
+			weather_data.master_bedroom_thermostat.temp = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
 		elif sensor.get('id') == CLIMATE_COOL_POINT:
-			weather_data.master_bedroom_thermostat.cool_set = format_f(sensor.get('value'))
+			weather_data.master_bedroom_thermostat.cool_set = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
 		elif sensor.get('id') == CLIMATE_HEAT_POINT:
-			weather_data.master_bedroom_thermostat.heat_set = format_f(sensor.get('value'))
+			weather_data.master_bedroom_thermostat.heat_set = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
 
 	xml_response = get_node_xml(ZW_POOL_LIGHT)
 	for sensor in xml_response.find('properties').findall('property'):
