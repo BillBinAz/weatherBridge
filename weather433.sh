@@ -12,7 +12,7 @@ cd /home/admin/weatherBridge/data
 
 # remove the old temp file
 rm weather433.temp
-/usr/local/bin/rtl_433 -F json:/home/admin/weatherBridge/data/weather433.temp -T 120 -R 40 -d 0 -W 2>&1
+/usr/local/bin/rtl_433 -F json:/home/admin/weatherBridge/data/weather433.temp -T 300 -R 40 -d 0 -W 2>&1
 
 # now that we have collected data into temp, make it available.
 cp weather433.temp weather433.json
