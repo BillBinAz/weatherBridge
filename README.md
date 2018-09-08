@@ -10,7 +10,7 @@ pip3 install Flask
 ### SDR
 https://github.com/merbanan/rtl_433
 
-### crontab
+### crontab -e
 */5 * * * * cd /home/admin/weatherBridge && ./update_isy.py > /tmp/weatherBridge.log 2>&1
 */5 * * * * cd /home/admin/weatherBridge && ./weather433.sh > /tmp/weather433.log 2>&1
 
