@@ -31,8 +31,8 @@ def get_weather(weather_data):
 			for line in f:
 				parse_433_json(weather_data, line)
 	except IOError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to open file " + FILE_NAME + e.strerror)
-		print(datetime.datetime.now().time(), "Unable to open file " + FILE_NAME + e.strerror)
+		syslog.syslog(syslog.LOG_EMERG, "Unable to open file " + FILE_NAME + " " + e.strerror)
+		print(datetime.datetime.now().time(), "Unable to open file " + FILE_NAME + " " + e.strerror)
 		pass
 	finally:
 		return weather_data
@@ -46,6 +46,7 @@ def parse_433_json(weather_data, line):
 			weather_data.master_bedroom_window.temp = c_to_f(parsed_json[TEMPERATURE])
 			weather_data.master_bedroom_window.humidity = parsed_json[HUMIDITY]
 			weather_data.master_bedroom_window.time = parsed_json[TIME]
+			weather_data.date_generated = parsed_json[TIME]
 		elif parsed_json['id'] == LIBRARY:
 			weather_data.library.temp = c_to_f(parsed_json[TEMPERATURE])
 			weather_data.library.humidity = parsed_json[HUMIDITY]
