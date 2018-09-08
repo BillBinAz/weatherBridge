@@ -98,7 +98,7 @@ def get_weather(weather_data):
 		if sensor.get('id') == HUMIDITY_6IN1:
 			weather_data.living_room.humidity = sensor.get('value')
 		elif sensor.get('id') == TEMPERATURE_6IN1:
-			weather_data.living_room.temp = format_f(sensor.get('value'), 'TEMPERATURE_6IN1')
+			weather_data.living_room.temp = format_f(sensor.get('value'), 'ZW_LIVING_ROOM_6IN1')
 		elif sensor.get('id') == LUX_6IN1:
 			weather_data.living_room.lux = sensor.get('value')
 
