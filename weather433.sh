@@ -10,12 +10,21 @@ err() {
 # make sure the data directory is current
 cd /home/admin/weatherBridge/data
 
-# remove the old temp file
-rm weather433.temp
-/usr/local/bin/rtl_433 -H 10 -f 433920000 -F json:/home/admin/weatherBridge/data/weather433.temp -T 120 -R 40 -d 0 -W 2>&1
+# See if it is running
+if ! pgrep -x "rtl_433" > /dev/null
+then
 
-# now that we have collected data into temp, make it available.
-cp weather433.temp weather433.json
+    # remove the old temp file
+    rm weather433.temp
 
-# Syslog the success to stderr
-err "433 Weather Updated"
+    # collect the sensor data
+    /usr/local/bin/rtl_433 -F json:/home/admin/weatherBridge/data/weather433.temp -T 300 -R 40 -d 0 -W 2>&1
+
+    # now that we have collected data into temp, make it available.
+    cp weather433.temp weather433.json
+
+    # Syslog the success to stderr
+    err "weather433.json Updated"
+else
+    err "rtl_433 already running"
+fi
