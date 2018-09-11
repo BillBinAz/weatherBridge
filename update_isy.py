@@ -24,6 +24,7 @@ def push_temp_isy(variable_type, variable_id, f_temp, label):
 	if f_temp == data.DEFAULT_TEMP:
 		msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
 		syslog.syslog(syslog.LOG_CRIT, msg)
+		print(datetime.datetime.now().time(), msg)
 		return
 
 	#
