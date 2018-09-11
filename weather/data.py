@@ -1,6 +1,8 @@
 import datetime
 import json
 
+DEFAULT_TEMP = -66.6
+
 
 class Alarm(object):
 	def __init__(self):
@@ -19,18 +21,18 @@ class Alarm(object):
 class Pool(object):
 	def __init__(self):
 		self.light = ""
-		self.temp = 0.0
+		self.temp = DEFAULT_TEMP
 
 
 class Spa(object):
 	def __init__(self):
 		self.pump = ""
-		self.temp = 0.0
+		self.temp = DEFAULT_TEMP
 
 
 class SensorSmall(object):
 	def __init__(self):
-		self.temp = 0.0
+		self.temp = DEFAULT_TEMP
 		self.humidity = 0.0
 		self.fan = ""
 		self.time = ""
@@ -39,7 +41,7 @@ class SensorSmall(object):
 class Sensor6In1(object):
 
 	def __init__(self):
-		self.temp = 0.0
+		self.temp = DEFAULT_TEMP
 		self.humidity = 0.0
 		self.lux = 0
 		self.fan = ""
@@ -48,7 +50,7 @@ class Sensor6In1(object):
 class SensorMajor(object):
 
 	def __init__(self):
-		self.temp = 0.0
+		self.temp = DEFAULT_TEMP
 		self.dew_point = 0.0
 		self.humidity = 0.0
 		self.wind_direction = ""
@@ -63,7 +65,7 @@ class SensorMajor(object):
 class SensorThermostat(object):
 
 	def __init__(self):
-		self.temp = 0.0
+		self.temp = DEFAULT_TEMP
 		self.mode = ""
 		self.heat_set = 0.0
 		self.cool_set = 0.0

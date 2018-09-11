@@ -5,6 +5,7 @@ import datetime
 import httplib2
 import syslog
 
+from weather import data
 from weather import stations
 
 ISY_STATE = 2
@@ -17,6 +18,13 @@ SECRET_FILE = "./secret/isy994"
 
 
 def push_temp_isy(variable_type, variable_id, f_temp):
+
+	#
+	# Never push defaults to ISY
+	if f_temp == data.DEFAULT_TEMP:
+		syslog.syslog(syslog.LOG_CRIT, "Default Temp found for Type:" + str(variable_type) + " Id:" + str(variable_id))
+		return
+
 	#
 	# Get ISY security data
 	with open(SECRET_FILE, "r") as secret_file:
