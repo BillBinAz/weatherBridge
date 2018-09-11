@@ -22,7 +22,8 @@ def push_temp_isy(variable_type, variable_id, f_temp, label):
 	#
 	# Never push defaults to ISY
 	if f_temp == data.DEFAULT_TEMP:
-		syslog.syslog(syslog.LOG_CRIT, "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id))
+		msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
+		syslog.syslog(syslog.LOG_CRIT, msg)
 		return
 
 	#
