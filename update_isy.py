@@ -17,12 +17,12 @@ TEMPERATURE_BUFFER = 3
 SECRET_FILE = "./secret/isy994"
 
 
-def push_temp_isy(variable_type, variable_id, f_temp):
+def push_temp_isy(variable_type, variable_id, f_temp, label):
 
 	#
 	# Never push defaults to ISY
 	if f_temp == data.DEFAULT_TEMP:
-		syslog.syslog(syslog.LOG_CRIT, "Default Temp found for Type:" + str(variable_type) + " Id:" + str(variable_id))
+		syslog.syslog(syslog.LOG_CRIT, "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id))
 		return
 
 	#
@@ -48,10 +48,10 @@ def push_temp_isy(variable_type, variable_id, f_temp):
 
 
 def update_isy(weather_data):
-	push_temp_isy(ISY_STATE, BACK_YARD_TEMP, weather_data.back_yard.temp)
-	push_temp_isy(ISY_STATE, FRONT_DOOR_TEMP, weather_data.front_door.temp)
-	push_temp_isy(ISY_STATE, THEATER_WINDOW_TEMP, weather_data.theater_window.temp)
-	push_temp_isy(ISY_STATE, MASTER_BEDROOM_TEMP, weather_data.master_bedroom_window.temp)
+	push_temp_isy(ISY_STATE, BACK_YARD_TEMP, weather_data.back_yard.temp, 'BACK_YARD_TEMP')
+	push_temp_isy(ISY_STATE, FRONT_DOOR_TEMP, weather_data.front_door.temp, 'FRONT_DOOR_TEMP')
+	push_temp_isy(ISY_STATE, THEATER_WINDOW_TEMP, weather_data.theater_window.temp, 'THEATER_WINDOW_TEMP')
+	push_temp_isy(ISY_STATE, MASTER_BEDROOM_TEMP, weather_data.master_bedroom_window.temp, 'MASTER_BEDROOM_TEMP')
 	syslog.syslog(syslog.LOG_CRIT, "ISY Temps pushed")
 
 
