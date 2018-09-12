@@ -46,7 +46,6 @@ def parse_433_json(weather_data, line):
 			weather_data.master_bedroom_window.temp = c_to_f(parsed_json[TEMPERATURE])
 			weather_data.master_bedroom_window.humidity = parsed_json[HUMIDITY]
 			weather_data.master_bedroom_window.time = parsed_json[TIME]
-			weather_data.date_generated = parsed_json[TIME]
 		elif parsed_json['id'] == LIBRARY:
 			weather_data.library.temp = c_to_f(parsed_json[TEMPERATURE])
 			weather_data.library.humidity = parsed_json[HUMIDITY]
