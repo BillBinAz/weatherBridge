@@ -36,6 +36,23 @@ def get_sensor_data():
 	all_sensors = ""
 
 	try:
+		with open(JSON_FILE_NAME, "r") as f:
+			for line in f:
+				parsed_json = json.loads(line)
+
+				if parsed_json['id'] == MASTER_BEDROOM_WINDOW:
+					master_bedroom_window = line
+				elif parsed_json['id'] == LIBRARY:
+					library = line
+				elif parsed_json['id'] == HUMIDOR:
+					humidor = line
+				elif parsed_json['id'] == FRONT_DOOR:
+					front_door = line
+				elif parsed_json['id'] == THEATER_WINDOW:
+					theater_window = line
+				elif parsed_json['id'] == FRONT_YARD:
+					front_yard = line
+
 		with open(TEMP_FILE_NAME, "r") as f:
 			for line in f:
 				parsed_json = json.loads(line)
