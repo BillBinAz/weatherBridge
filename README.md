@@ -10,6 +10,20 @@ pip3 install Flask
 ### SDR
 https://github.com/merbanan/rtl_433
 
+#### Permissions errors:
+    1.) enter lsusb - the command should give you a complete list for your USB devices, incl. your RTLSDR
+
+    2.) Note that line which is related to your stick (e.g. Bus 003 Device 018: ID 0bda:2832 Realtek Semiconductor Corp. RTL2832U DVB-T)
+
+    3.) open rtl-sdr.rules file with sudo nano /etc/udev/rules.d/rtl-sdr.rules
+
+    4.) Add the line (e.g.)
+    Code:
+    SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2832", MODE:="0666" -
+    5.) save the file and restart udev with sudo service udev restart
+
+    6.) restart the Pi
+
 ### crontab -e
 */5 * * * * cd /home/admin/weatherBridge && ./update_isy.py > /tmp/weatherBridge.log 2>&1 <br>
 */10 * * * * cd /home/admin/weatherBridge && ./weather433.sh > /tmp/weather433.log 2>&1
