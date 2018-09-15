@@ -49,6 +49,7 @@ def get_weather(weather_data):
 		if temp != data.DEFAULT_TEMP:
 			weather_data.theater_window.humidity = sensor.get(HUMIDITY)
 			weather_data.theater_window.temp = temp
+		print(weather_data.to_json())
 
 		sensor = parsed_json[BACK_YARD]
 		temp = sensor['temp']
@@ -117,12 +118,6 @@ def get_weather(weather_data):
 		if temp != data.DEFAULT_TEMP:
 			weather_data.theater.humidity = sensor[HUMIDITY]
 			weather_data.theater.temp = sensor[TEMPERATURE]
-
-		sensor = parsed_json[THEATER_WINDOW]
-		temp = sensor['temp']
-		if temp != data.DEFAULT_TEMP:
-			weather_data.theater_window.humidity = sensor[HUMIDITY]
-			weather_data.theater_window.temp = sensor[TEMPERATURE]
 
 	except json.JSONDecodeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk " + e.msg)
