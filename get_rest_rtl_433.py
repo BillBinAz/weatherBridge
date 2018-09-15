@@ -3,7 +3,7 @@
 import datetime
 import json
 
-import httplib2
+import requests
 import syslog
 
 from weather import data
@@ -26,7 +26,7 @@ HUMIDITY = 'humidity'
 S_OK = 200
 
 
-def rtl_433_json():
+def rtl_433_json_old():
 
 	#
 	# Pull the XML from meteobridge
@@ -37,25 +37,27 @@ def rtl_433_json():
 		syslog.syslog(syslog.LOG_EMERG, "Bad response from kiosk " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
 
-	return content
+	return resp.json()
+
+
+def rtl_433_json():
+	#
+	# Pull the XML from meteobridge
+	response = requests.get("http://kiosk.evilminions.org:8080/weather")
+	if not response.ok:
+		syslog.syslog(syslog.LOG_EMERG, "Bad response from kiosk " + str(resp))
+		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
+	return response.json()
 
 
 def get_weather(weather_data):
-	content = rtl_433_json()
-	print(content)
-	parsed_json = json.loads(content)
 
 	try:
-
-		content = rtl_433_json()
-		print(content)
-		parsed_json = json.loads(content)
+		parsed_json = rtl_433_json()
 		print(parsed_json)
 
 		sensor = parsed_json.get(THEATER_WINDOW)
-		print(sensor)
-		temp = parsed_json.get(TEMPERATURE)
-		print(temp)
+		temp = sensor.get(TEMPERATURE)
 		if temp != data.DEFAULT_TEMP:
 			weather_data.theater_window.humidity = sensor.get(HUMIDITY)
 			weather_data.theater_window.temp = temp
