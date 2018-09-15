@@ -1,7 +1,7 @@
 import datetime
 import json
 
-DEFAULT_TEMP = -66.6
+DEFAULT_TEMP = 0
 
 
 class Alarm(object):
