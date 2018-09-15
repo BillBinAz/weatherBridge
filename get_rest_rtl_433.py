@@ -27,20 +27,6 @@ TIME = 'time'
 S_OK = 200
 
 
-def rtl_433_json_old():
-
-	#
-	# Pull the XML from meteobridge
-	h = httplib2.Http()
-	resp, content = h. \
-		request("http://kiosk.evilminions.org:8080/weather", "GET")
-	if resp.status != S_OK:
-		syslog.syslog(syslog.LOG_EMERG, "Bad response from kiosk " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
-
-	return resp.json()
-
-
 def rtl_433_json():
 	#
 	# Pull the XML from meteobridge
