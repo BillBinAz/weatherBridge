@@ -165,4 +165,7 @@ def main():
 	get_weather(cur_weather)
 
 
+# print(cur_weather.to_json())
+
+
 main()

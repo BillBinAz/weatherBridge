@@ -62,4 +62,7 @@ def main():
 	update_isy(weather_data)
 
 
+# print(cur_weather.to_json())
+
+
 main()

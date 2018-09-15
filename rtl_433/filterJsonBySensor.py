@@ -16,8 +16,9 @@ TEMPERATURE = 'temperature_C'
 HUMIDITY = 'humidity'
 TIME = 'time'
 
-TEMP_FILE_NAME = "./data/weather433.temp"
-JSON_FILE_NAME = "./data/weather433.json"
+TEMP_FILE_NAME = "/tmp/weather433.temp"
+JSON_FILE_NAME = "/tmp/weather433.json"
+
 
 def c_to_f(c_temp):
 	#
@@ -86,7 +87,7 @@ def get_sensor_data():
 def save_sensor_data(all_sensors):
 
 	try:
-		with open(JSON_FILE_NAME, "w") as f:
+		with open(JSON_FILE_NAME, "w+") as f:
 			f.write(all_sensors)
 	except IOError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)

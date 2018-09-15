@@ -8,20 +8,21 @@ err() {
 }
 
 # make sure the data directory is current
-cd /home/admin/weatherBridge
+cd ~/weatherBridge
 
 # See if it is running
 if ! pgrep -x "rtl_433" > /dev/null
 then
 
     # remove the old temp file
-    rm ./data/weather433.temp
+    rm /tmp/weather433.temp
 
     # collect the sensor data
-    /usr/local/bin/rtl_433 -F json:/home/admin/weatherBridge/data/weather433.temp -T 530 -R 40 -d 0 -W 2>&1
+    /usr/local/bin/rtl_433 -F json:/tmp/weather433.temp -T 530 -R 40 -d 0 -W 2>&1
 
     # now that we have collected data into temp, make it available.
-    ./filterJsonBySensor.py
+    ~/weatherBridge/rtl_433/filterJsonBySensor.py
+    cp /tmp/weather433.json ~/weatherBridge/rtl_433/data/weather433.json
 
     # Syslog the success to stderr
     err "weather433.json Updated"

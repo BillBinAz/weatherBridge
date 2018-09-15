@@ -1,6 +1,5 @@
 from flask import Flask
 
-from weather import data
 from weather import stations
 
 app = Flask(__name__)
@@ -13,7 +12,6 @@ def system_check():
 
 @app.route("/weather")
 def get_weather():
-	weather_data = data.WeatherData()
 	weather_data = stations.get_weather()
 	return weather_data.to_json(), 200, {'Content-Type': 'text/json; charset=utf-8'}
 

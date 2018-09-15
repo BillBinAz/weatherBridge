@@ -1,3 +1,4 @@
 Flask==1.0.2
 httplib2==0.11.1
 xml.etree.ElementTree=="1.3.0"
+Requests==2.19.1

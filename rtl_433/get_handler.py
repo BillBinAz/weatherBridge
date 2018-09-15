@@ -1,7 +1,10 @@
-from flask import Flask
+import sys
 
+sys.path.append('../')
+
+from flask import Flask
+from rtl_433 import weather433
 from weather import data
-from weather import weather433
 
 app = Flask(__name__)
 
