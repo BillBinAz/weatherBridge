@@ -37,13 +37,15 @@ def rtl_433_json():
 		syslog.syslog(syslog.LOG_EMERG, "Bad response from kiosk " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
 
-	print(content)
 	return content
 
 
 def get_weather(weather_data):
 	try:
-		parsed_json = json.loads(rtl_433_json())
+
+		content = rtl_433_json()
+		print(content)
+		parsed_json = json.loads(content)
 		print(parsed_json)
 
 		sensor = parsed_json.get(THEATER_WINDOW)
