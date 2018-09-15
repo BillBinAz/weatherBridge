@@ -136,7 +136,9 @@ def get_weather(weather_data):
 def main():
 	cur_weather = data.WeatherData()
 	get_weather(cur_weather)
-	print(cur_weather.to_json())
+
+
+# print(cur_weather.to_json())
 
 
 main()
