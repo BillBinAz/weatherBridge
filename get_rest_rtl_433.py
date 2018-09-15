@@ -41,6 +41,10 @@ def rtl_433_json():
 
 
 def get_weather(weather_data):
+	content = rtl_433_json()
+	print(content)
+	parsed_json = json.loads(content)
+
 	try:
 
 		content = rtl_433_json()
