@@ -19,6 +19,7 @@ TIME = 'time'
 TEMP_FILE_NAME = "/tmp/weather433.temp"
 JSON_FILE_NAME = "/tmp/weather433.json"
 
+
 def c_to_f(c_temp):
 	#
 	# Convert from celsius to fahrenheit
