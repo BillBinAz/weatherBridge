@@ -1,17 +1,15 @@
 #!/usr/bin/python3
-import station_isy994
-import station_kiosk
-import station_meteohub
 from rtl_433 import weather433
+from stations import isy994, kiosk, meteohub
 from weather import data
 
 
 def get_weather():
 	cur_weather = data.WeatherData()
-	cur_weather = station_isy994.get_weather(cur_weather)
-	cur_weather = station_meteohub.get_weather(cur_weather)
+	cur_weather = isy994.get_weather(cur_weather)
+	cur_weather = meteohub.get_weather(cur_weather)
 	cur_weather = weather433.get_weather(cur_weather)
-	cur_weather = station_kiosk.get_weather(cur_weather)
+	cur_weather = kiosk.get_weather(cur_weather)
 	return cur_weather
 
 
