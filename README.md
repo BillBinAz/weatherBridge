@@ -3,9 +3,9 @@ Python3 code to upload weather data from metrohub and metrobridge to isy994.
 
 
 ## Dependencies
-python3
-pip3 install httplib2
-pip3 install Flask
+python3  <br>
+pip3 install httplib2  <br>
+pip3 install Flask  <br>
 
 ### SDR
 https://github.com/merbanan/rtl_433
