@@ -22,6 +22,7 @@ then
 
     # now that we have collected data into temp, make it available.
     ~/weatherBridge/rtl_433/filterJsonBySensor.py
+    cp /tmp/weather433.json ~/weatherBridge/rtl_433/data/weather433.json
 
     # Syslog the success to stderr
     err "weather433.json Updated"
