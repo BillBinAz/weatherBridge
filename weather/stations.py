@@ -16,7 +16,7 @@ def get_weather():
 
 
 def main():
-	get_weather()
+	cur_weather = get_weather()
 
 
 main()
