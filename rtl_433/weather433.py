@@ -1,10 +1,11 @@
 #!/usr/bin/python3
+import sys
+
+sys.path.append('../')
 
 import datetime
 import json
-
 import syslog
-
 from weather import data
 
 FRONT_YARD = 12147
