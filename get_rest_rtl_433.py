@@ -37,7 +37,6 @@ def rtl_433_json():
 		syslog.syslog(syslog.LOG_EMERG, "Bad response from kiosk " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
 
-	print(content)
 	return content
 
 
@@ -122,6 +121,8 @@ def get_weather(weather_data):
 	except json.JSONDecodeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk " + e.msg)
+	except:
+		print("unknown error")
 	finally:
 		return weather_data
 
@@ -129,9 +130,7 @@ def get_weather(weather_data):
 def main():
 	cur_weather = data.WeatherData()
 	get_weather(cur_weather)
-
-
-# print(cur_weather.to_json())
+	print(cur_weather.to_json())
 
 
 main()
