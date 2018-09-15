@@ -16,8 +16,8 @@ TEMPERATURE = 'temperature_C'
 HUMIDITY = 'humidity'
 TIME = 'time'
 
-TEMP_FILE_NAME = "./data/weather433.temp"
-JSON_FILE_NAME = "./data/weather433.json"
+TEMP_FILE_NAME = "~/weatherBridge/rtl_433/data/weather433.temp"
+JSON_FILE_NAME = "~/weatherBridge/rtl_433/data/weather433.json"
 
 def c_to_f(c_temp):
 	#

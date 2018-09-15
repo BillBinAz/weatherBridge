@@ -8,7 +8,7 @@ err() {
 }
 
 # make sure the data directory is current
-cd /home/admin/weatherBridge
+cd ~/weatherBridge
 
 # See if it is running
 if ! pgrep -x "rtl_433" > /dev/null
@@ -18,7 +18,7 @@ then
     rm ./data/weather433.temp
 
     # collect the sensor data
-    /usr/local/bin/rtl_433 -F json:/home/admin/weatherBridge/data/weather433.temp -T 530 -R 40 -d 0 -W 2>&1
+    /usr/local/bin/rtl_433 -F json:~/weatherBridge/rtl_433/data/weather433.temp -T 530 -R 40 -d 0 -W 2>&1
 
     # now that we have collected data into temp, make it available.
     ./filterJsonBySensor.py
