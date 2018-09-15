@@ -121,11 +121,14 @@ def get_weather(weather_data):
 	except json.JSONDecodeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk " + e.msg)
+		pass
 	except TypeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk: TypeError " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + e.msg)
+		pass
 	except:
 		print("unknown error")
+		pass
 	finally:
 		return weather_data
 
