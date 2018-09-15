@@ -21,7 +21,7 @@ then
     /usr/local/bin/rtl_433 -F json:~/weatherBridge/rtl_433/data/weather433.temp -T 530 -R 40 -d 0 -W 2>&1
 
     # now that we have collected data into temp, make it available.
-    ./filterJsonBySensor.py
+    ~/weatherBridge/rtl_433/filterJsonBySensor.py
 
     # Syslog the success to stderr
     err "weather433.json Updated"
