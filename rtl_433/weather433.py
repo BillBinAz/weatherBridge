@@ -17,7 +17,7 @@ FRONT_DOOR = 1153
 TEMPERATURE = 'temperature_C'
 HUMIDITY = 'humidity'
 TIME = 'time'
-FILE_NAME = "./rtl_433/data/weather433.json"
+FILE_NAME = "/tmp/weather433.json"
 
 
 def c_to_f(c_temp):
