@@ -44,6 +44,12 @@ def get_weather(weather_data):
 	try:
 		parsed_json = json.loads(rtl_433_json())
 
+		sensor = parsed_json.get(THEATER_WINDOW)
+		temp = parsed_json.get(TEMPERATURE)
+		if temp != data.DEFAULT_TEMP:
+			weather_data.theater_window.humidity = sensor.get(HUMIDITY)
+			weather_data.theater_window.temp = temp
+
 		sensor = parsed_json[BACK_YARD]
 		temp = sensor['temp']
 		if temp != data.DEFAULT_TEMP:
@@ -121,14 +127,11 @@ def get_weather(weather_data):
 	except json.JSONDecodeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk " + e.msg)
-		pass
 	except TypeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk: TypeError " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + e.msg)
-		pass
 	except:
 		print("unknown error")
-		pass
 	finally:
 		return weather_data
 
@@ -136,9 +139,7 @@ def get_weather(weather_data):
 def main():
 	cur_weather = data.WeatherData()
 	get_weather(cur_weather)
-
-
-# print(cur_weather.to_json())
+	print(cur_weather.to_json())
 
 
 main()
