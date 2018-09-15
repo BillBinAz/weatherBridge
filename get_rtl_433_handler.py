@@ -1,6 +1,6 @@
-import weather433
 from flask import Flask
 
+from rtl_433 import weather433
 from weather import data
 
 app = Flask(__name__)
