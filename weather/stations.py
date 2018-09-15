@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
+from isy994 import isy994
+from meteohub import meteohub
+from rtl_433 import weather433
 from weather import data
-from weather import isy994
-from weather import meteohub
-from weather import weather433
 
 
 def get_weather():
