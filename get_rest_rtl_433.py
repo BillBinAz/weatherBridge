@@ -45,7 +45,9 @@ def get_weather(weather_data):
 		parsed_json = json.loads(rtl_433_json())
 
 		sensor = parsed_json.get(THEATER_WINDOW)
+		print(sensor)
 		temp = parsed_json.get(TEMPERATURE)
+		print(temp)
 		if temp != data.DEFAULT_TEMP:
 			weather_data.theater_window.humidity = sensor.get(HUMIDITY)
 			weather_data.theater_window.temp = temp
@@ -125,8 +127,6 @@ def get_weather(weather_data):
 	except TypeError as e:
 		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk: TypeError " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + e.msg)
-	except:
-		print("unknown error")
 	finally:
 		return weather_data
 
