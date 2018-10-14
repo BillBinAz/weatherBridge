@@ -1,0 +1,10 @@
+[Unit]
+Description=Weather Bridge Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/admin/weatherBridge/launch_rest.sh > /tmp/weatherBridge_rest.log
+
+[Install]
+WantedBy=multi-user.target
