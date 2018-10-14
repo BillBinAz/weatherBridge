@@ -7,17 +7,19 @@ Next we will create a configuration file (aka a unit file) that tells systemd wh
 sudo nano /lib/systemd/system/myscript.service
 Add in the following text :
 
-[Unit]
-Description=My Script Service
-After=multi-user.target
 
-[Service]
-Type=idle
-ExecStart=/usr/bin/python /home/pi/myscript.py
+   [Unit]
+   Description=My Script Service
+   After=multi-user.target
 
-[Install]
-WantedBy=multi-user.target
-You can save and exit the nano editor using [CTRL-X], [Y] then [ENTER].
+   [Service]
+   Type=idle
+   ExecStart=/usr/bin/python /home/pi/myscript.py
+
+   [Install]
+   WantedBy=multi-user.target
+   You can save and exit the nano editor using [CTRL-X], [Y] then [ENTER].
+
 
 This defines a new service called “My Script Service” and we are requesting that it is launched once the multi-user environment is available. The “ExecStart” parameter is used to specify the command we want to run. The “Type” is set to “idle” ensures the ExecStart command is only run when everything else has loaded. For my GPIO based scripts the default type of “simple” didn’t work.
 
