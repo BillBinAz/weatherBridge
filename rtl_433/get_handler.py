@@ -1,6 +1,7 @@
 import sys
 
 sys.path.append('../')
+sys.path.append('./')
 
 from flask import Flask
 from rtl_433 import weather433
