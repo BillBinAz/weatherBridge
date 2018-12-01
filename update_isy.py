@@ -44,7 +44,7 @@ def push_temp_isy(variable_type, variable_id, f_temp, label):
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
 	if not str(content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
-		syslog.syslog(syslog.LOG_EMERG, "Failed URL: " + url + " Response: " + str(content))
+		syslog.syslog(syslog.LOG_INFO, "Failed URL: " + url + " Response: " + str(content))
 		print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(content))
 	else:
 		print(datetime.datetime.now().time(), " - Success URL: ", url)

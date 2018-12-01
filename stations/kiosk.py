@@ -32,7 +32,7 @@ def rtl_433_json():
 	# Pull the XML from meteobridge
 	response = requests.get("http://kiosk.evilminions.org:8080/weather")
 	if not response.ok:
-		syslog.syslog(syslog.LOG_EMERG, "Bad response from kiosk " + str(resp))
+		syslog.syslog(syslog.LOG_INFO, "Bad response from kiosk " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
 	return response.json()
 
@@ -122,10 +122,10 @@ def get_weather(weather_data):
 			weather_data.theater.temp = sensor[TEMPERATURE]
 
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse kiosk " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk " + e.msg)
 	except TypeError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to parse kiosk: TypeError " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse kiosk: TypeError " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + e.msg)
 	finally:
 		return weather_data
