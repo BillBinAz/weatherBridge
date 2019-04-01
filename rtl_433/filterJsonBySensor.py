@@ -5,7 +5,7 @@ import json
 
 import syslog
 
-FRONT_YARD = 12147
+LIVING_ROOM_WINDOW = 12147
 LIBRARY = 7621
 MASTER_BEDROOM_WINDOW = 14129
 HUMIDOR = 3329
@@ -28,7 +28,7 @@ def c_to_f(c_temp):
 
 def get_sensor_data():
 
-	front_yard = ""
+	living_room_window = ""
 	library = ""
 	master_bedroom_window = ""
 	humidor = ""
@@ -51,8 +51,8 @@ def get_sensor_data():
 					front_door = line
 				elif parsed_json['id'] == THEATER_WINDOW:
 					theater_window = line
-				elif parsed_json['id'] == FRONT_YARD:
-					front_yard = line
+				elif parsed_json['id'] == LIVING_ROOM_WINDOW:
+					living_room_window = line
 	except IOError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
@@ -78,8 +78,8 @@ def get_sensor_data():
 	if theater_window != "":
 		all_sensors += theater_window
 
-	if front_yard != "":
-		all_sensors += front_yard
+	if living_room_window != "":
+		all_sensors += living_room_window
 
 	return all_sensors
 
