@@ -102,3 +102,6 @@ ENV/
 
 # secrets
 secret/
+
+# ide
+.idea/
