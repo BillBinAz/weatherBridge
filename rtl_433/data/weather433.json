@@ -1,3 +1,3 @@
-{"time" : "2019-04-01 07:08:47", "model" : "Acurite tower sensor", "id" : 14129, "sensor_id" : 14129, "channel" : "A", "temperature_C" : 14.700, "humidity" : 16, "battery_low" : 0}
-{"time" : "2019-04-01 07:08:40", "model" : "Acurite tower sensor", "id" : 1153, "sensor_id" : 1153, "channel" : "A", "temperature_C" : 16.900, "humidity" : 16, "battery_low" : 0}
-{"time" : "2019-04-01 07:08:30", "model" : "Acurite tower sensor", "id" : 6227, "sensor_id" : 6227, "channel" : "C", "temperature_C" : 13.900, "humidity" : 19, "battery_low" : 0}
+{"time" : "2019-04-01 09:53:18", "model" : "Acurite tower sensor", "id" : 14129, "sensor_id" : 14129, "channel" : "A", "temperature_C" : 39.500, "humidity" : 5, "battery_low" : 0}
+{"time" : "2019-04-01 09:58:49", "model" : "Acurite tower sensor", "id" : 1153, "sensor_id" : 1153, "channel" : "A", "temperature_C" : 20.300, "humidity" : 16, "battery_low" : 0}
+{"time" : "2019-04-01 09:58:47", "model" : "Acurite tower sensor", "id" : 6227, "sensor_id" : 6227, "channel" : "C", "temperature_C" : 22.100, "humidity" : 11, "battery_low" : 0}
