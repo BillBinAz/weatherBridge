@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/pi/weatherBridge
-/usr/bin/python3 /home/pi/weatherBridge/rtl_433/get_handler.py
+cd ~/weatherBridge/rtl_433
+/usr/bin/python3 ~/weatherBridge/rtl_433/get_handler.py

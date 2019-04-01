@@ -41,7 +41,7 @@ def get_meteobridge_xml():
 	resp, content = h. \
 		request("http://meteobridge/cgi-bin/livedataxml.cgi", "GET")
 	if resp.status != S_OK:
-		syslog.syslog(syslog.LOG_EMERG, "Bad response from meteobridge " + str(resp))
+		syslog.syslog(syslog.LOG_INFO, "Bad response from meteobridge " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from meteobridge. " + str(resp))
 	xml_response = xml.etree.ElementTree.fromstring(content)
 	return xml_response

@@ -105,7 +105,7 @@ def get_meteohub_xml():
 	h = httplib2.Http()
 	resp, content = h.request(url, "GET")
 	if resp.status != 200:
-		syslog.syslog(syslog.LOG_EMERG, "Bad response from meteohub " + str(resp))
+		syslog.syslog(syslog.LOG_INFO, "Bad response from meteohub " + str(resp))
 		print(datetime.datetime.now().time(), " -  Bad response from meteohub. " + str(resp))
 	xml_response = xml.etree.ElementTree.fromstring(content)
 	return xml_response

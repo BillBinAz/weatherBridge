@@ -54,11 +54,11 @@ def get_sensor_data():
 				elif parsed_json['id'] == FRONT_YARD:
 					front_yard = line
 	except IOError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
+		syslog.syslog(syslog.LOG_INFO, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		pass
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to parse weather433.temp " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse weather433.temp " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse weather433.temp " + e.msg)
 
 	#
@@ -90,7 +90,7 @@ def save_sensor_data(all_sensors):
 		with open(JSON_FILE_NAME, "w+") as f:
 			f.write(all_sensors)
 	except IOError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
+		syslog.syslog(syslog.LOG_INFO, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		pass
 

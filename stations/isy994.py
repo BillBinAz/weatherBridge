@@ -59,7 +59,7 @@ def format_f(value, source):
 	try:
 		formatted_value = round(float(value) / 10.0, 1)
 	except:
-		syslog.syslog(syslog.LOG_EMERG, "Bad Data from isy994 " + str(value) + " " + source)
+		syslog.syslog(syslog.LOG_INFO, "Bad Data from isy994 " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
 	return formatted_value
 
@@ -218,7 +218,7 @@ def get_weather(weather_data):
 				else:
 					weather_data.alarm.main_garage = "0"
 	except xml.etree.ElementTree.ParseError as e:
-		syslog.syslog(syslog.LOG_EMERG, "Unable to parse isy994 " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse isy994 " + e.msg)
 	finally:
 		return weather_data
