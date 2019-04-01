@@ -10,11 +10,11 @@ from weather import data
 
 BACK_YARD = 'back_yard'
 FRONT_DOOR = 'front_door'
-FRONT_YARD = 'front_yard'
 HUMIDOR = 'humidor'
 KITCHEN_THERMOSTAT = 'kitchen_thermostat'
 LIBRARY = 'library'
 LIVING_ROOM = 'living_room'
+LIVING_ROOM_WINDOW = 'living_room_window'
 MASTER_BEDROOM_THERMOSTAT = 'master_bedroom_thermostat'
 MASTER_BEDROOM_WINDOW = 'master_bedroom_window'
 POOL = 'pool'
@@ -61,12 +61,12 @@ def get_weather(weather_data):
 			weather_data.front_door.temp = sensor[TEMPERATURE]
 			weather_data.front_door.time = sensor.get(TIME)
 
-		sensor = parsed_json.get(FRONT_YARD)
+		sensor = parsed_json.get(LIVING_ROOM_WINDOW)
 		temp = sensor.get(TEMPERATURE)
 		if temp != data.DEFAULT_TEMP:
-			weather_data.front_yard.humidity = sensor.get(HUMIDITY)
-			weather_data.front_yard.temp = sensor[TEMPERATURE]
-			weather_data.front_yard.time = sensor.get(TIME)
+			weather_data.living_room_window.humidity = sensor.get(HUMIDITY)
+			weather_data.living_room_window.temp = sensor[TEMPERATURE]
+			weather_data.living_room_window.time = sensor.get(TIME)
 
 		sensor = parsed_json.get(HUMIDOR)
 		temp = sensor.get(TEMPERATURE)
