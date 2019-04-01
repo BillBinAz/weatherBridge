@@ -8,7 +8,7 @@ import json
 import syslog
 from weather import data
 
-FRONT_YARD = 12147
+LIVING_ROOM_WINDOW = 12147
 LIBRARY = 7621
 MASTER_BEDROOM_WINDOW = 14129
 HUMIDOR = 3329
@@ -68,11 +68,11 @@ def parse_433_json(weather_data, line):
 				weather_data.theater_window.temp = c_to_f(parsed_json[TEMPERATURE])
 				weather_data.theater_window.humidity = parsed_json[HUMIDITY]
 				weather_data.theater_window.time = parsed_json[TIME]
-		elif parsed_json['id'] == FRONT_YARD:
+		elif parsed_json['id'] == LIVING_ROOM_WINDOW:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
-				weather_data.front_yard.temp = c_to_f(parsed_json[TEMPERATURE])
-				weather_data.front_yard.humidity = parsed_json[HUMIDITY]
-				weather_data.front_yard.time = parsed_json[TIME]
+				weather_data.living_room_window.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.living_room_window.humidity = parsed_json[HUMIDITY]
+				weather_data.living_room_window.time = parsed_json[TIME]
 	except json.JSONDecodeError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse weather433.json " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse weather433.json " + e.msg)

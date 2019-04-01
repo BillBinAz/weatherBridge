@@ -84,7 +84,7 @@ class WeatherData(object):
 		self.living_room = Sensor6In1()
 		self.master_bedroom_thermostat = SensorThermostat()
 		self.kitchen_thermostat = SensorThermostat()
-		self.front_yard = SensorSmall()
+		self.living_room_window = SensorSmall()
 		self.alarm = Alarm()
 		self.pool = Pool()
 		self.spa = Spa()
