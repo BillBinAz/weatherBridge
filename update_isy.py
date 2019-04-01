@@ -53,7 +53,7 @@ def push_temp_isy(variable_type, variable_id, f_temp, label):
 
 def update_isy(weather_data):
 	push_temp_isy(ISY_INTEGER, BACK_YARD_TEMP, weather_data.back_yard.temp, 'BACK_YARD_TEMP')
-	push_temp_isy(ISY_INTEGER, LIVING_ROOM_WINDOW, weather_data.living_room_window, 'LIVING_ROOM_WINDOW_TEMP')
+	push_temp_isy(ISY_INTEGER, LIVING_ROOM_WINDOW, weather_data.living_room_window.temp, 'LIVING_ROOM_WINDOW_TEMP')
 	push_temp_isy(ISY_INTEGER, FRONT_DOOR_TEMP, weather_data.front_door.temp, 'FRONT_DOOR_TEMP')
 	push_temp_isy(ISY_INTEGER, THEATER_WINDOW_TEMP, weather_data.theater_window.temp, 'THEATER_WINDOW_TEMP')
 	push_temp_isy(ISY_INTEGER, MASTER_BEDROOM_TEMP, weather_data.master_bedroom_window.temp, 'MASTER_BEDROOM_TEMP')
