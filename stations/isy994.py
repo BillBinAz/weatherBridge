@@ -165,42 +165,42 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ALARM_STATUS)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.status = sensor.get('formatted')
+				weather_data.alarm.status = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.front_garage_door = sensor.get('formatted')
+				weather_data.alarm.front_garage_door = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_SLIDING_GLASS_DOOR)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.sliding_glass_door = sensor.get('formatted')
+				weather_data.alarm.sliding_glass_door = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_LIVING_GREAT)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.living_great = sensor.get('formatted')
+				weather_data.alarm.living_great = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_MASTER)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.master = sensor.get('formatted')
+				weather_data.alarm.master = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_OFFICES)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.offices = sensor.get('formatted')
+				weather_data.alarm.offices = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_WEST_WING)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.west_wing = sensor.get('formatted')
+				weather_data.alarm.west_wing = sensor.get('value')
 
 		xml_response = get_node_xml(ALARM_BIKE_GARAGE)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.bike_garage = sensor.get('formatted')
+				weather_data.alarm.bike_garage = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_MC_GARAGE)
 		for sensor in xml_response.find('properties').findall('property'):
