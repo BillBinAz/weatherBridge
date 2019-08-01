@@ -3,6 +3,7 @@ Python3 code to upload weather data from metrohub and metrobridge to isy994.
 
 
 ## Dependencies
+## SystemCtl runs as root:  sudo -H pip3 install ...
 python3  <br>
 pip3 install httplib2  <br>
 pip3 install Flask  <br>
