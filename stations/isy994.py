@@ -10,8 +10,8 @@ from weather import data
 
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-ZW_KITCHEN_THERMOSTAT = "nodes/ZW011_1"
-ZW_MASTER_THERMOSTAT = "nodes/ZW012_1"
+ZW_KITCHEN_THERMOSTAT = "nodes/n001_ven1"
+ZW_MASTER_THERMOSTAT = "nodes/n001_ven2"
 
 ZW_THEATER_FAN = "nodes/ZW041_1"
 ZW_LIVING_FAN = "nodes/ZW042_1"
@@ -110,22 +110,22 @@ def get_weather(weather_data):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.kitchen_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
+				weather_data.kitchen_thermostat.temp = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
-				weather_data.kitchen_thermostat.cool_set = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
+				weather_data.kitchen_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
-				weather_data.kitchen_thermostat.heat_set = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
+				weather_data.kitchen_thermostat.heat_set = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_MASTER_THERMOSTAT)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.master_bedroom_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.master_bedroom_thermostat.temp = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
+				weather_data.master_bedroom_thermostat.temp = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
-				weather_data.master_bedroom_thermostat.cool_set = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
+				weather_data.master_bedroom_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
-				weather_data.master_bedroom_thermostat.heat_set = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
+				weather_data.master_bedroom_thermostat.heat_set = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_POOL_LIGHT)
 		for sensor in xml_response.find('properties').findall('property'):
