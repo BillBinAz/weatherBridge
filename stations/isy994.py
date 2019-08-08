@@ -110,7 +110,7 @@ def get_weather(weather_data):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.kitchen_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.kitchen_thermostat.temp = sensor.get('value')
+				weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
 				weather_data.kitchen_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
@@ -121,7 +121,7 @@ def get_weather(weather_data):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.master_bedroom_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.master_bedroom_thermostat.temp = sensor.get('value')
+				weather_data.master_bedroom_thermostat.temp = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
 				weather_data.master_bedroom_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
