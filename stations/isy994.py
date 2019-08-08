@@ -10,8 +10,8 @@ from weather import data
 
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-ZW_KITCHEN_THERMOSTAT = "nodes/n001_ven1"
-ZW_MASTER_THERMOSTAT = "nodes/n001_ven2"
+ZW_KITCHEN_THERMOSTAT = "nodes/n001_ecobee1"
+ZW_MASTER_THERMOSTAT = "nodes/n001_ecobee2"
 
 ZW_THEATER_FAN = "nodes/ZW041_1"
 ZW_LIVING_FAN = "nodes/ZW042_1"
