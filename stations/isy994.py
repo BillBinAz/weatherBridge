@@ -7,9 +7,12 @@ import httplib2
 import syslog
 
 from weather import data
+NODES = 'nodes/'
 
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
+ZW_LIVING_ROOM_ECOBEE = "nodes/n001_ecobee1_sen3"
+ZW_THEATER_ECOBEE = "nodes/n001_ecobee1_sen2"
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_ecobee1"
 ZW_MASTER_THERMOSTAT = "nodes/n001_ecobee2"
 
@@ -91,26 +94,32 @@ def get_weather(weather_data):
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == HUMIDITY_6IN1:
 				weather_data.theater.humidity = sensor.get('value')
-			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.theater.temp = format_f(sensor.get('value'), 'ZW_THEATER_6IN1')
 			elif sensor.get('id') == LUX_6IN1:
 				weather_data.theater.lux = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_THEATER_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.theater.temp = sensor.get('formatted')[:-1]
 
 		xml_response = get_node_xml(ZW_LIVING_ROOM_6IN1)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == HUMIDITY_6IN1:
 				weather_data.living_room.humidity = sensor.get('value')
-			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.living_room.temp = format_f(sensor.get('value'), 'ZW_LIVING_ROOM_6IN1')
 			elif sensor.get('id') == LUX_6IN1:
 				weather_data.living_room.lux = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_LIVING_ROOM_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.living_room.temp = sensor.get('formatted')[:-1]
 
 		xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.kitchen_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.kitchen_thermostat.temp = format_f(sensor.get('value'), 'ZW_KITCHEN_THERMOSTAT')
+				weather_data.kitchen_thermostat.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
 				weather_data.kitchen_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
@@ -121,7 +130,7 @@ def get_weather(weather_data):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.master_bedroom_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.master_bedroom_thermostat.temp = format_f(sensor.get('value'), 'ZW_MASTER_THERMOSTAT')
+				weather_data.master_bedroom_thermostat.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
 				weather_data.master_bedroom_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
