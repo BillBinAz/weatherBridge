@@ -11,6 +11,7 @@ MASTER_BEDROOM_WINDOW = 14129
 HUMIDOR = 3329
 THEATER_WINDOW = 6227
 FRONT_DOOR = 1153
+GARAGE = 9957
 
 TEMPERATURE = 'temperature_C'
 HUMIDITY = 'humidity'
@@ -35,6 +36,7 @@ def get_sensor_data():
 	theater_window = ""
 	front_door = ""
 	all_sensors = ""
+	garage = ""
 
 	try:
 		with open(TEMP_FILE_NAME, "r") as f:
@@ -53,6 +55,8 @@ def get_sensor_data():
 					theater_window = line
 				elif parsed_json['id'] == LIVING_ROOM_WINDOW:
 					living_room_window = line
+				elif parsed_json['id'] == GARAGE:
+					garage = line
 	except IOError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
@@ -80,6 +84,9 @@ def get_sensor_data():
 
 	if living_room_window != "":
 		all_sensors += living_room_window
+
+	if garage != "":
+		all_sensors += garage
 
 	return all_sensors
 
