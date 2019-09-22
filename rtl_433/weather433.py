@@ -64,10 +64,10 @@ def parse_433_json(weather_data, line):
 				weather_data.front_door.temp = c_to_f(parsed_json[TEMPERATURE])
 				weather_data.front_door.humidity = parsed_json[HUMIDITY]
 				weather_data.front_door.time = parsed_json[TIME]
-    elif parsed_json['id'] == GARAGE:
-      if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
-        weather_data.main_garage_temp.temp = c_to_f(parsed_json[TEMPERATURE])
-        weather_data.main_garage_temp.time = parsed_json[TIME]
+		elif parsed_json['id'] == GARAGE:
+			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
+				weather_data.main_garage_temp.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.main_garage_temp.time = parsed_json[TIME]
 		elif parsed_json['id'] == THEATER_WINDOW:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.theater_window.temp = c_to_f(parsed_json[TEMPERATURE])
