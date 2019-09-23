@@ -58,7 +58,7 @@ def update_isy(weather_data):
 	push_temp_isy(ISY_INTEGER, FRONT_DOOR_TEMP, weather_data.front_door.temp, 'FRONT_DOOR_TEMP')
 	push_temp_isy(ISY_INTEGER, THEATER_WINDOW_TEMP, weather_data.theater_window.temp, 'THEATER_WINDOW_TEMP')
 	push_temp_isy(ISY_INTEGER, MASTER_BEDROOM_TEMP, weather_data.master_bedroom_window.temp, 'MASTER_BEDROOM_TEMP')
-	push_temp_isy(ISY_INTEGER, MAIN_GARAGE, weather_data.main_garage_temp.temp, 'MAIN_GARAGE_TEMP')
+	push_temp_isy(ISY_INTEGER, MAIN_GARAGE, weather_data.main_garage.temp, 'MAIN_GARAGE_TEMP')
 	syslog.syslog(syslog.LOG_CRIT, "ISY Temps pushed")
 
 

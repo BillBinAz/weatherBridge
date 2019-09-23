@@ -80,7 +80,7 @@ class WeatherData(object):
 		self.master_bedroom_window = SensorSmall()
 		self.library = SensorSmall()
 		self.humidor = SensorSmall()
-		self.main_garage_temp = SensorSmall()
+		self.main_garage = SensorSmall()
 		self.front_door = SensorSmall()
 		self.living_room = Sensor6In1()
 		self.master_bedroom_thermostat = SensorThermostat()
