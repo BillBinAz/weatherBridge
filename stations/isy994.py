@@ -23,6 +23,7 @@ ZW_LIBRARY_FAN = "nodes/ZW034_1"
 ZW_OFFICE_FAN = "nodes/ZW033_1"
 ZW_MAIN_GARAGE = "nodes/ZW025_1"
 ZW_MC_GARAGE = "nodes/ZW049_1"
+ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
 ZW_SPA_PUMP = "nodes/ZW044_1"
 ZW_POOL_LIGHT = "nodes/ZW071_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
@@ -150,6 +151,11 @@ def get_weather(weather_data):
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.theater_window.fan = sensor.get('formatted')
+
+		xml_response = get_node_xml(ZW_MAIN_GARAGE_FAN)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == 'ST':
+				weather_data.main_garage.fan = sensor.get('formatted')
 
 		xml_response = get_node_xml(ZW_LIVING_FAN)
 		for sensor in xml_response.find('properties').findall('property'):
