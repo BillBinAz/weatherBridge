@@ -20,7 +20,7 @@ def format_f(value, source):
 	# add decimal place
 	formatted_value = 0
 	try:
-		formatted_value = round(float(value) / 10.0, 1)
+		formatted_value = round(float(value), 2)
 	except:
 		syslog.syslog(syslog.LOG_INFO, "Bad Data from AirScape " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from AirScape " + str(source) + " " + source)
@@ -80,7 +80,8 @@ def get_weather(weather_data):
 		weather_data.whole_house_fan.speed = xml_response.find('fanspd').text
 		weather_data.whole_house_fan.cubitFeetPerMinute = xml_response.find('cfm').text
 		weather_data.whole_house_fan.power = xml_response.find('power').text
-		weather_data.whole_house_fan.timeRemaining = xml_response.find('timeremaining').text
+		hours = int(xml_response.find('timeremaining').text) / 60
+		weather_data.whole_house_fan.timeRemaining = format_f(hours, 'timeremaining')
 	except xml.etree.ElementTree.ParseError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
