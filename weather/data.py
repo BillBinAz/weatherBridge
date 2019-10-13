@@ -18,6 +18,15 @@ class Alarm(object):
 		self.main_garage = ""
 
 
+class WholeHomeFan(object):
+	def __int__(self):
+		self.speed = ""
+		self.timeRemaining = ""
+		self.cubitFeetPerMinute = ""
+		self.power = ""
+		self.atticTemp = ""
+
+
 class Pool(object):
 	def __init__(self):
 		self.light = ""
@@ -89,6 +98,7 @@ class WeatherData(object):
 		self.alarm = Alarm()
 		self.pool = Pool()
 		self.spa = Spa()
+		self.whole_house_fan = WholeHomeFan()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):
