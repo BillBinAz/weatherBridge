@@ -25,7 +25,7 @@ ZW_MAIN_GARAGE = "nodes/ZW025_1"
 ZW_MC_GARAGE = "nodes/ZW049_1"
 ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
 ZW_SPA_PUMP = "nodes/ZW044_1"
-ZW_POOL_LIGHT = "nodes/ZW071_1"
+ZW_POOL_LIGHT = "nodes/ZW080_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
 
 TEMPERATURE = "ST"
@@ -65,7 +65,7 @@ def format_f(value, source):
 	except:
 		syslog.syslog(syslog.LOG_INFO, "Bad Data from isy994 " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
-	return formatted_value
+	return format_f(value, 1, source)
 
 
 def get_node_xml(node):
@@ -232,6 +232,9 @@ def get_weather(weather_data):
 					weather_data.alarm.main_garage = "1"
 				else:
 					weather_data.alarm.main_garage = "0"
+
+		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.temp) + float(weather_data.master_bedroom_thermostat.temp)) / 2.0)
+
 	except xml.etree.ElementTree.ParseError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse isy994 " + e.msg)
