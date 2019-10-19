@@ -14,9 +14,10 @@ FRONT_DOOR_TEMP = 12
 BACK_YARD_TEMP = 13
 THEATER_WINDOW_TEMP = 14
 MASTER_BEDROOM_TEMP = 17
-TEMPERATURE_BUFFER = 1
+TEMPERATURE_BUFFER = 0
 LIVING_ROOM_WINDOW = 22
 MAIN_GARAGE = 18
+AVERAGE_HOUSE_TEMP = 25
 SECRET_FILE = "./secret/isy994"
 
 
@@ -59,6 +60,7 @@ def update_isy(weather_data):
 	push_temp_isy(ISY_INTEGER, THEATER_WINDOW_TEMP, weather_data.theater_window.temp, 'THEATER_WINDOW_TEMP')
 	push_temp_isy(ISY_INTEGER, MASTER_BEDROOM_TEMP, weather_data.master_bedroom_window.temp, 'MASTER_BEDROOM_TEMP')
 	push_temp_isy(ISY_INTEGER, MAIN_GARAGE, weather_data.main_garage.temp, 'MAIN_GARAGE_TEMP')
+	push_temp_isy(ISY_INTEGER, AVERAGE_HOUSE_TEMP, weather_data.whole_house_fan.houseTemp, 'AVERAGE_HOUSE_TEMP')
 	syslog.syslog(syslog.LOG_CRIT, "ISY Temps pushed")
 
 

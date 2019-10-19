@@ -25,6 +25,7 @@ class WholeHomeFan(object):
 		self.cubitFeetPerMinute = ""
 		self.power = ""
 		self.atticTemp = ""
+		self.houseTemp = ""
 
 
 class Pool(object):
