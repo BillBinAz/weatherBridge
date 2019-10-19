@@ -65,7 +65,7 @@ def format_f(value, source):
 	except:
 		syslog.syslog(syslog.LOG_INFO, "Bad Data from isy994 " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
-	return format_f(value, 1, source)
+	return formatted_value
 
 
 def get_node_xml(node):
