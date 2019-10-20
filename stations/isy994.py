@@ -233,7 +233,7 @@ def get_weather(weather_data):
 				else:
 					weather_data.alarm.main_garage = "0"
 
-		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.temp) + float(weather_data.master_bedroom_thermostat.temp)) / 2.0)
+		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.temp) + float(weather_data.master_bedroom_thermostat.temp)) / 2.0, 1)
 
 	except xml.etree.ElementTree.ParseError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + e.msg)
