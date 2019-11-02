@@ -125,6 +125,8 @@ def get_weather(weather_data):
 				weather_data.kitchen_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
 				weather_data.kitchen_thermostat.heat_set = sensor.get('value')
+			elif sensor.get('id') == HUMIDITY_6IN1:
+				weather_data.kitchen_thermostat.humidity = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_MASTER_THERMOSTAT)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -136,6 +138,8 @@ def get_weather(weather_data):
 				weather_data.master_bedroom_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
 				weather_data.master_bedroom_thermostat.heat_set = sensor.get('value')
+			elif sensor.get('id') == HUMIDITY_6IN1:
+				weather_data.master_bedroom_thermostat.humidity = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_POOL_LIGHT)
 		for sensor in xml_response.find('properties').findall('property'):
