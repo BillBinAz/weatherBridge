@@ -11,10 +11,16 @@ NODES = 'nodes/'
 
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-ZW_LIVING_ROOM_ECOBEE = "nodes/n001_ecobee1_sen3"
-ZW_THEATER_ECOBEE = "nodes/n001_ecobee1_sen2"
+
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_ecobee1"
+ZW_KITCHEN_ECOBEE = "nodes/n001_ecobee1_sen1"
+ZW_THEATER_ECOBEE = "nodes/n001_ecobee1_sen2"
+ZW_LIVING_ROOM_ECOBEE = "nodes/n001_ecobee1_sen3"
+
 ZW_MASTER_THERMOSTAT = "nodes/n001_ecobee2"
+ZW_AMBERS_OFFICE_ECOBEE = "nodes/n001_ecobee2_sen2"
+ZW_MASTER_ECOBEE = "nodes/n001_ecobee2_sen3"
+ZW_BILLS_OFFICE_ECOBEE = "nodes/n001_ecobee2_sen4"
 
 ZW_THEATER_FAN = "nodes/ZW041_1"
 ZW_LIVING_FAN = "nodes/ZW042_1"
@@ -35,6 +41,7 @@ CLIMATE_MODE = "CLIMD"
 TEMPERATURE_6IN1 = "CLITEMP"
 LUX_6IN1 = "LUMIN"
 HUMIDITY_6IN1 = "CLIHUM"
+OCCUPANCY = "GV1"
 
 ALARM_STATUS = "nodes/n001_hwalrm1_part1"
 ALARM_ALL_ZONES = "vars/get/2/4"
@@ -102,6 +109,15 @@ def get_weather(weather_data):
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.theater.temp = sensor.get('formatted')[:-1]
+			if sensor.get('id') == OCCUPANCY:
+				weather_data.theater.temp = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_KITCHEN_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.kitchen_thermostat.sensor.temp = sensor.get('formatted')[:-1]
+			if sensor.get('id') == OCCUPANCY:
+				weather_data.kitchen_thermostat.sensor.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_LIVING_ROOM_6IN1)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -114,6 +130,27 @@ def get_weather(weather_data):
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.living_room.temp = sensor.get('formatted')[:-1]
+
+		xml_response = get_node_xml(ZW_MASTER_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.master_bedroom_thermostat.sensor.temp = sensor.get('formatted')[:-1]
+			if sensor.get('id') == OCCUPANCY:
+				weather_data.master_bedroom_thermostat.sensor.occupied = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_BILLS_OFFICE_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.bills_office.temp = sensor.get('formatted')[:-1]
+			if sensor.get('id') == OCCUPANCY:
+				weather_data.bills_office.occupied = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_AMBERS_OFFICE_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.ambers_office.temp = sensor.get('formatted')[:-1]
+			if sensor.get('id') == OCCUPANCY:
+				weather_data.ambers_office.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -233,7 +270,12 @@ def get_weather(weather_data):
 				else:
 					weather_data.alarm.main_garage = "0"
 
-		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.temp) + float(weather_data.master_bedroom_thermostat.temp)) / 2.0)
+		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.sensor.temp) +
+														float(weather_data.master_bedroom_thermostat.sensor.temp) +
+														float(weather_data.bills_office.temp) +
+														float(weather_data.ambers_office.temp) +
+														float(weather_data.living_room.temp) +
+														float(weather_data.theater.temp)) / 6.0)
 
 	except xml.etree.ElementTree.ParseError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + e.msg)

@@ -79,7 +79,13 @@ class SensorThermostat(object):
 		self.mode = ""
 		self.heat_set = 0.0
 		self.cool_set = 0.0
+		self.sensor = EcobeeSensor()
 
+class EcobeeSensor(object):
+
+	def __init__(self):
+		self.temp = DEFAULT_TEMP
+		self.occupied = 1
 
 class WeatherData(object):
 
@@ -99,6 +105,8 @@ class WeatherData(object):
 		self.alarm = Alarm()
 		self.pool = Pool()
 		self.spa = Spa()
+		self.ambers_office = EcobeeSensor()
+		self.bills_office = EcobeeSensor()
 		self.whole_house_fan = WholeHomeFan()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
