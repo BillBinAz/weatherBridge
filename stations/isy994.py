@@ -279,7 +279,7 @@ def get_weather(weather_data):
 														float(weather_data.bills_office.temp) +
 														float(weather_data.ambers_office.temp) +
 														float(weather_data.living_room.temp) +
-														float(weather_data.theater.temp)) / 6.0)
+														float(weather_data.theater.temp)) / 6.0, 1)
 
 	except xml.etree.ElementTree.ParseError as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + e.msg)
