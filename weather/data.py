@@ -77,6 +77,7 @@ class SensorThermostat(object):
 	def __init__(self):
 		self.temp = DEFAULT_TEMP
 		self.mode = ""
+		self.humidity = 0.0
 		self.heat_set = 0.0
 		self.cool_set = 0.0
 
