@@ -132,11 +132,11 @@ def get_weather(weather_data, host):
 
 
 def main():
+
 	cur_weather = data.WeatherData()
-	get_weather(cur_weather)
-
-
-# print(cur_weather.to_json())
+	# get_weather(cur_weather, "kiosk.evilminions.org")
+	# get_weather(cur_weather, "cairo.evilminions.org")
+	# print(cur_weather.to_json())
 
 
 main()
