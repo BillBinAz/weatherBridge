@@ -277,7 +277,7 @@ def get_weather(weather_data):
 def main():
 	weather_data = data.WeatherData()
 	get_weather(weather_data)
-	print(weather_data.to_json())
+	# print(weather_data.to_json())
 
 
 main()
