@@ -27,20 +27,20 @@ TIME = 'time'
 S_OK = 200
 
 
-def rtl_433_json():
+def rtl_433_json(host):
 	#
-	# Pull the XML from meteobridge
-	response = requests.get("http://kiosk.evilminions.org:8080/weather")
+	# Pull the json from 433 enabled pi
+	response = requests.get("http://" + host + ":8080/weather")
 	if not response.ok:
-		syslog.syslog(syslog.LOG_INFO, "Bad response from kiosk " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from kiosk. " + str(resp))
+		syslog.syslog(syslog.LOG_INFO, "Bad response from " + str(host) + " " + str(response))
+		print(datetime.datetime.now().time(), " -  Bad response from " + str(host) + " " + str(response))
 	return response.json()
 
 
-def get_weather(weather_data):
+def get_weather(weather_data, host):
 
 	try:
-		parsed_json = rtl_433_json()
+		parsed_json = rtl_433_json(host)
 		sensor = parsed_json.get(THEATER_WINDOW)
 		temp = sensor.get(TEMPERATURE)
 		if temp != data.DEFAULT_TEMP:
@@ -132,11 +132,11 @@ def get_weather(weather_data):
 
 
 def main():
+
 	cur_weather = data.WeatherData()
-	get_weather(cur_weather)
-
-
-# print(cur_weather.to_json())
+	# get_weather(cur_weather, "kiosk.evilminions.org")
+	# get_weather(cur_weather, "cairo.evilminions.org")
+	# print(cur_weather.to_json())
 
 
 main()

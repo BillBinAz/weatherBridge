@@ -91,10 +91,8 @@ def get_weather(weather_data):
 
 def main():
 	weather_data = data.WeatherData()
-	get_weather(weather_data)
-
-
-# print(cur_weather.to_json())
+	# get_weather(weather_data)
+    # print(cur_weather.to_json())
 
 
 main()

@@ -87,7 +87,7 @@ def parse_433_json(weather_data, line):
 
 def main():
 	cur_weather = data.WeatherData()
-	get_weather(cur_weather)
+	# get_weather(cur_weather)
 
 
 main()

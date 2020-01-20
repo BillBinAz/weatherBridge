@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from rtl_433 import weather433
-from stations import isy994, kiosk, meteohub, airScape
+from stations import isy994, rtl433, meteohub, airScape
 from weather import data
 
 
@@ -8,9 +8,9 @@ def get_weather():
 	cur_weather = data.WeatherData()
 	cur_weather = isy994.get_weather(cur_weather)
 	cur_weather = meteohub.get_weather(cur_weather)
-	cur_weather = weather433.get_weather(cur_weather)
-	cur_weather = kiosk.get_weather(cur_weather)
 	cur_weather = airScape.get_weather(cur_weather)
+	cur_weather = rtl433.get_weather(cur_weather, "kiosk.evilminions.org")
+	cur_weather = rtl433.get_weather(cur_weather, "cairo.evilminions.org")
 	return cur_weather
 
 
