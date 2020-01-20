@@ -44,7 +44,6 @@ class SensorSmall(object):
 	def __init__(self):
 		self.temp = DEFAULT_TEMP
 		self.humidity = 0.0
-		self.fan = ""
 		self.time = ""
 
 
@@ -54,7 +53,6 @@ class Sensor6In1(object):
 		self.temp = DEFAULT_TEMP
 		self.humidity = 0.0
 		self.lux = 0
-		self.fan = ""
 
 
 class SensorMajor(object):
@@ -93,23 +91,21 @@ class EcobeeSensor(object):
 class WeatherData(object):
 
 	def __init__(self):
-		self.theater_window = SensorSmall()
 		self.theater = Sensor6In1()
 		self.back_yard = SensorMajor()
-		self.master_bedroom_window = SensorSmall()
 		self.library = SensorSmall()
 		self.humidor = SensorSmall()
 		self.main_garage = SensorSmall()
-		self.front_door = SensorSmall()
 		self.living_room = Sensor6In1()
 		self.master_bedroom_thermostat = SensorThermostat()
 		self.kitchen_thermostat = SensorThermostat()
-		self.living_room_window = SensorSmall()
 		self.alarm = Alarm()
 		self.pool = Pool()
 		self.spa = Spa()
 		self.ambers_office = EcobeeSensor()
 		self.bills_office = EcobeeSensor()
+		self.guest = EcobeeSensor()
+		self.cheese = EcobeeSensor()
 		self.whole_house_fan = WholeHomeFan()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 

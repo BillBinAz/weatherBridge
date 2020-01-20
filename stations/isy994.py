@@ -13,20 +13,17 @@ ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
 
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_ecobee1"
-ZW_KITCHEN_ECOBEE = "nodes/n001_ecobee1_sen1"
-ZW_THEATER_ECOBEE = "nodes/n001_ecobee1_sen2"
-ZW_LIVING_ROOM_ECOBEE = "nodes/n001_ecobee1_sen3"
+ZW_GUEST_ECOBEE = "nodes/n001_ecobee1_sen1"
+ZW_KITCHEN_ECOBEE = "nodes/n001_ecobee1_sen2"
+ZW_CHEESE_ECOBEE = "nodes/n001_ecobee1_sen3"
+ZW_THEATER_ECOBEE = "nodes/n001_ecobee1_sen4"
+ZW_LIVING_ROOM_ECOBEE = "nodes/n001_ecobee1_sen5"
 
 ZW_MASTER_THERMOSTAT = "nodes/n001_ecobee2"
+ZW_MASTER_ECOBEE = "nodes/n001_ecobee2_sen1"
 ZW_AMBERS_OFFICE_ECOBEE = "nodes/n001_ecobee2_sen2"
-ZW_MASTER_ECOBEE = "nodes/n001_ecobee2_sen3"
 ZW_BILLS_OFFICE_ECOBEE = "nodes/n001_ecobee2_sen4"
 
-ZW_THEATER_FAN = "nodes/ZW041_1"
-ZW_LIVING_FAN = "nodes/ZW042_1"
-ZW_MASTER_FAN = "nodes/ZW043_1"
-ZW_LIBRARY_FAN = "nodes/ZW034_1"
-ZW_OFFICE_FAN = "nodes/ZW033_1"
 ZW_MAIN_GARAGE = "nodes/ZW025_1"
 ZW_MC_GARAGE = "nodes/ZW049_1"
 ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
@@ -112,6 +109,20 @@ def get_weather(weather_data):
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.theater.temp = sensor.get('value')
 
+		xml_response = get_node_xml(ZW_CHEESE_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.cheese.temp = sensor.get('formatted')[:-1]
+			elif sensor.get('id') == OCCUPANCY:
+				weather_data.cheese.temp = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_GUEST_ECOBEE)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.guest.temp = sensor.get('formatted')[:-1]
+			elif sensor.get('id') == OCCUPANCY:
+				weather_data.guest.temp = sensor.get('value')
+
 		xml_response = get_node_xml(ZW_KITCHEN_ECOBEE)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
@@ -188,35 +199,10 @@ def get_weather(weather_data):
 			if sensor.get('id') == 'ST':
 				weather_data.spa.pump = sensor.get('formatted')
 
-		xml_response = get_node_xml(ZW_THEATER_FAN)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.theater_window.fan = sensor.get('formatted')
-
 		xml_response = get_node_xml(ZW_MAIN_GARAGE_FAN)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.main_garage.fan = sensor.get('formatted')
-
-		xml_response = get_node_xml(ZW_LIVING_FAN)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.living_room.fan = sensor.get('formatted')
-
-		xml_response = get_node_xml(ZW_MASTER_FAN)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.master_bedroom_window.fan = sensor.get('formatted')
-
-		xml_response = get_node_xml(ZW_LIBRARY_FAN)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.library.fan = sensor.get('formatted')
-
-		xml_response = get_node_xml(ZW_OFFICE_FAN)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.front_door.fan = sensor.get('formatted')
 
 		xml_response = get_node_xml(ALARM_STATUS)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -291,9 +277,7 @@ def get_weather(weather_data):
 def main():
 	weather_data = data.WeatherData()
 	get_weather(weather_data)
-
-
-# print(cur_weather.to_json())
+	print(weather_data.to_json())
 
 
 main()
