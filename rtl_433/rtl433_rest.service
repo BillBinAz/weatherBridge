@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/home/pi/weatherBridge/rtl_433/launch_rest.sh > /tmp/rtl433_rest.log
+ExecStart=/home/admin/weatherBridge/rtl_433/launch_rest.sh > /tmp/rtl433_rest.log
 
 [Install]
 WantedBy=multi-user.target
