@@ -108,8 +108,8 @@ def get_weather(weather_data):
 	weather_data.back_yard.dew_point = wifi_logger_data[DEP_POINT]
 
 	# Rain
-	weather_data.back_yard.rain_rate = wifi_logger_data[RAIN_RATE]
-	weather_data.back_yard.rain_total = wifi_logger_data[RAIN_24_HOURS]
+	weather_data.back_yard.rain_rate = round(float(wifi_logger_data[RAIN_RATE]), 2)
+	weather_data.back_yard.rain_total = round(float(wifi_logger_data[RAIN_24_HOURS]), 2)
 
 	# Wind
 	weather_data.back_yard.wind_speed = wifi_logger_data[WIND_SPEED]
