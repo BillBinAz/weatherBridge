@@ -1,5 +1,5 @@
 # WeatherBridge
-Python3 code to upload weather data from metrohub and metrobridge to isy994.
+Python3 code to upload weather data from wifiLogger, and rtl_433 to isy994.
 
 
 ## Dependencies  
