@@ -14,7 +14,6 @@ FRONT_DOOR_TEMP = 12
 BACK_YARD_TEMP = 13
 THEATER_WINDOW_TEMP = 14
 MASTER_BEDROOM_TEMP = 17
-TEMPERATURE_BUFFER = 0
 LIVING_ROOM_WINDOW = 22
 MAIN_GARAGE = 18
 AVERAGE_HOUSE_TEMP = 25
@@ -37,12 +36,10 @@ def push_temp_isy(variable_type, variable_id, f_temp, label):
 		user_name = secret_file.readline().strip('\n')
 		password = secret_file.readline().strip('\n')
 
-	f_temp = f_temp + TEMPERATURE_BUFFER
-
 	#
 	# do a get on isy994 to update the data
 	url = "http://isy994.evilminions.org/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
-		round(f_temp))
+		round(float(f_temp)))
 	h = httplib2.Http()
 	h.add_credentials(user_name, password)  # Basic authentication
 	resp, content = h.request(url, "GET")
@@ -50,7 +47,7 @@ def push_temp_isy(variable_type, variable_id, f_temp, label):
 		syslog.syslog(syslog.LOG_INFO, "Failed URL: " + url + " Response: " + str(content))
 		print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(content))
 	else:
-		print(datetime.datetime.now().time(), " - Success URL: ", url)
+ 		print(datetime.datetime.now().time(), " - Success URL: ", url)
 
 
 def update_isy(weather_data):
@@ -62,8 +59,8 @@ def update_isy(weather_data):
 
 def main():
 	weather_data = stations.get_weather()
+	print(weather_data.to_json())
 	update_isy(weather_data)
-	# print(weather_data.to_json())
 
 
 main()
