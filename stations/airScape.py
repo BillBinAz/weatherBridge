@@ -29,14 +29,18 @@ def format_f(value, source):
 
 def get_node_xml():
 	url = "http://fan.evilminions.org/status.xml.cgi"
-	h = httplib2.Http()
-	resp, content = h.request(url, "POST")
-	if resp.status != 200:
-		syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(resp))
-		return
-	xml_response = xml.etree.ElementTree.fromstring(clean_up_xml(content))
-	return xml_response
+	try:
+		h = httplib2.Http(timeout=1)
+		resp, content = h.request(url, "POST")
+		if resp.status != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(resp))
+			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(resp))
+			return
+		return xml.etree.ElementTree.fromstring(clean_up_xml(content))
+	except Exception as e:
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
+	return
 
 
 def clean_up_xml(content):
@@ -46,9 +50,9 @@ def clean_up_xml(content):
 		end = str_content.find("</server_response>") + len("</server_response>")
 		return str_content.replace(str_content[start:end], "")
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
-	return ""
+		syslog.syslog(syslog.LOG_INFO, "Unable to get AirScape " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to get AirScape " + e.msg)
+	return
 
 
 # 	<?xml version="1.0" encoding="UTF-8"?>

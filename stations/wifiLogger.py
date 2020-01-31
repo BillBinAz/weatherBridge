@@ -88,15 +88,19 @@ def get_data():
 	#
 	# get the last 5 minutes worth of data
 	url = "http://wifilogger.evilminions.org/wflexp.json"
-
-	#
-	# Pull the data
-	h = httplib2.Http()
-	resp, content = h.request(url, "GET")
-	if resp.status != 200:
-		syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(resp))
-	return json.loads(content)
+	try:
+		#
+		# Pull the data
+		h = httplib2.Http(timeout=1)
+		resp, content = h.request(url, "GET")
+		if resp.status != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(resp))
+			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(resp))
+		return json.loads(content)
+	except Exception as e:
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifilogger " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to parse wifilogger " + e.msg)
+	return
 
 
 def get_weather(weather_data):

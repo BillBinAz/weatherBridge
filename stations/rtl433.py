@@ -3,7 +3,7 @@
 import datetime
 import json
 
-import requests
+import httplib2
 import syslog
 
 from weather import data
@@ -31,11 +31,21 @@ S_OK = 200
 def rtl_433_json(host):
 	#
 	# Pull the json from 433 enabled pi
-	response = requests.get("http://" + host + ":8080/weather")
-	if not response.ok:
-		syslog.syslog(syslog.LOG_INFO, "Bad response from " + str(host) + " " + str(response))
-		print(datetime.datetime.now().time(), " -  Bad response from " + str(host) + " " + str(response))
-	return response.json()
+	url = "http://" + host + ":8080/weather"
+
+	try:
+		#
+		# Pull the data
+		h = httplib2.Http(timeout=1)
+		resp, content = h.request(url, "GET")
+		if resp.status != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from rtl_433_json " + str(resp))
+			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(resp))
+		return json.loads(content)
+	except Exception as e:
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse rtl_433_json " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to parse rtl_433_json " + e.msg)
+	return
 
 
 def get_weather(weather_data, host):

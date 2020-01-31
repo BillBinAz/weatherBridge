@@ -73,23 +73,29 @@ def format_f(value, source):
 
 
 def get_node_xml(node):
-	#
-	# Get ISY security data
-	with open(SECRET_FILE, "r") as secret_file:
-		user_name = secret_file.readline().strip('\n')
-		password = secret_file.readline().strip('\n')
 
-	#
-	# do a get on isy994 to update the data
-	url = "http://isy994.evilminions.org/rest/" + str(node)
-	h = httplib2.Http()
-	h.add_credentials(user_name, password)  # Basic authentication
-	resp, content = h.request(url, "GET")
-	if resp.status != 200:
-		syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
-		print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
-	xml_response = xml.etree.ElementTree.fromstring(content)
-	return xml_response
+	try:
+		#
+		# Get ISY security data
+		with open(SECRET_FILE, "r") as secret_file:
+			user_name = secret_file.readline().strip('\n')
+			password = secret_file.readline().strip('\n')
+		#
+		# do a get on isy994 to update the data
+		url = "http://isy994.evilminions.org/rest/" + str(node)
+
+		h = httplib2.Http()
+		h.add_credentials(user_name, password)  # Basic authentication
+		resp, content = h.request(url, "GET")
+		if resp.status != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
+			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
+			return
+		return xml.etree.ElementTree.fromstring(content)
+	except Exception as e:
+		syslog.syslog(syslog.LOG_INFO, "Unable to get isy994 " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to get isy994 " + e.msg)
+	return
 
 
 def get_weather(weather_data):
