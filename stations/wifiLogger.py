@@ -104,33 +104,41 @@ def get_data():
 
 
 def get_weather(weather_data):
-	wifi_logger_data = get_data()
 
-	# Temperature - Back yard
-	weather_data.back_yard.temp = wifi_logger_data[TEMPERATURE_OUTDOOR]
-	weather_data.back_yard.humidity = wifi_logger_data[HUMIDITY_OUTDOOR]
-	weather_data.back_yard.dew_point = wifi_logger_data[DEP_POINT]
+	try:
+		wifi_logger_data = get_data()
 
-	# Rain
-	weather_data.back_yard.rain_rate = round(float(wifi_logger_data[RAIN_RATE]), 2)
-	weather_data.back_yard.rain_total = round(float(wifi_logger_data[RAIN_24_HOURS]), 2)
+		# Temperature - Back yard
+		weather_data.back_yard.temp = wifi_logger_data[TEMPERATURE_OUTDOOR]
+		weather_data.back_yard.humidity = wifi_logger_data[HUMIDITY_OUTDOOR]
+		weather_data.back_yard.dew_point = wifi_logger_data[DEP_POINT]
 
-	# Wind
-	weather_data.back_yard.wind_speed = wifi_logger_data[WIND_SPEED]
-	weather_data.back_yard.wind_gust = wifi_logger_data[WIND_GUST]
-	weather_data.back_yard.wind_direction = deg_to_compass(wifi_logger_data[WIND_DIRECTION])
-	weather_data.back_yard.wind_chill = wifi_logger_data[WIND_CHILL]
+		# Rain
+		weather_data.back_yard.rain_rate = round(float(wifi_logger_data[RAIN_RATE]), 2)
+		weather_data.back_yard.rain_total = round(float(wifi_logger_data[RAIN_24_HOURS]), 2)
 
-	# Pressure
-	weather_data.back_yard.pressure = wifi_logger_data[PRESSURE]
+		# Wind
+		weather_data.back_yard.wind_speed = wifi_logger_data[WIND_SPEED]
+		weather_data.back_yard.wind_gust = wifi_logger_data[WIND_GUST]
+		weather_data.back_yard.wind_direction = deg_to_compass(wifi_logger_data[WIND_DIRECTION])
+		weather_data.back_yard.wind_chill = wifi_logger_data[WIND_CHILL]
 
-	# Temperature - Spa
-	weather_data.spa.temp = wifi_logger_data[LEAF_TEMP][1]
+		# Pressure
+		weather_data.back_yard.pressure = wifi_logger_data[PRESSURE]
 
-	# Temperature - Pool
-	weather_data.pool.temp = wifi_logger_data[LEAF_TEMP][0]
+		# Temperature - Spa
+		weather_data.spa.temp = wifi_logger_data[LEAF_TEMP][1]
 
-	return weather_data
+		# Temperature - Pool
+		weather_data.pool.temp = wifi_logger_data[LEAF_TEMP][0]
+	except json.JSONDecodeError as e:
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data " + e.msg)
+	except Exception as e:
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data: Exception " + e.msg)
+		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: Exception " + e.msg)
+	finally:
+		return weather_data
 
 
 def main():
