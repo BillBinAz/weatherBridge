@@ -110,7 +110,7 @@ def get_weather(weather_data):
 			elif sensor.get('id') == LUX_6IN1:
 				weather_data.theater.lux = sensor.get('value')
 			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.theater.temp = sensor.get('formatted')[:-1]
+				weather_data.theater.temp = sensor.get('formatted')[:-2]
 
 		xml_response = get_node_xml(ZW_THEATER_ECOBEE)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -154,7 +154,7 @@ def get_weather(weather_data):
 			elif sensor.get('id') == LUX_6IN1:
 				weather_data.living_room.lux = sensor.get('value')
 			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.living_room.temp = sensor.get('formatted')[:-1]
+				weather_data.living_room.temp = sensor.get('formatted')[:-2]
 
 		xml_response = get_node_xml(ZW_LIVING_ROOM_ECOBEE)
 		for sensor in xml_response.find('properties').findall('property'):
