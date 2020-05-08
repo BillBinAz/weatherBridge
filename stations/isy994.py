@@ -161,7 +161,7 @@ def get_weather(weather_data):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.living_room.sensor.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
-				weather_data.kitchen_thermostat.sensor.occupied = sensor.get('value')
+				weather_data.living_room.sensor.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_MASTER_ECOBEE)
 		for sensor in xml_response.find('properties').findall('property'):
