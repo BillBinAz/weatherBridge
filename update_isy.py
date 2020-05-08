@@ -58,7 +58,7 @@ def update_isy(weather_data):
 
 def main():
     weather_data = stations.get_weather()
-    print(weather_data.to_json())
+    # print(weather_data.to_json())
     update_isy(weather_data)
 
 

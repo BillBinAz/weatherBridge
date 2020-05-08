@@ -40,6 +40,7 @@ TEMPERATURE_6IN1 = "CLITEMP"
 LUX_6IN1 = "LUMIN"
 HUMIDITY = "CLIHUM"
 OCCUPANCY = "GV1"
+HEAT_COOL_STATE = "CLIHCS"  # 0 = idle | 1 = Heat | 2 = Cool
 
 ALARM_STATUS = "nodes/n001_hwalrm1_part1"
 ALARM_ALL_ZONES = "vars/get/2/4"
@@ -195,6 +196,8 @@ def get_weather(weather_data):
 				weather_data.kitchen_thermostat.heat_set = sensor.get('value')
 			elif sensor.get('id') == HUMIDITY:
 				weather_data.kitchen_thermostat.humidity = sensor.get('value')
+			elif sensor.get('id') == HEAT_COOL_STATE:
+				weather_data.kitchen_thermostat.state = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_MASTER_THERMOSTAT)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -208,6 +211,8 @@ def get_weather(weather_data):
 				weather_data.master_bedroom_thermostat.heat_set = sensor.get('value')
 			elif sensor.get('id') == HUMIDITY:
 				weather_data.master_bedroom_thermostat.humidity = sensor.get('value')
+			elif sensor.get('id') == HEAT_COOL_STATE:
+				weather_data.master_bedroom_thermostat.state = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_POOL_LIGHT)
 		for sensor in xml_response.find('properties').findall('property'):
