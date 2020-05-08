@@ -53,6 +53,7 @@ class Sensor6In1(object):
 		self.temp = DEFAULT_TEMP
 		self.humidity = 0.0
 		self.lux = 0
+		self.sensor = EcobeeSensor()
 
 
 class SensorMajor(object):
@@ -75,6 +76,7 @@ class SensorThermostat(object):
 	def __init__(self):
 		self.temp = DEFAULT_TEMP
 		self.mode = ""
+		self.state = 0
 		self.humidity = 0.0
 		self.heat_set = 0.0
 		self.cool_set = 0.0
@@ -85,7 +87,7 @@ class EcobeeSensor(object):
 
 	def __init__(self):
 		self.temp = DEFAULT_TEMP
-		self.occupied = 1
+		self.occupied = 0
 
 
 class WeatherData(object):
@@ -93,7 +95,7 @@ class WeatherData(object):
 	def __init__(self):
 		self.theater = Sensor6In1()
 		self.back_yard = SensorMajor()
-		self.library = SensorSmall()
+		self.library = EcobeeSensor()
 		self.humidor = SensorSmall()
 		self.main_garage = SensorSmall()
 		self.living_room = Sensor6In1()
@@ -103,7 +105,7 @@ class WeatherData(object):
 		self.pool = Pool()
 		self.spa = Spa()
 		self.ambers_office = EcobeeSensor()
-		self.bills_office = EcobeeSensor()
+		self.gym = EcobeeSensor()
 		self.guest = EcobeeSensor()
 		self.cheese = EcobeeSensor()
 		self.whole_house_fan = WholeHomeFan()
