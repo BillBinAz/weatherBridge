@@ -79,7 +79,7 @@ def get_node_xml(node, h):
 	try:
 		# do a get on isy994 to update the data
 		url = "http://isy994.evilminions.org/rest/" + str(node)
-		resp, content = h.request(url, "GET")
+		resp, content = h.request(url, method="GET", headers={'Connection': 'close'})
 
 		if resp.status != 200:
 			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
