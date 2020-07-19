@@ -74,21 +74,13 @@ def format_f(value, source):
 	return formatted_value
 
 
-def get_node_xml(node):
+def get_node_xml(node, h):
 
 	try:
-		#
-		# Get ISY security data
-		with open(SECRET_FILE, "r") as secret_file:
-			user_name = secret_file.readline().strip('\n')
-			password = secret_file.readline().strip('\n')
-		#
 		# do a get on isy994 to update the data
 		url = "http://isy994.evilminions.org/rest/" + str(node)
-
-		h = httplib2.Http()
-		h.add_credentials(user_name, password)  # Basic authentication
 		resp, content = h.request(url, "GET")
+
 		if resp.status != 200:
 			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
 			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
@@ -103,7 +95,16 @@ def get_node_xml(node):
 def get_weather(weather_data):
 
 	try:
-		xml_response = get_node_xml(ZW_THEATER_6IN1)
+		#
+		# Get ISY security data
+		with open(SECRET_FILE, "r") as secret_file:
+			user_name = secret_file.readline().strip('\n')
+			password = secret_file.readline().strip('\n')
+
+		h = httplib2.Http()
+		h.add_credentials(user_name, password)
+
+		xml_response = get_node_xml(ZW_THEATER_6IN1, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == HUMIDITY:
 				weather_data.theater.humidity = sensor.get('value')
@@ -112,42 +113,42 @@ def get_weather(weather_data):
 			elif sensor.get('id') == TEMPERATURE_6IN1:
 				weather_data.theater.temp = sensor.get('formatted')[:-2]
 
-		xml_response = get_node_xml(ZW_THEATER_ECOBEE)
+		xml_response = get_node_xml(ZW_THEATER_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.theater.sensor.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.theater.sensor.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_CHEESE_ECOBEE)
+		xml_response = get_node_xml(ZW_CHEESE_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.cheese.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.cheese.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_GUEST_ECOBEE)
+		xml_response = get_node_xml(ZW_GUEST_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.guest.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.guest.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_KITCHEN_ECOBEE)
+		xml_response = get_node_xml(ZW_KITCHEN_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.kitchen_thermostat.sensor.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.kitchen_thermostat.sensor.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_LIBRARY_ECOBEE)
+		xml_response = get_node_xml(ZW_LIBRARY_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.library.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.library.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_LIVING_ROOM_6IN1)
+		xml_response = get_node_xml(ZW_LIVING_ROOM_6IN1, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == HUMIDITY:
 				weather_data.living_room.humidity = sensor.get('value')
@@ -156,35 +157,35 @@ def get_weather(weather_data):
 			elif sensor.get('id') == TEMPERATURE_6IN1:
 				weather_data.living_room.temp = sensor.get('formatted')[:-2]
 
-		xml_response = get_node_xml(ZW_LIVING_ROOM_ECOBEE)
+		xml_response = get_node_xml(ZW_LIVING_ROOM_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.living_room.sensor.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.living_room.sensor.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_MASTER_ECOBEE)
+		xml_response = get_node_xml(ZW_MASTER_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.master_bedroom_thermostat.sensor.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.master_bedroom_thermostat.sensor.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_GYM_ECOBEE)
+		xml_response = get_node_xml(ZW_GYM_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.gym.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.gym.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_AMBERS_OFFICE_ECOBEE)
+		xml_response = get_node_xml(ZW_AMBERS_OFFICE_ECOBEE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.ambers_office.temp = sensor.get('formatted')[:-1]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.ambers_office.occupied = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT)
+		xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.kitchen_thermostat.mode = sensor.get('formatted')
@@ -199,7 +200,7 @@ def get_weather(weather_data):
 			elif sensor.get('id') == HEAT_COOL_STATE:
 				weather_data.kitchen_thermostat.state = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_MASTER_THERMOSTAT)
+		xml_response = get_node_xml(ZW_MASTER_THERMOSTAT, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.master_bedroom_thermostat.mode = sensor.get('formatted')
@@ -214,62 +215,62 @@ def get_weather(weather_data):
 			elif sensor.get('id') == HEAT_COOL_STATE:
 				weather_data.master_bedroom_thermostat.state = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_POOL_LIGHT)
+		xml_response = get_node_xml(ZW_POOL_LIGHT, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.pool.light = sensor.get('formatted')
 
-		xml_response = get_node_xml(ZW_SPA_PUMP)
+		xml_response = get_node_xml(ZW_SPA_PUMP, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.spa.pump = sensor.get('formatted')
 
-		xml_response = get_node_xml(ZW_MAIN_GARAGE_FAN)
+		xml_response = get_node_xml(ZW_MAIN_GARAGE_FAN, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.main_garage.fan = sensor.get('formatted')
 
-		xml_response = get_node_xml(ALARM_STATUS)
+		xml_response = get_node_xml(ALARM_STATUS, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.status = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR)
+		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.front_garage_door = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_SLIDING_GLASS_DOOR)
+		xml_response = get_node_xml(ALARM_SLIDING_GLASS_DOOR, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.sliding_glass_door = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_LIVING_GREAT)
+		xml_response = get_node_xml(ALARM_LIVING_GREAT, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.living_great = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_MASTER)
+		xml_response = get_node_xml(ALARM_MASTER, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.master = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_OFFICES)
+		xml_response = get_node_xml(ALARM_OFFICES, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.offices = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_WEST_WING)
+		xml_response = get_node_xml(ALARM_WEST_WING, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.west_wing = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_BIKE_GARAGE)
+		xml_response = get_node_xml(ALARM_BIKE_GARAGE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.bike_garage = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_MC_GARAGE)
+		xml_response = get_node_xml(ZW_MC_GARAGE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				if sensor.get('value') == "100":
@@ -277,7 +278,7 @@ def get_weather(weather_data):
 				else:
 					weather_data.alarm.mc_garage = "0"
 
-		xml_response = get_node_xml(ZW_MAIN_GARAGE)
+		xml_response = get_node_xml(ZW_MAIN_GARAGE, h)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				if sensor.get('value') == "100":
