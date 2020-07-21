@@ -8,6 +8,7 @@ python3  <br>
 pip3 install httplib2  <br>
 pip3 install Flask  <br>
 pip3 install Requests <br>
+pip3 isntall jsonpickle <br>
 ### SDR
 https://github.com/merbanan/rtl_433
 
