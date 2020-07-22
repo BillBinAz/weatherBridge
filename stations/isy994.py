@@ -79,7 +79,7 @@ def get_node_xml(node, h):
 		# do a get on isy994 to update the data
 		url = "http://isy994.evilminions.org/rest/" + str(node)
 		resp, content = h.request(url, "GET")
-
+		print("Get: " + str(node))
 		if resp.status != 200:
 			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
 			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
@@ -218,8 +218,6 @@ def get_weather(weather_data):
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.pool.light = sensor.get('formatted')
-
-		print("retrieved ZW_POOL_LIGHT")
 
 		xml_response = get_node_xml(ZW_SPA_PUMP, h)
 		for sensor in xml_response.find('properties').findall('property'):
