@@ -2,12 +2,12 @@
 
 import datetime
 
-import httplib2
+import requests
 import syslog
 import jsonpickle
 
 from weather import data
-
+from weather import stations
 ISY_INTEGER = 1
 ISY_STATE = 2
 FRONT_DOOR_TEMP = 12
@@ -24,15 +24,14 @@ def get_rest():
     try:
         #
         # call home for data
-        h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
         url = "https://home.evilminions.org/weather/data"
-        resp, content = h.request(url, "GET")
+        ret = requests.get(url, verify=False)
 
-        if resp.status != 200:
-            syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
-            print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
+        if ret.status_code != 200:
+            syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(ret.status_code))
+            print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
             return
-        json_content = content.decode()
+        json_content = ret.content.decode()
         return jsonpickle.decode(json_content)
     except Exception as e:
         syslog.syslog(syslog.LOG_INFO, "Unable to get weather data from home " + str(e))
@@ -40,7 +39,7 @@ def get_rest():
     return
 
 
-def push_temp_isy(h, variable_type, variable_id, f_temp, label):
+def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
     #
     # Never push defaults to ISY
     if f_temp == data.DEFAULT_TEMP:
@@ -50,33 +49,28 @@ def push_temp_isy(h, variable_type, variable_id, f_temp, label):
         return
 
     #
-    # Get ISY security data
-    with open(SECRET_FILE, "r") as secret_file:
-        user_name = secret_file.readline().strip('\n')
-        password = secret_file.readline().strip('\n')
-
-    #
     # do a get on isy994 to update the data
     url = "http://isy994.evilminions.org/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
         round(float(f_temp)))
-    resp, content = h.request(url, "GET")
-    if not str(content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
-        syslog.syslog(syslog.LOG_INFO, "Failed URL: " + url + " Response: " + str(content))
-        print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(content))
+    ret = s.get(url, auth=(user_name, password), verify=False)
+    if not str(ret.content.decode()).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
+        syslog.syslog(syslog.LOG_INFO, "Failed URL: " + url + " Response: " + str(ret.content))
+        print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content))
     else:
         print(datetime.datetime.now().time(), " - Success URL: ", url)
 
 
-def update_isy(weather_dict, h):
-    push_temp_isy(h, ISY_INTEGER, BACK_YARD_TEMP, weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
-    push_temp_isy(h, ISY_INTEGER, MAIN_GARAGE, weather_dict["main_garage"]["temp"], 'MAIN_GARAGE_TEMP')
-    push_temp_isy(h, ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
+def update_isy(weather_dict, s, user_name, password):
+    push_temp_isy(s, user_name, password, ISY_INTEGER, BACK_YARD_TEMP, weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
+    push_temp_isy(s, user_name, password,  ISY_INTEGER, MAIN_GARAGE, weather_dict["main_garage"]["temp"], 'MAIN_GARAGE_TEMP')
+    push_temp_isy(s, user_name, password,  ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
     syslog.syslog(syslog.LOG_CRIT, "ISY Temps pushed")
 
 
 def main():
     #
     # Get weather data from the rest endpoint
+    weather_data = stations.get_weather()
     weather_dict = get_rest()
 
     #
@@ -85,9 +79,8 @@ def main():
         user_name = secret_file.readline().strip('\n')
         password = secret_file.readline().strip('\n')
 
-    h = httplib2.Http()
-    h.add_credentials(user_name, password)  # Basic authentication
-    update_isy(weather_dict, h)
+    s = requests.Session()
+    update_isy(weather_dict, s, user_name, password)
 
 
 main()

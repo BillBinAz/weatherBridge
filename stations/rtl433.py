@@ -3,9 +3,8 @@
 import datetime
 import json
 
-import httplib2
 import syslog
-
+import requests
 from weather import data
 
 BACK_YARD = 'back_yard'
@@ -36,12 +35,11 @@ def rtl_433_json(host):
 	try:
 		#
 		# Pull the data
-		h = httplib2.Http(timeout=1)
-		resp, content = h.request(url, "GET")
-		if resp.status != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from rtl_433_json " + str(resp))
-			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(resp))
-		return json.loads(content)
+		ret = requests.get(url, verify=False)
+		if ret.status_code != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from rtl_433_json " + str(ret.status_code))
+			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(ret.status_code))
+		return json.loads(ret.content.decode())
 	except Exception as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse rtl_433_json " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse rtl_433_json " + str(e))

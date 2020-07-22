@@ -3,7 +3,7 @@
 import datetime
 import json
 
-import httplib2
+import requests
 import syslog
 
 S_OK = 200
@@ -89,12 +89,11 @@ def get_data():
 	try:
 		#
 		# Pull the data
-		h = httplib2.Http(timeout=1)
-		resp, content = h.request(url, "GET")
-		if resp.status != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(resp))
-			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(resp))
-		return json.loads(content)
+		ret = requests.get(url, verify=False)
+		if ret.status_code != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(ret.status_code))
+			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))
+		return json.loads(ret.content.decode())
 	except Exception as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifilogger " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse wifilogger " + str(e))

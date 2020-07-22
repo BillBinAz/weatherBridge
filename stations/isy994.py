@@ -78,8 +78,7 @@ def get_node_xml(node, s, user_name, password):
 	try:
 		# do a get on isy994 to update the data
 		url = "http://isy994.evilminions.org/rest/" + str(node)
-		print("Node: " + node)
-		ret = s.get(url, auth=(user_name, password))
+		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
 			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))

@@ -5,7 +5,6 @@ Python3 code to upload weather data from wifiLogger, and rtl_433 to isy994.
 ## Dependencies  
 #### SystemCtl runs as root:  sudo -H pip3 install ...
 python3  <br>
-pip3 install httplib2  <br>
 pip3 install Flask  <br>
 pip3 install Requests <br>
 pip3 install jsonpickle <br>

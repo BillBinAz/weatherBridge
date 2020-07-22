@@ -3,7 +3,7 @@
 import datetime
 import xml.etree.ElementTree
 
-import httplib2
+import requests
 import syslog
 
 
@@ -26,15 +26,15 @@ def format_f(value, source):
 
 
 def get_node_xml():
-	url = "http://fan.evilminions.org/status.xml.cgi"
+
 	try:
-		h = httplib2.Http(timeout=1)
-		resp, content = h.request(url, "POST")
-		if resp.status != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(resp))
-			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(resp))
+		url = "http://fan.evilminions.org/status.xml.cgi"
+		ret = requests.post(url, verify=False)
+		if ret.status_code != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(ret.status_code))
+			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(ret.status_code))
 			return
-		return xml.etree.ElementTree.fromstring(clean_up_xml(content))
+		return xml.etree.ElementTree.fromstring(clean_up_xml(ret.content))
 	except Exception as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse AirScape " + str(e))
