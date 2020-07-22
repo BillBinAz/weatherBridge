@@ -5,7 +5,7 @@ import sys
 sys.path.append('/home/admin/.local/usr/bin')
 
 app = Flask(__name__)
-logging.basicConfig(filename='error.log',level=logging.DEBUG)
+logging.basicConfig(filename='/tmp/weather_bridge_rest.log',level=logging.DEBUG)
 
 
 @app.route("/weather", methods=['GET'])
