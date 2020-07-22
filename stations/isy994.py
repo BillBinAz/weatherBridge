@@ -6,7 +6,6 @@ import xml.etree.ElementTree
 import httplib2
 import syslog
 
-from weather import data
 NODES = 'nodes/'
 
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
@@ -87,8 +86,8 @@ def get_node_xml(node, h):
 			return
 		return xml.etree.ElementTree.fromstring(content)
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to get isy994 " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to get isy994 " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to get isy994 " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get isy994 " + str(e))
 	return
 
 
@@ -297,8 +296,8 @@ def get_weather(weather_data):
 														float(weather_data.theater.sensor.temp)) / 9.0, 1)
 
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse isy994 " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse isy994 " + str(e))
 	finally:
-		return weather_data
+		return
 

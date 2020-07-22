@@ -8,7 +8,6 @@ import jsonpickle
 
 from weather import data
 
-
 ISY_INTEGER = 1
 ISY_STATE = 2
 FRONT_DOOR_TEMP = 12
