@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.route("/weather", methods=['GET'])
 def get_weather():
 	weather_data = stations.get_weather()
-	return weather_data.to_json()
+	return weather_data.to_json(), 200, {'Content-Type': 'text/json; charset=utf-8'}
 
 
 if __name__ == "__main__":
