@@ -90,6 +90,7 @@ def get_data():
 		#
 		# Pull the data
 		ret = requests.get(url, verify=False)
+		ret.close()
 		if ret.status_code != 200:
 			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))

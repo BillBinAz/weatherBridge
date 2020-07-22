@@ -283,6 +283,8 @@ def get_weather(weather_data):
 				else:
 					weather_data.alarm.main_garage = "0"
 
+		s.close()
+
 		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.sensor.temp) +
 														float(weather_data.master_bedroom_thermostat.sensor.temp) +
 														float(weather_data.gym.temp) +

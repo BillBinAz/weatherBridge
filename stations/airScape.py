@@ -30,6 +30,7 @@ def get_node_xml():
 	try:
 		url = "http://fan.evilminions.org/status.xml.cgi"
 		ret = requests.post(url, verify=False)
+		ret.close()
 		if ret.status_code != 200:
 			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(ret.status_code))

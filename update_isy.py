@@ -7,7 +7,7 @@ import syslog
 import jsonpickle
 
 from weather import data
-from weather import stations
+# from weather import stations
 ISY_INTEGER = 1
 ISY_STATE = 2
 FRONT_DOOR_TEMP = 12
@@ -70,7 +70,7 @@ def update_isy(weather_dict, s, user_name, password):
 def main():
     #
     # Get weather data from the rest endpoint
-    weather_data = stations.get_weather()
+    # weather_data = stations.get_weather()
     weather_dict = get_rest()
 
     #
@@ -81,6 +81,7 @@ def main():
 
     s = requests.Session()
     update_isy(weather_dict, s, user_name, password)
+    s.close()
 
 
 main()
