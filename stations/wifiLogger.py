@@ -3,10 +3,8 @@
 import datetime
 import json
 
-import httplib2
+import requests
 import syslog
-
-from weather import data
 
 S_OK = 200
 TEMPERATURE_OUTDOOR = 'tempout'
@@ -91,15 +89,15 @@ def get_data():
 	try:
 		#
 		# Pull the data
-		h = httplib2.Http(timeout=1)
-		resp, content = h.request(url, "GET")
-		if resp.status != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(resp))
-			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(resp))
-		return json.loads(content)
+		ret = requests.get(url, verify=False)
+		ret.close()
+		if ret.status_code != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(ret.status_code))
+			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))
+		return json.loads(ret.content.decode())
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifilogger " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse wifilogger " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifilogger " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse wifilogger " + str(e))
 	return
 
 
@@ -132,19 +130,12 @@ def get_weather(weather_data):
 		# Temperature - Pool
 		weather_data.pool.temp = round(float(wifi_logger_data[LEAF_TEMP][0]), 2)
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data " + str(e))
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data: Exception " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: Exception " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data: Exception " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: Exception " + str(e))
 	finally:
-		return weather_data
+		return
 
 
-def main():
-	cur_weather = data.WeatherData()
-	# get_weather(cur_weather)
-	# print(cur_weather.to_json())
-
-
-main()

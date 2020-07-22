@@ -3,10 +3,8 @@
 import datetime
 import xml.etree.ElementTree
 
-import httplib2
+import requests
 import syslog
-
-from weather import data
 
 
 def c_to_f(c_temp):
@@ -28,18 +26,19 @@ def format_f(value, source):
 
 
 def get_node_xml():
-	url = "http://fan.evilminions.org/status.xml.cgi"
+
 	try:
-		h = httplib2.Http(timeout=1)
-		resp, content = h.request(url, "POST")
-		if resp.status != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(resp))
-			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(resp))
+		url = "http://fan.evilminions.org/status.xml.cgi"
+		ret = requests.post(url, verify=False)
+		ret.close()
+		if ret.status_code != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(ret.status_code))
+			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(ret.status_code))
 			return
-		return xml.etree.ElementTree.fromstring(clean_up_xml(content))
+		return xml.etree.ElementTree.fromstring(clean_up_xml(ret.content))
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse AirScape " + str(e))
 	return
 
 
@@ -50,8 +49,8 @@ def clean_up_xml(content):
 		end = str_content.find("</server_response>") + len("</server_response>")
 		return str_content.replace(str_content[start:end], "")
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to get AirScape " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to get AirScape " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to get AirScape " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get AirScape " + str(e))
 	return
 
 
@@ -76,6 +75,7 @@ def clean_up_xml(content):
 # 		<switch2>1111</switch2>
 # 		<Setpoint>0</Setpoint>
 # 	</airscapewhf>
+
 def get_weather(weather_data):
 
 	try:
@@ -90,13 +90,5 @@ def get_weather(weather_data):
 		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
 	finally:
-		return weather_data
+		return
 
-
-def main():
-	weather_data = data.WeatherData()
-	# get_weather(weather_data)
-    # print(cur_weather.to_json())
-
-
-main()

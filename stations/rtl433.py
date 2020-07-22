@@ -3,9 +3,8 @@
 import datetime
 import json
 
-import httplib2
 import syslog
-
+import requests
 from weather import data
 
 BACK_YARD = 'back_yard'
@@ -36,15 +35,15 @@ def rtl_433_json(host):
 	try:
 		#
 		# Pull the data
-		h = httplib2.Http(timeout=1)
-		resp, content = h.request(url, "GET")
-		if resp.status != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from rtl_433_json " + str(resp))
-			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(resp))
-		return json.loads(content)
+		ret = requests.get(url, verify=False)
+		ret.close()
+		if ret.status_code != 200:
+			syslog.syslog(syslog.LOG_INFO, "Bad response from rtl_433_json " + str(ret.status_code))
+			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(ret.status_code))
+		return json.loads(ret.content.decode())
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse rtl_433_json " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse rtl_433_json " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse rtl_433_json " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse rtl_433_json " + str(e))
 	return
 
 
@@ -67,21 +66,12 @@ def get_weather(weather_data, host):
 			weather_data.humidor.time = sensor.get(TIME)
 
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse kiosk " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse kiosk " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse kiosk " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse kiosk " + str(e))
 	except TypeError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse kiosk: TypeError " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + e.msg)
+		syslog.syslog(syslog.LOG_INFO, "Unable to parse kiosk: TypeError " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + str(e))
 	finally:
-		return weather_data
+		return
 
 
-def main():
-
-	cur_weather = data.WeatherData()
-	# get_weather(cur_weather, "kiosk.evilminions.org")
-	# get_weather(cur_weather, "cairo.evilminions.org")
-	# print(cur_weather.to_json())
-
-
-main()
