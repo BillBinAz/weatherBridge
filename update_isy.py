@@ -8,6 +8,7 @@ import jsonpickle
 
 from weather import data
 
+
 ISY_INTEGER = 1
 ISY_STATE = 2
 FRONT_DOOR_TEMP = 12
@@ -35,8 +36,8 @@ def get_rest():
         json_content = content.decode()
         return jsonpickle.decode(json_content)
     except Exception as e:
-        syslog.syslog(syslog.LOG_INFO, "Unable to get weather data from home " + e.msg)
-        print(datetime.datetime.now().time(), "Unable to get weather data from home " + e.msg)
+        syslog.syslog(syslog.LOG_INFO, "Unable to get weather data from home " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get weather data from home " + str(e))
     return
 
 
