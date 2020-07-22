@@ -79,6 +79,8 @@ def main():
     # Get weather data from the rest endpoint
     weather_dict = get_rest()
 
+
+
     #
     # Get ISY security data
     with open(SECRET_FILE, "r") as secret_file:

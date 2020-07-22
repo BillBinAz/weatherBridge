@@ -84,7 +84,7 @@ def get_node_xml(node, h):
 			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(resp))
 			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(resp))
 			return
-		return xml.etree.ElementTree.fromstring(content)
+		return xml.etree.ElementTree.fromstring(content.decode())
 	except Exception as e:
 		syslog.syslog(syslog.LOG_INFO, "Unable to get isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994 " + str(e))
@@ -218,6 +218,8 @@ def get_weather(weather_data):
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.pool.light = sensor.get('formatted')
+
+		print("retrieved ZW_POOL_LIGHT")
 
 		xml_response = get_node_xml(ZW_SPA_PUMP, h)
 		for sensor in xml_response.find('properties').findall('property'):
