@@ -28,13 +28,13 @@ def get_rest():
         ret = requests.get(url, verify=False)
 
         if ret.status_code != 200:
-            syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(ret.status_code))
+            syslog.syslog(syslog.LOG_CRIT, "Bad response from isy994 " + str(ret.status_code))
             print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
             return
         json_content = ret.content.decode()
         return jsonpickle.decode(json_content)
     except Exception as e:
-        syslog.syslog(syslog.LOG_INFO, "Unable to get weather data from home " + str(e))
+        syslog.syslog(syslog.LOG_CRIT, "Unable to get weather data from home " + str(e))
         print(datetime.datetime.now().time(), "Unable to get weather data from home " + str(e))
     return
 
@@ -68,20 +68,25 @@ def update_isy(weather_dict, s, user_name, password):
 
 
 def main():
-    #
-    # Get weather data from the rest endpoint
-    # weather_data = stations.get_weather()
-    weather_dict = get_rest()
 
-    #
-    # Get ISY security data
-    with open(SECRET_FILE, "r") as secret_file:
-        user_name = secret_file.readline().strip('\n')
-        password = secret_file.readline().strip('\n')
+    try:
+        #
+        # Get weather data from the rest endpoint
+        # weather_data = stations.get_weather()
+        weather_dict = get_rest()
 
-    s = requests.Session()
-    update_isy(weather_dict, s, user_name, password)
-    s.close()
+        #
+        # Get ISY security data
+        with open(SECRET_FILE, "r") as secret_file:
+            user_name = secret_file.readline().strip('\n')
+            password = secret_file.readline().strip('\n')
+
+        s = requests.Session()
+        update_isy(weather_dict, s, user_name, password)
+        s.close()
+    except Exception as e:
+        syslog.syslog(syslog.LOG_CRIT, "Unable to update ISY " + str(e))
+        print(datetime.datetime.now().time(), "Unable to update ISY " + str(e))
 
 
 main()

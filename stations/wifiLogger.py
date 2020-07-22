@@ -92,11 +92,11 @@ def get_data():
 		ret = requests.get(url, verify=False)
 		ret.close()
 		if ret.status_code != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from wifilogger " + str(ret.status_code))
+			syslog.syslog(syslog.LOG_CRIT, "Bad response from wifilogger " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))
 		return json.loads(ret.content.decode())
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifilogger " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to parse wifilogger " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse wifilogger " + str(e))
 	return
 
@@ -130,10 +130,10 @@ def get_weather(weather_data):
 		# Temperature - Pool
 		weather_data.pool.temp = round(float(wifi_logger_data[LEAF_TEMP][0]), 2)
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to parse wifi_logger_data " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data " + str(e))
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse wifi_logger_data: Exception " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to parse wifi_logger_data: Exception " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: Exception " + str(e))
 	finally:
 		return
