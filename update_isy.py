@@ -53,7 +53,7 @@ def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, la
     url = "http://isy994.evilminions.org/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
         round(float(f_temp)))
     ret = s.get(url, auth=(user_name, password), verify=False)
-    if not str(ret.content.decode()).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
+    if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
         syslog.syslog(syslog.LOG_INFO, "Failed URL: " + url + " Response: " + str(ret.content))
         print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content))
     else:
