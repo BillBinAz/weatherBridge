@@ -20,7 +20,7 @@ def format_f(value, source):
 	try:
 		formatted_value = round(float(value), 2)
 	except:
-		syslog.syslog(syslog.LOG_INFO, "Bad Data from AirScape " + str(value) + " " + source)
+		syslog.syslog(syslog.LOG_CRIT, "Bad Data from AirScape " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from AirScape " + str(source) + " " + source)
 	return formatted_value
 
@@ -32,12 +32,12 @@ def get_node_xml():
 		ret = requests.post(url, verify=False)
 		ret.close()
 		if ret.status_code != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from AirScape " + str(ret.status_code))
+			syslog.syslog(syslog.LOG_CRIT, "Bad response from AirScape " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(ret.status_code))
 			return
 		return xml.etree.ElementTree.fromstring(clean_up_xml(ret.content))
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to parse AirScape " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse AirScape " + str(e))
 	return
 
@@ -49,7 +49,7 @@ def clean_up_xml(content):
 		end = str_content.find("</server_response>") + len("</server_response>")
 		return str_content.replace(str_content[start:end], "")
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to get AirScape " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to get AirScape " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get AirScape " + str(e))
 	return
 
@@ -87,7 +87,7 @@ def get_weather(weather_data):
 		hours = int(xml_response.find('timeremaining').text) / 60
 		weather_data.whole_house_fan.timeRemaining = format_f(hours, 'timeremaining')
 	except xml.etree.ElementTree.ParseError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse AirScape " + e.msg)
+		syslog.syslog(syslog.LOG_CRIT, "Unable to parse AirScape " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
 	finally:
 		return

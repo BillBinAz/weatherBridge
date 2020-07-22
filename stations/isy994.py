@@ -68,7 +68,7 @@ def format_f(value, source):
 	try:
 		formatted_value = round(float(value) / 10.0, 1)
 	except:
-		syslog.syslog(syslog.LOG_INFO, "Bad Data from isy994 " + str(value) + " " + source)
+		syslog.syslog(syslog.LOG_CRIT, "Bad Data from isy994 " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
 	return formatted_value
 
@@ -85,7 +85,7 @@ def get_node_xml(node, s, user_name, password):
 			return
 		return xml.etree.ElementTree.fromstring(ret.content.decode())
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to get isy994 " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to get isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994 " + str(e))
 	return
 
@@ -296,7 +296,7 @@ def get_weather(weather_data):
 														float(weather_data.theater.sensor.temp)) / 9.0, 1)
 
 	except Exception as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse isy994 " + str(e))
+		syslog.syslog(syslog.LOG_CRIT, "Unable to parse isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse isy994 " + str(e))
 	finally:
 		return
