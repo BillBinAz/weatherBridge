@@ -76,12 +76,3 @@ def get_weather(weather_data, host):
 		return weather_data
 
 
-def main():
-
-	cur_weather = data.WeatherData()
-	# get_weather(cur_weather, "kiosk.evilminions.org")
-	# get_weather(cur_weather, "cairo.evilminions.org")
-	# print(cur_weather.to_json())
-
-
-main()
