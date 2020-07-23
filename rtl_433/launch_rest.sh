@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo pgrep python | xargs kill
-cd ~/weatherBridge/rtl_433
+rm /tmp/weather_bridge_rest_433.log
+cd home/admin/weatherBridge/rtl_433
 export FLASK_APP=get_handler.py
 /usr/bin/python3 -m flask run --host='0.0.0.0' --port=8080 --no-reload
