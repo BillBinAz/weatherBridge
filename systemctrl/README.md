@@ -12,6 +12,7 @@ ExecStart=/home/admin/weatherBridge/launch_rest.sh
 [Install]
 WantedBy=multi-user.target
 
+
 ##nodelink.service
 
 [Unit]
@@ -26,6 +27,7 @@ StandardOutput=syslog+console
 WantedBy=multi-user.target
 Alias=nodelink.service
 
+
 ##weatherBridgeRest.service
 
 [Unit]
@@ -38,4 +40,20 @@ StandardOutput=syslog+console
 [Install]
 WantedBy=multi-user.target
 Alias=weatherBridgeRest.service
+
+
+## RTL 433 Service
+[Unit]
+Description=RTL_433 Weather Flask Rest
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/admin/weatherBridge/rtl_433/launch_rest.sh > /tmp/rtl433_rest.log
+# User=admin
+
+[Install]
+WantedBy=multi-user.target
+
+
 
