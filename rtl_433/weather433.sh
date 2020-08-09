@@ -18,7 +18,7 @@ then
     rm /tmp/weather433.temp
 
     # collect the sensor data
-    /usr/local/bin/rtl_433 -F json:/tmp/weather433.temp -T 530 -R 40 -d 0 -W 2>&1
+    /usr/local/bin/rtl_433 -F json:/tmp/weather433.temp -T 530 -R 40 -d 0 2>&1
 
     # now that we have collected data into temp, make it available.
     ~/weatherBridge/rtl_433/filterJsonBySensor.py
