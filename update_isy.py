@@ -7,7 +7,7 @@ import syslog
 import jsonpickle
 
 from weather import data
-from weather import stations
+#from weather import stations
 
 ISY_INTEGER = 1
 ISY_STATE = 2
