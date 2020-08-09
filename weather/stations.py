@@ -8,6 +8,6 @@ def get_weather():
 	isy994.get_weather(cur_weather)
 	wifiLogger.get_weather(cur_weather)
 	airScape.get_weather(cur_weather)
-	# rtl433.get_weather(cur_weather, "kiosk.evilminions.org")
+	rtl433.get_weather(cur_weather, "humidor-pi.evilminions.org")
 	rtl433.get_weather(cur_weather, "cairo.evilminions.org")
 	return cur_weather
