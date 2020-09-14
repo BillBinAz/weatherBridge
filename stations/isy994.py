@@ -25,7 +25,7 @@ ZW_MASTER_ECOBEE = "nodes/n001_ecobee2_sen3"
 ZW_GYM_ECOBEE = "nodes/n001_ecobee2_sen4"
 
 ZW_MAIN_GARAGE = "nodes/ZW025_1"
-ZW_MC_GARAGE = "nodes/ZW049_1"
+ZW_MC_GARAGE = "nodes/ZW095_1"
 ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
 ZW_SPA_PUMP = "nodes/ZW044_1"
 ZW_POOL_LIGHT = "nodes/ZW080_1"
