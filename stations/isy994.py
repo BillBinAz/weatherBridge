@@ -11,18 +11,18 @@ NODES = 'nodes/'
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
 
-ZW_KITCHEN_THERMOSTAT = "nodes/n001_ecobee1"
-ZW_LIBRARY_ECOBEE = "nodes/n001_ecobee1_sen1"
-ZW_GUEST_ECOBEE = "nodes/n001_ecobee1_sen2"
-ZW_KITCHEN_ECOBEE = "nodes/n001_ecobee1_sen3"
-ZW_CHEESE_ECOBEE = "nodes/n001_ecobee1_sen4"
-ZW_THEATER_ECOBEE = "nodes/n001_ecobee1_sen5"
-ZW_LIVING_ROOM_ECOBEE = "nodes/n001_ecobee1_sen6"
+ZW_KITCHEN_THERMOSTAT = "nodes/n004_t521752427579"
+ZW_LIBRARY_ECOBEE = "nodes/n004_rs_ptth"
+ZW_GUEST_ECOBEE = "nodes/n004_rs_x9pl"
+ZW_KITCHEN_ECOBEE = "nodes/n004_s521752427579"
+ZW_CHEESE_ECOBEE = "nodes/n004_rs_x9lx"
+ZW_THEATER_ECOBEE = "nodes/n004_rs_bwn4"
+ZW_LIVING_ROOM_ECOBEE = "nodes/n004_rs_bw6z"
 
-ZW_MASTER_THERMOSTAT = "nodes/n001_ecobee2"
-ZW_AMBERS_OFFICE_ECOBEE = "nodes/n001_ecobee2_sen2"
-ZW_MASTER_ECOBEE = "nodes/n001_ecobee2_sen3"
-ZW_GYM_ECOBEE = "nodes/n001_ecobee2_sen4"
+ZW_MASTER_THERMOSTAT = "nodes/n004_t521778805292"
+ZW_AMBERS_OFFICE_ECOBEE = "nodes/n004_rs_kz2j"
+ZW_MASTER_ECOBEE = "nodes/n004_s521778805292"
+ZW_GYM_ECOBEE = "nodes/n004_rs_f869"
 
 ZW_MAIN_GARAGE = "nodes/ZW025_1"
 ZW_MC_GARAGE = "nodes/ZW095_1"
@@ -113,35 +113,35 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ZW_THEATER_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.theater.sensor.temp = sensor.get('formatted')[:-1]
+				weather_data.theater.sensor.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.theater.sensor.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_CHEESE_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.cheese.temp = sensor.get('formatted')[:-1]
+				weather_data.cheese.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.cheese.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_GUEST_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.guest.temp = sensor.get('formatted')[:-1]
+				weather_data.guest.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.guest.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_KITCHEN_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.kitchen_thermostat.sensor.temp = sensor.get('formatted')[:-1]
+				weather_data.kitchen_thermostat.sensor.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.kitchen_thermostat.sensor.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_LIBRARY_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.library.temp = sensor.get('formatted')[:-1]
+				weather_data.library.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.library.occupied = sensor.get('value')
 
@@ -157,28 +157,28 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ZW_LIVING_ROOM_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.living_room.sensor.temp = sensor.get('formatted')[:-1]
+				weather_data.living_room.sensor.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.living_room.sensor.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_MASTER_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.master_bedroom_thermostat.sensor.temp = sensor.get('formatted')[:-1]
+				weather_data.master_bedroom_thermostat.sensor.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.master_bedroom_thermostat.sensor.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_GYM_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.gym.temp = sensor.get('formatted')[:-1]
+				weather_data.gym.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.gym.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_AMBERS_OFFICE_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.ambers_office.temp = sensor.get('formatted')[:-1]
+				weather_data.ambers_office.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.ambers_office.occupied = sensor.get('value')
 
@@ -187,7 +187,7 @@ def get_weather(weather_data):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.kitchen_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.kitchen_thermostat.temp = sensor.get('formatted')[:-1]
+				weather_data.kitchen_thermostat.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
 				weather_data.kitchen_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
@@ -202,7 +202,7 @@ def get_weather(weather_data):
 			if sensor.get('id') == CLIMATE_MODE:
 				weather_data.master_bedroom_thermostat.mode = sensor.get('formatted')
 			elif sensor.get('id') == TEMPERATURE:
-				weather_data.master_bedroom_thermostat.temp = sensor.get('formatted')[:-1]
+				weather_data.master_bedroom_thermostat.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == CLIMATE_COOL_POINT:
 				weather_data.master_bedroom_thermostat.cool_set = sensor.get('value')
 			elif sensor.get('id') == CLIMATE_HEAT_POINT:
