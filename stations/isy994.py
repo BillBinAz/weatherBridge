@@ -127,7 +127,7 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ZW_GUEST_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
-				weather_data.guest.temp = sensor.get('formatted')[:-1]
+				weather_data.guest.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.guest.occupied = sensor.get('value')
 
