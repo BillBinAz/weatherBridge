@@ -6,9 +6,6 @@ import requests
 import syslog
 import jsonpickle
 
-from weather import data
-# from weather import stations
-
 ISY_INTEGER = 1
 ISY_STATE = 2
 FRONT_DOOR_TEMP = 12
@@ -18,7 +15,6 @@ MASTER_BEDROOM_TEMP = 17
 LIVING_ROOM_WINDOW = 22
 MAIN_GARAGE = 18
 AVERAGE_HOUSE_TEMP = 25
-SECRET_FILE = "./secret/isy994"
 
 
 def get_rest():
@@ -40,27 +36,6 @@ def get_rest():
     return
 
 
-def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
-    #
-    # Never push defaults to ISY
-    if f_temp == data.DEFAULT_TEMP:
-        msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
-        syslog.syslog(syslog.LOG_CRIT, msg)
-        print(datetime.datetime.now().time(), msg)
-        return
-
-    #
-    # do a get on isy994 to update the data
-    url = "http://isy994.evilminions.org/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
-        round(float(f_temp)))
-    ret = s.get(url, auth=(user_name, password), verify=False)
-    if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
-        syslog.syslog(syslog.LOG_INFO, "Failed URL: " + url + " Response: " + str(ret.content))
-        print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content))
-    else:
-        print(datetime.datetime.now().time(), " - Success URL: ", url)
-
-
 def main():
 
     try:
@@ -69,19 +44,11 @@ def main():
         # weather_data = stations.get_weather()
         weather_dict = get_rest()
 
-        #
-        # Get ISY security data
-        with open(SECRET_FILE, "r") as secret_file:
-            user_name = secret_file.readline().strip('\n')
-            password = secret_file.readline().strip('\n')
-
-        s = requests.Session()
-        s.close()
-        print(weather_dict["whole_house_fan"]["speed"]);
+        print(weather_dict["whole_house_fan"]["speed"])
 
     except Exception as e:
-        syslog.syslog(syslog.LOG_CRIT, "Unable to update ISY " + str(e))
-        print(datetime.datetime.now().time(), "Unable to update ISY " + str(e))
+        syslog.syslog(syslog.LOG_CRIT, "Unable to get fan speed " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get fan speed " + str(e))
 
 
 main()
