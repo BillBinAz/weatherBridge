@@ -46,7 +46,10 @@ def main():
         urllib3.disable_warnings()
         weather_dict = get_rest()
 
-        print(weather_dict["whole_house_fan"]["speed"])
+        print("fanSpeed=%s|indoorTemp=%s|outdoorTemp=%s" %
+              (weather_dict["whole_house_fan"]["speed"],
+              weather_dict["back_yard"]["temp"],
+              weather_dict["whole_house_fan"]["houseTemp"]))
 
     except Exception as e:
         syslog.syslog(syslog.LOG_CRIT, "Unable to get fan speed " + str(e))
