@@ -46,7 +46,7 @@ def main():
         urllib3.disable_warnings()
         weather_dict = get_rest()
 
-        print("fanSpeed=%s|indoorTemp=%s|outdoorTemp=%s" %
+        print("%s, %s, %s" %
               (weather_dict["whole_house_fan"]["speed"],
               weather_dict["back_yard"]["temp"],
               weather_dict["whole_house_fan"]["houseTemp"]))
