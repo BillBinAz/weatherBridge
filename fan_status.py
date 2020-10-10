@@ -4,6 +4,7 @@ import datetime
 
 import requests
 import syslog
+import jsonpickle
 import urllib3
 
 ISY_INTEGER = 1
@@ -29,7 +30,7 @@ def get_rest():
             print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
             return
         json_content = ret.content.decode()
-        return json_content
+        return jsonpickle.decode(json_content)
     except Exception as e:
         syslog.syslog(syslog.LOG_CRIT, "Unable to get weather data from home " + str(e))
         print(datetime.datetime.now().time(), "Unable to get weather data from home " + str(e))
@@ -43,7 +44,12 @@ def main():
         # Get weather data from the rest endpoint
         # weather_data = stations.get_weather()
         urllib3.disable_warnings()
-        print(get_rest())
+        weather_dict = get_rest()
+
+        print("{ \"fanSpeed\" : %s, \"indoorTemp\" : %s, \"outdoorTemp\" : %s }" %
+              (weather_dict["whole_house_fan"]["speed"],
+              weather_dict["back_yard"]["temp"],
+              weather_dict["whole_house_fan"]["houseTemp"]))
 
 
     except Exception as e:
