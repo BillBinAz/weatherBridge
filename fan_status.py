@@ -5,6 +5,7 @@ import datetime
 import requests
 import syslog
 import jsonpickle
+import urllib3
 
 ISY_INTEGER = 1
 ISY_STATE = 2
@@ -42,6 +43,7 @@ def main():
         #
         # Get weather data from the rest endpoint
         # weather_data = stations.get_weather()
+        urllib3.disable_warnings()
         weather_dict = get_rest()
 
         print(weather_dict["whole_house_fan"]["speed"])
