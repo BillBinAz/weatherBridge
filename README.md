@@ -31,7 +31,7 @@ https://github.com/merbanan/rtl_433
 */10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
 
 ## copy config to /etc
-sudo mkdir /etc/rtl_433   
+sudo mkdir /etc/rtl_433 <br>   
 sudo cp ~/weatherBridge/rtl_433/rtl_433.conf /etc/rtl_433/rtl_433.conf
 
 
