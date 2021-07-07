@@ -61,9 +61,6 @@ def get_sensor_data():
 	if rack != "":
 		all_sensors = rack
 
-	if library != "":
-		all_sensors += library
-
 	if humidor != "":
 		all_sensors += humidor
 
