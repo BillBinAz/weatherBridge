@@ -43,6 +43,7 @@ class Spa(object):
 class SensorSmall(object):
 	def __init__(self):
 		self.temp = DEFAULT_TEMP
+		self.temp_c = DEFAULT_TEMP
 		self.humidity = 0.0
 		self.time = ""
 

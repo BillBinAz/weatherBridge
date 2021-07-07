@@ -47,36 +47,43 @@ def parse_433_json(weather_data, line):
 		if parsed_json['id'] == EQ_RACK:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.rack.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.rack.temp_c = parsed_json[TEMPERATURE]
 				weather_data.rack.humidity = parsed_json[HUMIDITY]
 				weather_data.rack.time = parsed_json[TIME]
 		elif parsed_json['id'] == LIBRARY:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.library.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.library.temp_c = parsed_json[TEMPERATURE]
 				weather_data.library.humidity = parsed_json[HUMIDITY]
 				weather_data.library.time = parsed_json[TIME]
 		elif parsed_json['id'] == HUMIDOR:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.humidor.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.humidor.temp_c = parsed_json[TEMPERATURE]
 				weather_data.humidor.humidity = parsed_json[HUMIDITY]
 				weather_data.humidor.time = parsed_json[TIME]
 		elif parsed_json['id'] == FRONT_DOOR:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.front_door.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.front_door.temp_c = parsed_json[TEMPERATURE]
 				weather_data.front_door.humidity = parsed_json[HUMIDITY]
 				weather_data.front_door.time = parsed_json[TIME]
 		elif parsed_json['id'] == GARAGE:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.main_garage.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.main_garage.temp_c = parsed_json[TEMPERATURE]
 				weather_data.main_garage.humidity = parsed_json[HUMIDITY]
 				weather_data.main_garage.time = parsed_json[TIME]
 		elif parsed_json['id'] == EQ_PANEL:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.panel.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.panel.temp_c = parsed_json[TEMPERATURE]
 				weather_data.panel.humidity = parsed_json[HUMIDITY]
 				weather_data.panel.time = parsed_json[TIME]
 		elif parsed_json['id'] == LIVING_ROOM_WINDOW:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.living_room_window.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.living_room_window.temp_c = parsed_json[TEMPERATURE]
 				weather_data.living_room_window.humidity = parsed_json[HUMIDITY]
 				weather_data.living_room_window.time = parsed_json[TIME]
 	except json.JSONDecodeError as e:
