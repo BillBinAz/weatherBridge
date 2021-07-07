@@ -107,7 +107,7 @@ class WeatherData(object):
 		self.alarm = Alarm()
 		self.pool = Pool()
 		self.spa = Spa()
-		self.ambers_office = EcobeeSensor()
+		self.office = EcobeeSensor()
 		self.gym = EcobeeSensor()
 		self.guest = EcobeeSensor()
 		self.cheese = EcobeeSensor()
