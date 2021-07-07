@@ -8,6 +8,8 @@ import requests
 from weather import data
 
 BACK_YARD = 'back_yard'
+EQ_RACK = 'rack'
+EQ_PANEL = 'panel'
 FRONT_DOOR = 'front_door'
 HUMIDOR = 'humidor'
 KITCHEN_THERMOSTAT = 'kitchen_thermostat'
@@ -57,6 +59,20 @@ def get_weather(weather_data, host):
 			weather_data.main_garage.humidity = sensor.get(HUMIDITY)
 			weather_data.main_garage.temp = temp
 			weather_data.main_garage.time = sensor.get(TIME)
+
+		sensor = parsed_json.get(EQ_RACK)
+		temp = sensor.get(TEMPERATURE)
+		if temp != data.DEFAULT_TEMP:
+			weather_data.rack.humidity = sensor.get(HUMIDITY)
+			weather_data.rack.temp = temp
+			weather_data.rack.time = sensor.get(TIME)
+
+		sensor = parsed_json.get(EQ_PANEL)
+		temp = sensor.get(TEMPERATURE)
+		if temp != data.DEFAULT_TEMP:
+			weather_data.panel.humidity = sensor.get(HUMIDITY)
+			weather_data.panel.temp = temp
+			weather_data.panel.time = sensor.get(TIME)
 
 		sensor = parsed_json.get(HUMIDOR)
 		temp = sensor.get(TEMPERATURE)
