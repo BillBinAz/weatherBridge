@@ -24,6 +24,7 @@ SPA = 'spa'
 THEATER = 'theater'
 THEATER_WINDOW = 'theater_window'
 TEMPERATURE = 'temp'
+TEMPERATURE_C = 'temp_c'
 HUMIDITY = 'humidity'
 TIME = 'time'
 S_OK = 200
@@ -58,6 +59,7 @@ def get_weather(weather_data, host):
 		if temp != data.DEFAULT_TEMP:
 			weather_data.main_garage.humidity = sensor.get(HUMIDITY)
 			weather_data.main_garage.temp = temp
+			weather_data.main_garage.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.main_garage.time = sensor.get(TIME)
 
 		sensor = parsed_json.get(EQ_RACK)
@@ -65,6 +67,7 @@ def get_weather(weather_data, host):
 		if temp != data.DEFAULT_TEMP:
 			weather_data.rack.humidity = sensor.get(HUMIDITY)
 			weather_data.rack.temp = temp
+			weather_data.rack.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.rack.time = sensor.get(TIME)
 
 		sensor = parsed_json.get(EQ_PANEL)
@@ -72,13 +75,15 @@ def get_weather(weather_data, host):
 		if temp != data.DEFAULT_TEMP:
 			weather_data.panel.humidity = sensor.get(HUMIDITY)
 			weather_data.panel.temp = temp
+			weather_data.panel.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.panel.time = sensor.get(TIME)
 
 		sensor = parsed_json.get(HUMIDOR)
 		temp = sensor.get(TEMPERATURE)
 		if temp != data.DEFAULT_TEMP:
 			weather_data.humidor.humidity = sensor.get(HUMIDITY)
-			weather_data.humidor.temp = sensor[TEMPERATURE]
+			weather_data.humidor.temp = temp
+			weather_data.panel.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.humidor.time = sensor.get(TIME)
 
 	except json.JSONDecodeError as e:
