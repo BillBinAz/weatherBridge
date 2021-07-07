@@ -20,9 +20,9 @@ ZW_THEATER_ECOBEE = "nodes/n004_rs_bwn4"
 ZW_LIVING_ROOM_ECOBEE = "nodes/n004_rs_bw6z"
 
 ZW_MASTER_THERMOSTAT = "nodes/n004_t521778805292"
-ZW_AMBERS_OFFICE_ECOBEE = "nodes/n004_rs_kz2j"
+ZW_GYM_ECOBEE = "nodes/n004_rs_kz2j"
 ZW_MASTER_ECOBEE = "nodes/n004_s521778805292"
-ZW_GYM_ECOBEE = "nodes/n004_rs_f869"
+ZW_OFFICE_ECOBEE = "nodes/n004_rs_f869"
 
 ZW_MAIN_GARAGE = "nodes/ZW025_1"
 ZW_MC_GARAGE = "nodes/ZW095_1"
@@ -168,19 +168,19 @@ def get_weather(weather_data):
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.master_bedroom_thermostat.sensor.occupied = sensor.get('value')
 
+		xml_response = get_node_xml(ZW_OFFICE_ECOBEE, s, user_name, password)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == TEMPERATURE:
+				weather_data.office.temp = sensor.get('formatted')[:-2]
+			elif sensor.get('id') == OCCUPANCY:
+				weather_data.office.occupied = sensor.get('value')
+
 		xml_response = get_node_xml(ZW_GYM_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == TEMPERATURE:
 				weather_data.gym.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.gym.occupied = sensor.get('value')
-
-		xml_response = get_node_xml(ZW_AMBERS_OFFICE_ECOBEE, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == TEMPERATURE:
-				weather_data.ambers_office.temp = sensor.get('formatted')[:-2]
-			elif sensor.get('id') == OCCUPANCY:
-				weather_data.ambers_office.occupied = sensor.get('value')
 
 		xml_response = get_node_xml(ZW_KITCHEN_THERMOSTAT, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -287,8 +287,8 @@ def get_weather(weather_data):
 
 		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.sensor.temp) +
 														float(weather_data.master_bedroom_thermostat.sensor.temp) +
+														float(weather_data.office.temp) +
 														float(weather_data.gym.temp) +
-														float(weather_data.ambers_office.temp) +
 														float(weather_data.library.temp) +
 														float(weather_data.living_room.sensor.temp) +
 														float(weather_data.cheese.temp) +

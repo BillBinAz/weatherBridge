@@ -83,7 +83,7 @@ def get_weather(weather_data, host):
 		if temp != data.DEFAULT_TEMP:
 			weather_data.humidor.humidity = sensor.get(HUMIDITY)
 			weather_data.humidor.temp = temp
-			weather_data.panel.temp_c = sensor.get(TEMPERATURE_C)
+			weather_data.humidor.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.humidor.time = sensor.get(TIME)
 
 	except json.JSONDecodeError as e:
