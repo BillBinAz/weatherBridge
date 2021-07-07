@@ -10,9 +10,9 @@ from weather import data
 
 LIVING_ROOM_WINDOW = 12147
 LIBRARY = 7621
-MASTER_BEDROOM_WINDOW = 14129
+EQ_RACK = 14129
 HUMIDOR = 3329
-THEATER_WINDOW = 6227
+EQ_PANEL = 6227
 FRONT_DOOR = 1153
 GARAGE = 9957
 TEMPERATURE = 'temperature_C'
@@ -44,11 +44,11 @@ def parse_433_json(weather_data, line):
 	try:
 		parsed_json = json.loads(line)
 
-		if parsed_json['id'] == MASTER_BEDROOM_WINDOW:
+		if parsed_json['id'] == EQ_RACK:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
-				weather_data.master_bedroom_window.temp = c_to_f(parsed_json[TEMPERATURE])
-				weather_data.master_bedroom_window.humidity = parsed_json[HUMIDITY]
-				weather_data.master_bedroom_window.time = parsed_json[TIME]
+				weather_data.rack.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.rack.humidity = parsed_json[HUMIDITY]
+				weather_data.rack.time = parsed_json[TIME]
 		elif parsed_json['id'] == LIBRARY:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.library.temp = c_to_f(parsed_json[TEMPERATURE])
@@ -69,11 +69,11 @@ def parse_433_json(weather_data, line):
 				weather_data.main_garage.temp = c_to_f(parsed_json[TEMPERATURE])
 				weather_data.main_garage.humidity = parsed_json[HUMIDITY]
 				weather_data.main_garage.time = parsed_json[TIME]
-		elif parsed_json['id'] == THEATER_WINDOW:
+		elif parsed_json['id'] == EQ_PANEL:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
-				weather_data.theater_window.temp = c_to_f(parsed_json[TEMPERATURE])
-				weather_data.theater_window.humidity = parsed_json[HUMIDITY]
-				weather_data.theater_window.time = parsed_json[TIME]
+				weather_data.panel.temp = c_to_f(parsed_json[TEMPERATURE])
+				weather_data.panel.humidity = parsed_json[HUMIDITY]
+				weather_data.panel.time = parsed_json[TIME]
 		elif parsed_json['id'] == LIVING_ROOM_WINDOW:
 			if parsed_json[TEMPERATURE] != data.DEFAULT_TEMP:
 				weather_data.living_room_window.temp = c_to_f(parsed_json[TEMPERATURE])

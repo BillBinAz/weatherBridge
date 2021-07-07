@@ -5,12 +5,10 @@ import json
 
 import syslog
 
-LIVING_ROOM_WINDOW = 12147
 LIBRARY = 7621
-MASTER_BEDROOM_WINDOW = 14129
+EQ_RACK = 14129
 HUMIDOR = 3329
-THEATER_WINDOW = 6227
-FRONT_DOOR = 1153
+EQ_PANEL = 6227
 GARAGE = 9957
 
 TEMPERATURE = 'temperature_C'
@@ -29,12 +27,9 @@ def c_to_f(c_temp):
 
 def get_sensor_data():
 
-	living_room_window = ""
-	library = ""
-	master_bedroom_window = ""
+	rack = ""
 	humidor = ""
-	theater_window = ""
-	front_door = ""
+	panel = ""
 	all_sensors = ""
 	garage = ""
 
@@ -43,18 +38,14 @@ def get_sensor_data():
 			for line in f:
 				parsed_json = json.loads(line)
 
-				if parsed_json['id'] == MASTER_BEDROOM_WINDOW:
-					master_bedroom_window = line
+				if parsed_json['id'] == EQ_RACK:
+					rack = line
 				elif parsed_json['id'] == LIBRARY:
 					library = line
 				elif parsed_json['id'] == HUMIDOR:
 					humidor = line
-				elif parsed_json['id'] == FRONT_DOOR:
-					front_door = line
-				elif parsed_json['id'] == THEATER_WINDOW:
-					theater_window = line
-				elif parsed_json['id'] == LIVING_ROOM_WINDOW:
-					living_room_window = line
+				elif parsed_json['id'] == EQ_PANEL:
+					panel = line
 				elif parsed_json['id'] == GARAGE:
 					garage = line
 	except IOError as e:
@@ -67,23 +58,14 @@ def get_sensor_data():
 
 	#
 	# build the json string
-	if master_bedroom_window != "":
-		all_sensors = master_bedroom_window
-
-	if library != "":
-		all_sensors += library
+	if rack != "":
+		all_sensors = rack
 
 	if humidor != "":
 		all_sensors += humidor
 
-	if front_door != "":
-		all_sensors += front_door
-
-	if theater_window != "":
-		all_sensors += theater_window
-
-	if living_room_window != "":
-		all_sensors += living_room_window
+	if panel != "":
+		all_sensors += panel
 
 	if garage != "":
 		all_sensors += garage
