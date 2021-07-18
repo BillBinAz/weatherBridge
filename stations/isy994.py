@@ -51,6 +51,9 @@ ALARM_WEST_WING = "nodes/n007_zone06"
 ALARM_LIVING_GREAT_MOTION = "nodes/n007_zone07"
 ALARM_MASTER_MOTION = "nodes/n007_zone08"
 ALARM_BIKE_GARAGE = "nodes/n007_zone10"
+ALARM_ARMED = 1
+ALARM_DISARMED = 0
+ARMED_STARTS_AT = 2
 SECRET_FILE = "./secret/isy994"
 
 
@@ -229,7 +232,10 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ALARM_STATUS, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.status = sensor.get('value')
+				if int(sensor.get('value')) >= ARMED_STARTS_AT:
+					weather_data.alarm.status = ALARM_ARMED
+				else:
+					weather_data.alarm.status = ALARM_DISARMED
 
 		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
