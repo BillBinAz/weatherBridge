@@ -4,7 +4,6 @@ import datetime
 import requests
 import logging
 import json
-import iso8601
 from datetime import timedelta
 
 from weather import stations
@@ -13,7 +12,7 @@ SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
 ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"
-TIME_FORMAT_STR = "%Y-%m-%dT%H:%M:%S.000Z"
+TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
 FREEZER_ID = "16838664.5275010362836084938"
 HUMIDOR_ID = "16825492.35235396901569655440"
 
@@ -140,15 +139,19 @@ def get_weather(weather_data):
         if sensor_data:
             #
             # Humidor Sensor
-            time_stamp = iso8601.parse_date(sensor_data["sensors"][HUMIDOR_ID][0]["observed"]).astimezone(time_zone_object)
+            time_stamp = sensor_data["sensors"][HUMIDOR_ID][0]["observed"]
+            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
+
+            weather_data.humidor.time = time_stamp.strftime(TIME_FORMAT_STR)
             weather_data.humidor.humidity = get_average(sensor_data["sensors"][HUMIDOR_ID], "humidity")
             weather_data.humidor.temp = get_average(sensor_data["sensors"][HUMIDOR_ID], "temperature")
             weather_data.humidor.temp_c = f_to_c(weather_data.humidor.temp)
-            weather_data.humidor.time = time_stamp.strftime(TIME_FORMAT_STR)
 
             #
             # Freezer Sensor
-            time_stamp = iso8601.parse_date(sensor_data["sensors"][FREEZER_ID][0]["observed"]).astimezone(time_zone_object)
+            time_stamp = sensor_data["sensors"][FREEZER_ID][0]["observed"]
+            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
+
             weather_data.garage_freezer.humidity = get_average(sensor_data["sensors"][FREEZER_ID], "humidity")
             weather_data.garage_freezer.temp = get_average(sensor_data["sensors"][FREEZER_ID], "temperature")
             weather_data.garage_freezer.temp_c = f_to_c(weather_data.garage_freezer.temp)
