@@ -112,6 +112,7 @@ class WeatherData(object):
 		self.guest = EcobeeSensor()
 		self.cheese = EcobeeSensor()
 		self.whole_house_fan = WholeHomeFan()
+		self.garage_freezer = SensorSmall()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):

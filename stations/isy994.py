@@ -4,7 +4,7 @@ import datetime
 import xml.etree.ElementTree
 
 import requests
-import syslog
+import logging
 
 NODES = 'nodes/'
 
@@ -54,7 +54,7 @@ ALARM_BIKE_GARAGE = "nodes/n007_zone10"
 ALARM_ARMED = 1
 ALARM_DISARMED = 0
 ARMED_STARTS_AT = 2
-SECRET_FILE = "./secret/isy994"
+SECRET_FILE = "../secret/isy994"
 
 
 def c_to_f(c_temp):
@@ -70,7 +70,7 @@ def format_f(value, source):
 	try:
 		formatted_value = round(float(value) / 10.0, 1)
 	except:
-		syslog.syslog(syslog.LOG_CRIT, "Bad Data from isy994 " + str(value) + " " + source)
+		logging.error("Bad Data from isy994 " + str(value) + " " + source)
 		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
 	return formatted_value
 
@@ -82,12 +82,12 @@ def get_node_xml(node, s, user_name, password):
 		url = "http://isy994.evilminions.org/rest/" + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from isy994 " + str(ret.status_code))
+			logging.error("Bad response from isy994 " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
 			return
 		return xml.etree.ElementTree.fromstring(ret.content.decode())
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, "Unable to get isy994 " + str(e))
+		logging.error("Unable to get isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994 " + str(e))
 	return
 
@@ -301,7 +301,7 @@ def get_weather(weather_data):
 														float(weather_data.theater.sensor.temp)) / 9.0, 1)
 
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, "Unable to parse isy994 " + str(e))
+		logging.error("Unable to parse isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse isy994 " + str(e))
 	finally:
 		return

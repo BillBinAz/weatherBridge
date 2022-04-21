@@ -2,8 +2,7 @@
 
 import datetime
 import json
-
-import syslog
+import logging
 
 LIBRARY = 7621
 EQ_RACK = 14129
@@ -49,11 +48,11 @@ def get_sensor_data():
 				elif parsed_json['id'] == GARAGE:
 					garage = line
 	except IOError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
+		logging.info("Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		pass
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to parse weather433.temp " + e.msg)
+		logging.error("Unable to parse weather433.temp " + e.msg)
 		print(datetime.datetime.now().time(), "Unable to parse weather433.temp " + e.msg)
 
 	#
@@ -79,7 +78,7 @@ def save_sensor_data(all_sensors):
 		with open(JSON_FILE_NAME, "w+") as f:
 			f.write(all_sensors)
 	except IOError as e:
-		syslog.syslog(syslog.LOG_INFO, "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
+		logging.error("Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		pass
 
