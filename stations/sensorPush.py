@@ -159,18 +159,3 @@ def get_weather(weather_data):
         print(datetime.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
         return
 
-
-def main():
-    try:
-        #
-        # Get weather data from the rest endpoint
-        # weather_data = stations.get_weather()
-        weather_data = stations.get_weather()
-        get_weather(weather_data)
-        print(weather_data)
-    except Exception as e:
-        logging.error("Unable to update sensor_push " + str(e))
-        print(datetime.datetime.now().time(), "Unable to update sensor_push " + str(e))
-
-
-

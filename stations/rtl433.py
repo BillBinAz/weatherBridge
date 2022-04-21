@@ -70,14 +70,6 @@ def get_weather(weather_data, host):
 			weather_data.panel.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.panel.time = sensor.get(TIME)
 
-		sensor = parsed_json.get(HUMIDOR)
-		temp = sensor.get(TEMPERATURE)
-		if temp != data.DEFAULT_TEMP:
-			weather_data.humidor.humidity = sensor.get(HUMIDITY)
-			weather_data.humidor.temp = temp
-			weather_data.humidor.temp_c = sensor.get(TEMPERATURE_C)
-			weather_data.humidor.time = sensor.get(TIME)
-
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse kiosk " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse kiosk " + str(e))
