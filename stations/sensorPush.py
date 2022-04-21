@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from weather import stations
 
-SECRET_FILE = "../secret/sensor_push"
+SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
 ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"

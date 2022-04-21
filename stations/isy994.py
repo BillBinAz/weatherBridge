@@ -2,7 +2,6 @@
 
 import datetime
 import xml.etree.ElementTree
-
 import requests
 import logging
 
@@ -54,7 +53,7 @@ ALARM_BIKE_GARAGE = "nodes/n007_zone10"
 ALARM_ARMED = 1
 ALARM_DISARMED = 0
 ARMED_STARTS_AT = 2
-SECRET_FILE = "../secret/isy994"
+SECRET_FILE = "./secret/isy994"
 
 
 def c_to_f(c_temp):
@@ -97,6 +96,7 @@ def get_weather(weather_data):
 	try:
 		#
 		# Get ISY security data
+
 		with open(SECRET_FILE, "r") as secret_file:
 			user_name = secret_file.readline().strip('\n')
 			password = secret_file.readline().strip('\n')
