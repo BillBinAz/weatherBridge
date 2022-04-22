@@ -62,6 +62,14 @@ def get_weather(weather_data, host):
 			weather_data.main_garage.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.main_garage.time = sensor.get(TIME)
 
+		sensor = parsed_json.get(EQ_RACK)
+		temp = sensor.get(TEMPERATURE)
+		if temp != data.DEFAULT_TEMP:
+			weather_data.rack.humidity = sensor.get(HUMIDITY)
+			weather_data.rack.temp = temp
+			weather_data.rack.temp_c = sensor.get(TEMPERATURE_C)
+			weather_data.rack.time = sensor.get(TIME)
+
 		sensor = parsed_json.get(EQ_PANEL)
 		temp = sensor.get(TEMPERATURE)
 		if temp != data.DEFAULT_TEMP:
