@@ -2,6 +2,7 @@ from flask import Flask
 from weather import stations
 import logging
 import sys
+
 sys.path.append('/home/admin/.local/usr/bin')
 
 app = Flask(__name__)

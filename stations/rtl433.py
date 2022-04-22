@@ -3,7 +3,7 @@
 import datetime
 import json
 
-import syslog
+import logging
 import requests
 from weather import data
 
@@ -41,11 +41,11 @@ def rtl_433_json(host):
 		ret = requests.get(url, verify=False)
 		ret.close()
 		if ret.status_code != 200:
-			syslog.syslog(syslog.LOG_INFO, "Bad response from rtl_433_json " + str(ret.status_code))
+			logging.error("Bad response from rtl_433_json " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(ret.status_code))
 		return json.loads(ret.content.decode())
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, "Unable to parse rtl_433_json " + str(e))
+		logging.error( "Unable to parse rtl_433_json " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse rtl_433_json " + str(e))
 	return
 
@@ -78,19 +78,11 @@ def get_weather(weather_data, host):
 			weather_data.panel.temp_c = sensor.get(TEMPERATURE_C)
 			weather_data.panel.time = sensor.get(TIME)
 
-		sensor = parsed_json.get(HUMIDOR)
-		temp = sensor.get(TEMPERATURE)
-		if temp != data.DEFAULT_TEMP:
-			weather_data.humidor.humidity = sensor.get(HUMIDITY)
-			weather_data.humidor.temp = temp
-			weather_data.humidor.temp_c = sensor.get(TEMPERATURE_C)
-			weather_data.humidor.time = sensor.get(TIME)
-
 	except json.JSONDecodeError as e:
-		syslog.syslog(syslog.LOG_CRIT, "Unable to parse kiosk " + str(e))
+		logging.error("Unable to parse kiosk " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse kiosk " + str(e))
 	except TypeError as e:
-		syslog.syslog(syslog.LOG_CRIT, "Unable to parse kiosk: TypeError " + str(e))
+		logging.error("Unable to parse kiosk: TypeError " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + str(e))
 	finally:
 		return

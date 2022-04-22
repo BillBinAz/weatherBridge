@@ -3,8 +3,8 @@
 import datetime
 
 import requests
-import syslog
 import urllib3
+import logging
 
 ISY_INTEGER = 1
 ISY_STATE = 2
@@ -25,13 +25,13 @@ def get_rest():
         ret = requests.get(url, verify=False)
 
         if ret.status_code != 200:
-            syslog.syslog(syslog.LOG_CRIT, "Bad response from isy994 " + str(ret.status_code))
+            logging.error("Bad response from isy994 " + str(ret.status_code))
             print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
             return
         return ret.content.decode()
 
     except Exception as e:
-        syslog.syslog(syslog.LOG_CRIT, "Unable to get weather data from home " + str(e))
+        logging.error("Unable to get weather data from home " + str(e))
         print(datetime.datetime.now().time(), "Unable to get weather data from home " + str(e))
     return
 
@@ -44,7 +44,7 @@ def main():
         print(get_rest())
 
     except Exception as e:
-        syslog.syslog(syslog.LOG_CRIT, "Unable to get fan speed " + str(e))
+        logging.error("Unable to get fan speed " + str(e))
         print(datetime.datetime.now().time(), "Unable to get fan speed " + str(e))
 
 
