@@ -153,7 +153,7 @@ def get_weather(weather_data):
 
             weather_data.main_garage_freezer.humidity = get_average(sensor_data["sensors"][FREEZER_ID], "humidity")
             weather_data.main_garage_freezer.temp = get_average(sensor_data["sensors"][FREEZER_ID], "temperature")
-            weather_data.main_garage_freezer.temp_c = f_to_c(weather_data.garage_freezer.temp)
+            weather_data.main_garage_freezer.temp_c = f_to_c(weather_data.main_garage_freezer.temp)
             weather_data.main_garage_freezer.time = time_stamp.strftime(TIME_FORMAT_STR)
 
     except Exception as e:
