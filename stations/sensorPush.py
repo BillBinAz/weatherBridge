@@ -103,8 +103,7 @@ def get_sensor_data(access_token):
     try:
         data_to = datetime.datetime.utcnow()
         data_from = data_to - timedelta(minutes=30)
-        data = {"limit": 10, "startTime": data_from.isoformat(),
-                "stopTime": data_to.isoformat()}
+        data = {"limit": 10}
         json_post_data = json.dumps(data)
 
         ret = requests.post(DATA_URL, data=json_post_data, headers={"Accept": "application/json",
