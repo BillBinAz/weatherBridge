@@ -36,8 +36,8 @@ def format_f(value, source):
     try:
         formatted_value = round(float(value) / 10.0, 1)
     except:
-        logging.error("Bad Data from isy994 " + str(value) + " " + source)
-        print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
+        logging.error("Bad Data from sensorPush " + str(value) + " " + source)
+        print(datetime.datetime.now().time(), " -  Bad Data from sensorPush " + str(source) + " " + source)
     return formatted_value
 
 
