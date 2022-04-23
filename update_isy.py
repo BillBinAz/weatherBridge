@@ -71,7 +71,7 @@ def main():
     try:
         #
         # Get weather data from the rest endpoint
-        weather_data = stations.get_weather()
+        # weather_data = stations.get_weather()
         weather_dict = get_rest()
 
         #
