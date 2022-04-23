@@ -13,9 +13,9 @@ AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
 ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"
 TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
-FREEZER_ID = "16838664.5275010362836084938"
-HUMIDOR_ID = "16825492.35235396901569655440"
-MAIN_GARAGE_ID = "16803031.36755478814198086988"
+FREEZER_ID = "16838664"
+HUMIDOR_ID = "16825492"
+MAIN_GARAGE_ID = "16803031"
 
 def c_to_f(c_temp):
     #
@@ -137,32 +137,42 @@ def get_weather(weather_data):
 
         if sensor_data:
             #
+            # Get full keys
+            for sensor in sensor_data["sensors"]:
+                sensor_key = str(sensor)
+                if sensor_key.startswith(HUMIDOR_ID):
+                    humidor_key = sensor_key
+                elif sensor_key.startswith(MAIN_GARAGE_ID):
+                    garage_key = sensor_key
+                elif sensor_key.startswith(FREEZER_ID):
+                    garage_freezer_key = sensor_key
+            #
             # Humidor Sensor
-            time_stamp = sensor_data["sensors"][HUMIDOR_ID][0]["observed"]
+            time_stamp = sensor_data["sensors"][humidor_key][0]["observed"]
             time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
 
             weather_data.humidor.time = time_stamp.strftime(TIME_FORMAT_STR)
-            weather_data.humidor.humidity = get_average(sensor_data["sensors"][HUMIDOR_ID], "humidity")
-            weather_data.humidor.temp = get_average(sensor_data["sensors"][HUMIDOR_ID], "temperature")
+            weather_data.humidor.humidity = get_average(sensor_data["sensors"][humidor_key], "humidity")
+            weather_data.humidor.temp = get_average(sensor_data["sensors"][humidor_key], "temperature")
             weather_data.humidor.temp_c = f_to_c(weather_data.humidor.temp)
 
             #
             # Freezer Sensor
-            time_stamp = sensor_data["sensors"][FREEZER_ID][0]["observed"]
+            time_stamp = sensor_data["sensors"][garage_freezer_key][0]["observed"]
             time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
 
-            weather_data.main_garage_freezer.humidity = get_average(sensor_data["sensors"][FREEZER_ID], "humidity")
-            weather_data.main_garage_freezer.temp = get_average(sensor_data["sensors"][FREEZER_ID], "temperature")
+            weather_data.main_garage_freezer.humidity = get_average(sensor_data["sensors"][garage_freezer_key], "humidity")
+            weather_data.main_garage_freezer.temp = get_average(sensor_data["sensors"][garage_freezer_key], "temperature")
             weather_data.main_garage_freezer.temp_c = f_to_c(weather_data.main_garage_freezer.temp)
             weather_data.main_garage_freezer.time = time_stamp.strftime(TIME_FORMAT_STR)
 
             #
             # Main Garage Sensor
-            time_stamp = sensor_data["sensors"][MAIN_GARAGE_ID][0]["observed"]
+            time_stamp = sensor_data["sensors"][garage_key][0]["observed"]
             time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
 
-            weather_data.main_garage.humidity = get_average(sensor_data["sensors"][MAIN_GARAGE_ID], "humidity")
-            weather_data.main_garage.temp = get_average(sensor_data["sensors"][MAIN_GARAGE_ID], "temperature")
+            weather_data.main_garage.humidity = get_average(sensor_data["sensors"][garage_key], "humidity")
+            weather_data.main_garage.temp = get_average(sensor_data["sensors"][garage_key], "temperature")
             weather_data.main_garage.temp_c = f_to_c(weather_data.main_garage.temp)
             weather_data.main_garage.time = time_stamp.strftime(TIME_FORMAT_STR)
 
