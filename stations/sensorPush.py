@@ -15,7 +15,7 @@ DATA_URL = "https://api.sensorpush.com/api/v1/samples"
 TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
 FREEZER_ID = "16838664.5275010362836084938"
 HUMIDOR_ID = "16825492.35235396901569655440"
-
+MAIN_GARAGE_ID = "16803031.36755478814198086988"
 
 def c_to_f(c_temp):
     #
@@ -155,6 +155,16 @@ def get_weather(weather_data):
             weather_data.main_garage_freezer.temp = get_average(sensor_data["sensors"][FREEZER_ID], "temperature")
             weather_data.main_garage_freezer.temp_c = f_to_c(weather_data.main_garage_freezer.temp)
             weather_data.main_garage_freezer.time = time_stamp.strftime(TIME_FORMAT_STR)
+
+            #
+            # Main Garage Sensor
+            time_stamp = sensor_data["sensors"][MAIN_GARAGE_ID][0]["observed"]
+            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
+
+            weather_data.main_garage.humidity = get_average(sensor_data["sensors"][MAIN_GARAGE_ID], "humidity")
+            weather_data.main_garage.temp = get_average(sensor_data["sensors"][MAIN_GARAGE_ID], "temperature")
+            weather_data.main_garage.temp_c = f_to_c(weather_data.main_garage.temp)
+            weather_data.main_garage.time = time_stamp.strftime(TIME_FORMAT_STR)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:data " + str(e))

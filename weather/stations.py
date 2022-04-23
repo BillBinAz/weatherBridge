@@ -8,7 +8,6 @@ def get_weather():
 	isy994.get_weather(cur_weather)
 	wifiLogger.get_weather(cur_weather)
 	airScape.get_weather(cur_weather)
-	rtl433.get_weather(cur_weather, "humidor-pi.evilminions.org")
 	rtl433.get_weather(cur_weather, "rtl433.evilminions.org")
 	sensorPush.get_weather(cur_weather)
 	return cur_weather
