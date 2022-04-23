@@ -54,13 +54,6 @@ def get_weather(weather_data, host):
 
 	try:
 		parsed_json = rtl_433_json(host)
-		sensor = parsed_json.get(MAIN_GARAGE)
-		temp = sensor.get(TEMPERATURE)
-		if temp != data.DEFAULT_TEMP:
-			weather_data.main_garage.humidity = sensor.get(HUMIDITY)
-			weather_data.main_garage.temp = temp
-			weather_data.main_garage.temp_c = sensor.get(TEMPERATURE_C)
-			weather_data.main_garage.time = sensor.get(TIME)
 
 		sensor = parsed_json.get(EQ_RACK)
 		temp = sensor.get(TEMPERATURE)
