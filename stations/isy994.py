@@ -22,13 +22,14 @@ ZW_MASTER_THERMOSTAT = "nodes/n004_t521778805292"
 ZW_GYM_ECOBEE = "nodes/n004_rs_kz2j"
 ZW_MASTER_ECOBEE = "nodes/n004_rs_gbfs"
 ZW_OFFICE_ECOBEE = "nodes/n004_rs_f869"
-
-ZW_MAIN_GARAGE = "nodes/ZW025_1"
-ZW_MC_GARAGE = "nodes/ZW095_1"
 ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
 ZW_SPA_PUMP = "nodes/ZW044_1"
 ZW_POOL_LIGHT = "nodes/ZW080_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
+
+MYQ_MAIN_GARAGE = "nodes/n001_gw33001391fd"
+MYQ_MC_GARAGE = "nodes/n001_cg0846887726"
+MYQ_BIKE_GARAGE = "nodes/n001_cg08469920f5"
 
 TEMPERATURE = "ST"
 CLIMATE_HEAT_POINT = "CLISPH"
@@ -49,7 +50,6 @@ ALARM_OFFICES = "nodes/n007_zone05"
 ALARM_WEST_WING = "nodes/n007_zone06"
 ALARM_LIVING_GREAT_MOTION = "nodes/n007_zone07"
 ALARM_MASTER_MOTION = "nodes/n007_zone08"
-ALARM_BIKE_GARAGE = "nodes/n007_zone10"
 ALARM_ARMED = 1
 ALARM_DISARMED = 0
 ARMED_STARTS_AT = 2
@@ -267,26 +267,29 @@ def get_weather(weather_data):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.west_wing = sensor.get('value')
 
-		xml_response = get_node_xml(ALARM_BIKE_GARAGE, s, user_name, password)
+		xml_response = get_node_xml(MYQ_MC_GARAGE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.bike_garage = sensor.get('value')
-
-		xml_response = get_node_xml(ZW_MC_GARAGE, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				if sensor.get('value') == "100":
+				if sensor.get('value') == "1":
 					weather_data.alarm.mc_garage = "1"
 				else:
 					weather_data.alarm.mc_garage = "0"
 
-		xml_response = get_node_xml(ZW_MAIN_GARAGE, s, user_name, password)
+		xml_response = get_node_xml(MYQ_MAIN_GARAGE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				if sensor.get('value') == "100":
+				if sensor.get('value') == 1:
 					weather_data.alarm.main_garage = "1"
 				else:
 					weather_data.alarm.main_garage = "0"
+
+		xml_response = get_node_xml(MYQ_BIKE_GARAGE, s, user_name, password)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == 'ST':
+				if sensor.get('value') == 1:
+					weather_data.alarm.bike_garage = "1"
+				else:
+					weather_data.alarm.bike_garage = "0"
 
 		s.close()
 
