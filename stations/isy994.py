@@ -10,18 +10,18 @@ NODES = 'nodes/'
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
 
-ZW_KITCHEN_THERMOSTAT = "nodes/n004_t521752427579"
-ZW_LIBRARY_ECOBEE = "nodes/n004_rs_ptth"
-ZW_GUEST_ECOBEE = "nodes/n004_rs_x9pl"
-ZW_KITCHEN_ECOBEE = "nodes/n004_s521752427579"
-ZW_CHEESE_ECOBEE = "nodes/n004_rs_x9lx"
-ZW_THEATER_ECOBEE = "nodes/n004_rs_bwn4"
-ZW_LIVING_ROOM_ECOBEE = "nodes/n004_rs_bw6z"
+ZW_KITCHEN_THERMOSTAT = "nodes/n001_t521752427579"
+ZW_LIBRARY_ECOBEE = "nodes/n001_rs_ptth"
+ZW_GUEST_ECOBEE = "nodes/n001_rs_x9pl"
+ZW_KITCHEN_ECOBEE = "nodes/n001_t521752427579"
+ZW_CHEESE_ECOBEE = "nodes/n001_rs_x9lx"
+ZW_THEATER_ECOBEE = "nodes/n001_rs_bwn4"
+ZW_LIVING_ROOM_ECOBEE = "nodes/n001_rs_bw6z"
 
-ZW_MASTER_THERMOSTAT = "nodes/n004_t521778805292"
-ZW_GYM_ECOBEE = "nodes/n004_rs_kz2j"
-ZW_MASTER_ECOBEE = "nodes/n004_rs_gbfs"
-ZW_OFFICE_ECOBEE = "nodes/n004_rs_f869"
+ZW_MASTER_THERMOSTAT = "nodes/n001_t521778805292"
+ZW_GYM_ECOBEE = "nodes/n001_rs_kz2j"
+ZW_MASTER_ECOBEE = "nodes/n001_rs_gbfs"
+ZW_OFFICE_ECOBEE = "nodes/n001_rs_f869"
 ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
 ZW_SPA_PUMP = "nodes/ZW044_1"
 ZW_POOL_LIGHT = "nodes/ZW080_1"
@@ -267,29 +267,29 @@ def get_weather(weather_data):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.west_wing = sensor.get('value')
 
-		xml_response = get_node_xml(MYQ_MC_GARAGE, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				if sensor.get('value') == "1":
-					weather_data.alarm.mc_garage = "1"
-				else:
-					weather_data.alarm.mc_garage = "0"
-
-		xml_response = get_node_xml(MYQ_MAIN_GARAGE, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				if sensor.get('value') == 1:
-					weather_data.alarm.main_garage = "1"
-				else:
-					weather_data.alarm.main_garage = "0"
-
-		xml_response = get_node_xml(MYQ_BIKE_GARAGE, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				if sensor.get('value') == 1:
-					weather_data.alarm.bike_garage = "1"
-				else:
-					weather_data.alarm.bike_garage = "0"
+#		xml_response = get_node_xml(MYQ_MC_GARAGE, s, user_name, password)
+#		for sensor in xml_response.find('properties').findall('property'):
+#			if sensor.get('id') == 'ST':
+#				if sensor.get('value') == "1":
+#					weather_data.alarm.mc_garage = "1"
+#				else:
+#					weather_data.alarm.mc_garage = "0"
+#
+#		xml_response = get_node_xml(MYQ_MAIN_GARAGE, s, user_name, password)
+#		for sensor in xml_response.find('properties').findall('property'):
+#			if sensor.get('id') == 'ST':
+#				if sensor.get('value') == 1:
+#					weather_data.alarm.main_garage = "1"
+#				else:
+#					weather_data.alarm.main_garage = "0"
+#
+#		xml_response = get_node_xml(MYQ_BIKE_GARAGE, s, user_name, password)
+#		for sensor in xml_response.find('properties').findall('property'):
+#			if sensor.get('id') == 'ST':
+#				if sensor.get('value') == 1:
+#					weather_data.alarm.bike_garage = "1"
+#				else:
+#					weather_data.alarm.bike_garage = "0"
 
 		s.close()
 

@@ -1,4 +1,6 @@
 Flask
-xml.etree.ElementTree
 Requests
 jsonpickle
+pymyq
+aiohttp
+urllib3
