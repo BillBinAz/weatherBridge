@@ -64,7 +64,8 @@ async def async_get_myq(weather_data) -> None:
 
 def get_weather(weather_data):
     try:
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         coroutine = async_get_myq(weather_data)
         loop.run_until_complete(coroutine)
     except Exception as e:
