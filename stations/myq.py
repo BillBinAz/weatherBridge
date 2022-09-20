@@ -27,7 +27,6 @@ async def async_get_myq(weather_data) -> None:
             garage = devices[BIKE_GARAGE]
             online = garage.online
             state = garage.state
-            name = garage.name
 
             if online and state == 'closed':
                 weather_data.alarm.bike_garage = 1
@@ -38,7 +37,6 @@ async def async_get_myq(weather_data) -> None:
             garage = devices[MOTORCYCLE_GARAGE]
             online = garage.online
             state = garage.state
-            name = garage.name
 
             if online and state == 'closed':
                 weather_data.alarm.mc_garage = 1
@@ -49,7 +47,6 @@ async def async_get_myq(weather_data) -> None:
             garage = devices[MAIN_GARAGE]
             online = garage.online
             state = garage.state
-            name = garage.name
 
             if online and state == 'closed':
                 weather_data.alarm.main_garage = 1
