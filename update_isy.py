@@ -15,9 +15,9 @@ GARAGE_FREEZER_TEMP = 14
 BACK_YARD_TEMP = 13
 MAIN_GARAGE = 18
 AVERAGE_HOUSE_TEMP = 25
-BIKE_GARAGE = 31
-MAIN_GARAGE = 22
-MOTORCYCLE_GARAGE = 29
+BIKE_GARAGE = 3
+MAIN_GARAGE = 2
+MOTORCYCLE_GARAGE = 4
 SECRET_FILE = "secret/isy994"
 
 
@@ -62,15 +62,17 @@ def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, la
 
 
 def update_isy(weather_dict, s, user_name, password):
+
     # temps
     push_temp_isy(s, user_name, password, ISY_INTEGER, BACK_YARD_TEMP, weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
     push_temp_isy(s, user_name, password,  ISY_INTEGER, MAIN_GARAGE, weather_dict["main_garage"]["temp"], 'MAIN_GARAGE_TEMP')
     push_temp_isy(s, user_name, password,  ISY_INTEGER, GARAGE_FREEZER_TEMP, weather_dict["main_garage_freezer"]["temp"], 'GARAGE_FREEZER_TEMP')
     push_temp_isy(s, user_name, password,  ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
+
     # garage doors
-    push_temp_isy(s, user_name, password,  ISY_INTEGER, BIKE_GARAGE, weather_dict["alarm"]["bike_garage"], 'bike_garage')
-    push_temp_isy(s, user_name, password,  ISY_INTEGER, MOTORCYCLE_GARAGE, weather_dict["alarm"]["mc_garage"], 'mc_garage')
-    push_temp_isy(s, user_name, password,  ISY_INTEGER, MAIN_GARAGE, weather_dict["alarm"]["main_garage"], 'main_garage')
+    push_temp_isy(s, user_name, password,  ISY_STATE, BIKE_GARAGE, weather_dict["alarm"]["bike_garage"], 'bike_garage')
+    push_temp_isy(s, user_name, password,  ISY_STATE, MOTORCYCLE_GARAGE, weather_dict["alarm"]["mc_garage"], 'mc_garage')
+    push_temp_isy(s, user_name, password,  ISY_STATE, MAIN_GARAGE, weather_dict["alarm"]["main_garage"], 'main_garage')
     logging.error("ISY pushed")
 
 
