@@ -41,17 +41,18 @@ HUMIDITY = "CLIHUM"
 OCCUPANCY = "GV1"
 HEAT_COOL_STATE = "CLIHCS"  # 0 = idle | 1 = Heat | 2 = Cool
 
-ALARM_STATUS = "nodes/n007_hwalrm1_part1"
-ALARM_FRONT_GARAGE_DOOR = "nodes/n007_hwalrm1_z01"
-ALARM_SLIDING_GLASS_DOOR = "nodes/n007_hwalrm1_z02"
-ALARM_LIVING_GREAT = "nodes/n007_hwalrm1_z03"
-ALARM_MASTER = "nodes/n007_hwalrm1_z04"
-ALARM_OFFICES = "nodes/n007_hwalrm1_z05"
-ALARM_WEST_WING = "nodes/n007_hwalrm1_z06"
-ALARM_LIVING_GREAT_MOTION = "nodes/n007_hwalrm1_z07"
-ALARM_MASTER_MOTION = "nodes/n007_hwalrm1_z08"
+ALARM_STATUS = "nodes/n008_partition1"
+ALARM_FRONT_GARAGE_DOOR = "nodes/n008_zone01"
+ALARM_SLIDING_GLASS_DOOR = "nodes/n008_zone02"
+ALARM_LIVING_GREAT = "nodes/n008_zone03"
+ALARM_MASTER = "nodes/n008_zone04"
+ALARM_OFFICES = "nodes/n008_zone05"
+ALARM_WEST_WING = "nodes/n008_zone06"
+ALARM_LIVING_GREAT_MOTION = "nodes/n008_zone07"
+ALARM_MASTER_MOTION = "nodes/n008_zone08"
 ALARM_ARMED = 1
 ALARM_DISARMED = 0
+ALARM_ZONES_CLOSED = 0
 ARMED_STARTS_AT = 2
 SECRET_FILE = "./secret/isy994"
 
@@ -89,6 +90,22 @@ def get_node_xml(node, s, user_name, password):
 		logging.error("Unable to get isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994 " + str(e))
 	return
+
+
+def get_zone_status(zone_status):
+
+	if int(zone_status) == ALARM_ZONES_CLOSED:
+		return 1
+	return 0
+
+
+def get_alarm_status(alarm_status):
+
+	if int(alarm_status) == ALARM_DISARMED:
+		return 0
+	if int(alarm_status) > ALARM_DISARMED:
+		return 1
+	return 0
 
 
 def get_weather(weather_data):
@@ -232,64 +249,37 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ALARM_STATUS, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				if int(sensor.get('value')) >= ARMED_STARTS_AT:
-					weather_data.alarm.status = ALARM_ARMED
-				else:
-					weather_data.alarm.status = ALARM_DISARMED
+				weather_data.alarm.status = get_alarm_status(sensor.get('value'))
 
 		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.front_garage_door = sensor.get('value')
+				weather_data.alarm.front_garage_door = get_zone_status(sensor.get('value'))
 
 		xml_response = get_node_xml(ALARM_SLIDING_GLASS_DOOR, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.sliding_glass_door = sensor.get('value')
+				weather_data.alarm.sliding_glass_door = get_zone_status(sensor.get('value'))
 
 		xml_response = get_node_xml(ALARM_LIVING_GREAT, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.living_great = sensor.get('value')
+				weather_data.alarm.living_great = get_zone_status(sensor.get('value'))
 
 		xml_response = get_node_xml(ALARM_MASTER, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.master = sensor.get('value')
+				weather_data.alarm.master = get_zone_status(sensor.get('value'))
 
 		xml_response = get_node_xml(ALARM_OFFICES, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.offices = sensor.get('value')
+				weather_data.alarm.offices = get_zone_status(sensor.get('value'))
 
 		xml_response = get_node_xml(ALARM_WEST_WING, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.west_wing = sensor.get('value')
-
-#		xml_response = get_node_xml(MYQ_MC_GARAGE, s, user_name, password)
-#		for sensor in xml_response.find('properties').findall('property'):
-#			if sensor.get('id') == 'ST':
-#				if sensor.get('value') == "1":
-#					weather_data.alarm.mc_garage = "1"
-#				else:
-#					weather_data.alarm.mc_garage = "0"
-#
-#		xml_response = get_node_xml(MYQ_MAIN_GARAGE, s, user_name, password)
-#		for sensor in xml_response.find('properties').findall('property'):
-#			if sensor.get('id') == 'ST':
-#				if sensor.get('value') == 1:
-#					weather_data.alarm.main_garage = "1"
-#				else:
-#					weather_data.alarm.main_garage = "0"
-#
-#		xml_response = get_node_xml(MYQ_BIKE_GARAGE, s, user_name, password)
-#		for sensor in xml_response.find('properties').findall('property'):
-#			if sensor.get('id') == 'ST':
-#				if sensor.get('value') == 1:
-#					weather_data.alarm.bike_garage = "1"
-#				else:
-#					weather_data.alarm.bike_garage = "0"
+				weather_data.alarm.west_wing = get_zone_status(sensor.get('value'))
 
 		s.close()
 
