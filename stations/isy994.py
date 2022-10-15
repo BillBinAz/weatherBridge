@@ -50,10 +50,15 @@ ALARM_OFFICES = "nodes/n008_zone05"
 ALARM_WEST_WING = "nodes/n008_zone06"
 ALARM_LIVING_GREAT_MOTION = "nodes/n008_zone07"
 ALARM_MASTER_MOTION = "nodes/n008_zone08"
-ALARM_ARMED = 1
-ALARM_DISARMED = 0
+ALARM_READY = "Ready"
+ALARM_NOT_READY = "Not Ready"
+ALARM_ARMED_AWAY = "Armed Away"
+ALARM_ARMED_STAY = "Armed Stay"
+ALARM_ARMED_INSTANT = "Armed Instant"
+ALARM_ARMED_NIGHT = "Night Armed"
+ALARM_ALARMING = "Alarming"
 ALARM_ZONES_CLOSED = 0
-ARMED_STARTS_AT = 2
+
 SECRET_FILE = "./secret/isy994"
 
 
@@ -101,9 +106,13 @@ def get_zone_status(zone_status):
 
 def get_alarm_status(alarm_status):
 
-	if int(alarm_status) == ALARM_DISARMED:
-		return 0
-	if int(alarm_status) > ALARM_DISARMED:
+	if alarm_status == ALARM_ARMED_AWAY:
+		return 1
+	if alarm_status == ALARM_ARMED_STAY:
+		return 1
+	if alarm_status == ALARM_ARMED_INSTANT:
+		return 1
+	if alarm_status == ALARM_ARMED_NIGHT:
 		return 1
 	return 0
 
@@ -249,7 +258,7 @@ def get_weather(weather_data):
 		xml_response = get_node_xml(ALARM_STATUS, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
-				weather_data.alarm.status = get_alarm_status(sensor.get('value'))
+				weather_data.alarm.status = get_alarm_status(sensor.get('formatted'))
 
 		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
