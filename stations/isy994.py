@@ -41,15 +41,15 @@ HUMIDITY = "CLIHUM"
 OCCUPANCY = "GV1"
 HEAT_COOL_STATE = "CLIHCS"  # 0 = idle | 1 = Heat | 2 = Cool
 
-ALARM_STATUS = "nodes/n008_partition1"
-ALARM_FRONT_GARAGE_DOOR = "nodes/n008_zone01"
-ALARM_SLIDING_GLASS_DOOR = "nodes/n008_zone02"
-ALARM_LIVING_GREAT = "nodes/n008_zone03"
-ALARM_MASTER = "nodes/n008_zone04"
-ALARM_OFFICES = "nodes/n008_zone05"
-ALARM_WEST_WING = "nodes/n008_zone06"
-ALARM_LIVING_GREAT_MOTION = "nodes/n008_zone07"
-ALARM_MASTER_MOTION = "nodes/n008_zone08"
+ALARM_STATUS = "nodes/n008_hwalrm1_part1"
+ALARM_FRONT_GARAGE_DOOR = "nodes/n008_hwalrm1_z01"
+ALARM_SLIDING_GLASS_DOOR = "nodes/n008_hwalrm1_z02"
+ALARM_LIVING_GREAT = "nodes/n008_hwalrm1_z03"
+ALARM_MASTER = "nodes/n008_hwalrm1_z04"
+ALARM_OFFICES = "nodes/n008_hwalrm1_z05"
+ALARM_WEST_WING = "nodes/n008_hwalrm1_z06"
+ALARM_LIVING_GREAT_MOTION = "nodes/n008_hwalrm1_z07"
+ALARM_MASTER_MOTION = "nodes/n008_hwalrm1_z08"
 ALARM_READY = "Ready"
 ALARM_NOT_READY = "Not Ready"
 ALARM_ARMED_AWAY = "Armed Away"
@@ -106,13 +106,7 @@ def get_zone_status(zone_status):
 
 def get_alarm_status(alarm_status):
 
-	if alarm_status == ALARM_ARMED_AWAY:
-		return 1
-	if alarm_status == ALARM_ARMED_STAY:
-		return 1
-	if alarm_status == ALARM_ARMED_INSTANT:
-		return 1
-	if alarm_status == ALARM_ARMED_NIGHT:
+	if int(alarm_status) > 0:
 		return 1
 	return 0
 
