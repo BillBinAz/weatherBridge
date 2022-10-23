@@ -58,7 +58,7 @@ ALARM_ARMED_STAY = "Armed Stay"
 ALARM_ARMED_INSTANT = "Armed Instant"
 ALARM_ARMED_NIGHT = "Night Armed"
 ALARM_ALARMING = "Alarming"
-ALARM_ZONES_CLOSED = '1'
+ALARM_ZONES_CLOSED = '0'
 
 SECRET_FILE = "./secret/isy994"
 
