@@ -51,13 +51,14 @@ ALARM_WEST_WING = "nodes/n008_hwalrm1_z06"
 ALARM_LIVING_GREAT_MOTION = "nodes/n008_hwalrm1_z07"
 ALARM_MASTER_MOTION = "nodes/n008_hwalrm1_z08"
 ALARM_READY = "Ready"
+ALARM_DISARMED = "Disarmed"
 ALARM_NOT_READY = "Not Ready"
 ALARM_ARMED_AWAY = "Armed Away"
 ALARM_ARMED_STAY = "Armed Stay"
 ALARM_ARMED_INSTANT = "Armed Instant"
 ALARM_ARMED_NIGHT = "Night Armed"
 ALARM_ALARMING = "Alarming"
-ALARM_ZONES_CLOSED = 0
+ALARM_ZONES_CLOSED = '1'
 
 SECRET_FILE = "./secret/isy994"
 
@@ -99,14 +100,14 @@ def get_node_xml(node, s, user_name, password):
 
 def get_zone_status(zone_status):
 
-	if int(zone_status) == ALARM_ZONES_CLOSED:
+	if str(zone_status) == ALARM_ZONES_CLOSED:
 		return 1
 	return 0
 
 
 def get_alarm_status(alarm_status):
 
-	if int(alarm_status) > 0:
+	if str(alarm_status) != ALARM_DISARMED:
 		return 1
 	return 0
 
