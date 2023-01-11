@@ -52,7 +52,7 @@ def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, la
 
     #
     # do a get on isy994 to update the data
-    url = "http://policy.evilminions.org:8080/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
+    url = "http://polisy.evilminions.org:8080/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
         round(float(f_temp)))
     ret = s.get(url, auth=(user_name, password), verify=False)
     if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
