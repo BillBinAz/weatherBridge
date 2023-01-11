@@ -85,7 +85,7 @@ def get_node_xml(node, s, user_name, password):
 
 	try:
 		# do a get on isy994 to update the data
-		url = "http://isy994.evilminions.org/rest/" + str(node)
+		url = "http://polisy.evilminions.org:8080/rest/" + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
 			logging.error("Bad response from isy994 " + str(ret.status_code))
@@ -123,15 +123,6 @@ def get_weather(weather_data):
 			password = secret_file.readline().strip('\n')
 
 		s = requests.Session()
-
-		xml_response = get_node_xml(ZW_THEATER_6IN1, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == HUMIDITY:
-				weather_data.theater.humidity = sensor.get('value')
-			elif sensor.get('id') == LUX_6IN1:
-				weather_data.theater.lux = sensor.get('value')
-			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.theater.temp = sensor.get('formatted')[:-2]
 
 		xml_response = get_node_xml(ZW_THEATER_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
