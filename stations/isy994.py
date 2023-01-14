@@ -9,7 +9,7 @@ NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-
+ISY_URL = "http://isy994.evilminions.org/rest/"
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_t521752427579"
 ZW_LIBRARY_ECOBEE = "nodes/n001_rs_ptth"
 ZW_GUEST_ECOBEE = "nodes/n001_rs_x9pl"
@@ -85,7 +85,7 @@ def get_node_xml(node, s, user_name, password):
 
 	try:
 		# do a get on isy994 to update the data
-		url = "http://polisy.evilminions.org:8080/rest/" + str(node)
+		url = ISY_URL + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
 			logging.error("Bad response from isy994 " + str(ret.status_code))
