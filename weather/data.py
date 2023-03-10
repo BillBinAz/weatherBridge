@@ -98,6 +98,7 @@ class WeatherData(object):
 		self.back_yard = SensorMajor()
 		self.library = EcobeeSensor()
 		self.humidor = SensorSmall()
+		self.safe = SensorSmall()
 		self.rack = SensorSmall()
 		self.panel = SensorSmall()
 		self.main_garage = SensorSmall()
