@@ -14,8 +14,9 @@ ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"
 TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
 FREEZER_ID = "16838664"
-HUMIDOR_ID = "16825492"
+HUMIDOR_ID = "16869529"
 MAIN_GARAGE_ID = "16803031"
+SAFE_ID = "16866908"
 
 def c_to_f(c_temp):
     #
@@ -66,7 +67,7 @@ def get_authorization():
     return
 
 
-def get_accesstoken(authorization_header):
+def get_access_token(authorization_header):
     try:
 
         data = {"authorization": authorization_header}
@@ -132,7 +133,7 @@ def get_weather(weather_data):
         time_zone_delta = datetime.timedelta(hours=-7)
         time_zone_object = datetime.timezone(time_zone_delta, name="MST")
         auth_token = get_authorization()
-        access_token = get_accesstoken(auth_token)
+        access_token = get_access_token(auth_token)
         sensor_data = get_sensor_data(access_token)
 
         if sensor_data:
@@ -146,6 +147,8 @@ def get_weather(weather_data):
                     garage_key = sensor_key
                 elif sensor_key.startswith(FREEZER_ID):
                     garage_freezer_key = sensor_key
+                elif sensor_key.startswith(SAFE_ID):
+                    safe_key = sensor_key
             #
             # Humidor Sensor
             time_stamp = sensor_data["sensors"][humidor_key][0]["observed"]
@@ -175,6 +178,16 @@ def get_weather(weather_data):
             weather_data.main_garage.temp = get_average(sensor_data["sensors"][garage_key], "temperature")
             weather_data.main_garage.temp_c = f_to_c(weather_data.main_garage.temp)
             weather_data.main_garage.time = time_stamp.strftime(TIME_FORMAT_STR)
+
+            #
+            # Safe Sensor
+            time_stamp = sensor_data["sensors"][safe_key][0]["observed"]
+            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
+
+            weather_data.safe.humidity = get_average(sensor_data["sensors"][safe_key], "humidity")
+            weather_data.safe.temp = get_average(sensor_data["sensors"][safe_key], "temperature")
+            weather_data.safe.temp_c = f_to_c(weather_data.safe.temp)
+            weather_data.safe.time = time_stamp.strftime(TIME_FORMAT_STR)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:data " + str(e))

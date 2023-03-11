@@ -6,10 +6,10 @@ import requests
 import logging
 
 NODES = 'nodes/'
-
+ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-
+ISY_URL = "http://isy994.evilminions.org/rest/"
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_t521752427579"
 ZW_LIBRARY_ECOBEE = "nodes/n001_rs_ptth"
 ZW_GUEST_ECOBEE = "nodes/n001_rs_x9pl"
@@ -41,23 +41,24 @@ HUMIDITY = "CLIHUM"
 OCCUPANCY = "GV1"
 HEAT_COOL_STATE = "CLIHCS"  # 0 = idle | 1 = Heat | 2 = Cool
 
-ALARM_STATUS = "nodes/n008_partition1"
-ALARM_FRONT_GARAGE_DOOR = "nodes/n008_zone01"
-ALARM_SLIDING_GLASS_DOOR = "nodes/n008_zone02"
-ALARM_LIVING_GREAT = "nodes/n008_zone03"
-ALARM_MASTER = "nodes/n008_zone04"
-ALARM_OFFICES = "nodes/n008_zone05"
-ALARM_WEST_WING = "nodes/n008_zone06"
-ALARM_LIVING_GREAT_MOTION = "nodes/n008_zone07"
-ALARM_MASTER_MOTION = "nodes/n008_zone08"
+ALARM_STATUS = "nodes/n008_hwalrm1_part1"
+ALARM_FRONT_GARAGE_DOOR = "nodes/n008_hwalrm1_z01"
+ALARM_SLIDING_GLASS_DOOR = "nodes/n008_hwalrm1_z02"
+ALARM_LIVING_GREAT = "nodes/n008_hwalrm1_z03"
+ALARM_MASTER = "nodes/n008_hwalrm1_z04"
+ALARM_OFFICES = "nodes/n008_hwalrm1_z05"
+ALARM_WEST_WING = "nodes/n008_hwalrm1_z06"
+ALARM_LIVING_GREAT_MOTION = "nodes/n008_hwalrm1_z07"
+ALARM_MASTER_MOTION = "nodes/n008_hwalrm1_z08"
 ALARM_READY = "Ready"
+ALARM_DISARMED = "Disarmed"
 ALARM_NOT_READY = "Not Ready"
 ALARM_ARMED_AWAY = "Armed Away"
 ALARM_ARMED_STAY = "Armed Stay"
 ALARM_ARMED_INSTANT = "Armed Instant"
 ALARM_ARMED_NIGHT = "Night Armed"
 ALARM_ALARMING = "Alarming"
-ALARM_ZONES_CLOSED = 0
+ALARM_ZONES_CLOSED = '0'
 
 SECRET_FILE = "./secret/isy994"
 
@@ -84,12 +85,12 @@ def get_node_xml(node, s, user_name, password):
 
 	try:
 		# do a get on isy994 to update the data
-		url = "http://isy994.evilminions.org/rest/" + str(node)
+		url = ISY_URL + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
 			logging.error("Bad response from isy994 " + str(ret.status_code))
 			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
-			return
+			return xml.etree.ElementTree.fromstring(ERROR_XML)
 		return xml.etree.ElementTree.fromstring(ret.content.decode())
 	except Exception as e:
 		logging.error("Unable to get isy994 " + str(e))
@@ -99,20 +100,14 @@ def get_node_xml(node, s, user_name, password):
 
 def get_zone_status(zone_status):
 
-	if int(zone_status) == ALARM_ZONES_CLOSED:
+	if str(zone_status) == ALARM_ZONES_CLOSED:
 		return 1
 	return 0
 
 
 def get_alarm_status(alarm_status):
 
-	if alarm_status == ALARM_ARMED_AWAY:
-		return 1
-	if alarm_status == ALARM_ARMED_STAY:
-		return 1
-	if alarm_status == ALARM_ARMED_INSTANT:
-		return 1
-	if alarm_status == ALARM_ARMED_NIGHT:
+	if str(alarm_status) != ALARM_DISARMED:
 		return 1
 	return 0
 
@@ -128,15 +123,6 @@ def get_weather(weather_data):
 			password = secret_file.readline().strip('\n')
 
 		s = requests.Session()
-
-		xml_response = get_node_xml(ZW_THEATER_6IN1, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == HUMIDITY:
-				weather_data.theater.humidity = sensor.get('value')
-			elif sensor.get('id') == LUX_6IN1:
-				weather_data.theater.lux = sensor.get('value')
-			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.theater.temp = sensor.get('formatted')[:-2]
 
 		xml_response = get_node_xml(ZW_THEATER_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -172,15 +158,6 @@ def get_weather(weather_data):
 				weather_data.library.temp = sensor.get('formatted')[:-2]
 			elif sensor.get('id') == OCCUPANCY:
 				weather_data.library.occupied = sensor.get('value')
-
-		xml_response = get_node_xml(ZW_LIVING_ROOM_6IN1, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == HUMIDITY:
-				weather_data.living_room.humidity = sensor.get('value')
-			elif sensor.get('id') == LUX_6IN1:
-				weather_data.living_room.lux = sensor.get('value')
-			elif sensor.get('id') == TEMPERATURE_6IN1:
-				weather_data.living_room.temp = sensor.get('formatted')[:-2]
 
 		xml_response = get_node_xml(ZW_LIVING_ROOM_ECOBEE, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):

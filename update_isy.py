@@ -13,10 +13,11 @@ ISY_INTEGER = 1
 ISY_STATE = 2
 GARAGE_FREEZER_TEMP = 14
 BACK_YARD_TEMP = 13
-MAIN_GARAGE = 18
+MAIN_GARAGE = 2
+MAIN_GARAGE_TEMP = 18
 AVERAGE_HOUSE_TEMP = 25
 BIKE_GARAGE = 3
-MAIN_GARAGE = 2
+MAIN_GARAGE = 18
 MOTORCYCLE_GARAGE = 4
 SECRET_FILE = "secret/isy994"
 
@@ -51,7 +52,7 @@ def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, la
 
     #
     # do a get on isy994 to update the data
-    url = "http://isy994.evilminions.org/rest/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
+    url = stations.isy994.ISY_URL + "/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
         round(float(f_temp)))
     ret = s.get(url, auth=(user_name, password), verify=False)
     if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
