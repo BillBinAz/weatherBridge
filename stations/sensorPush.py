@@ -129,30 +129,33 @@ def get_sensor_data(access_token, url):
     return
 
 
-def apply_calibration(value, adjustment):
-    return round( value + adjustment, 2)
-
-
 def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key):
 
     try:
         #
-        # Apply Sensor
+        # Time
         time_zone_delta = datetime.timedelta(hours=-7)
         time_zone_object = datetime.timezone(time_zone_delta, name="MST")
-
         time_stamp = sensor_data["sensors"][sensor_key][0]["observed"]
         time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
-
-        calibration_temp = calibration_data[sensor_key]["calibration"]["temperature"]
-        calibration_humidity = calibration_data[sensor_key]["calibration"]["humidity"]
-
         weather_data_station.time = time_stamp.strftime(TIME_FORMAT_STR)
+
+        #
+        # Temperature
+        calibration_temp = calibration_data[sensor_key]["calibration"]["temperature"]
+        raw_temp = get_average(sensor_data["sensors"][sensor_key], "temperature")
         weather_data_station.temp_calibration = calibration_temp
-        weather_data_station.humidity_calibration = calibration_humidity
-        weather_data_station.humidity = apply_calibration(get_average(sensor_data["sensors"][sensor_key], "humidity"), calibration_humidity)
-        weather_data_station.temp = apply_calibration(get_average(sensor_data["sensors"][sensor_key], "temperature"), calibration_temp)
+        weather_data_station.temp_raw = raw_temp
+        weather_data_station.temp = round(raw_temp + calibration_temp, 2)
         weather_data_station.temp_c = f_to_c(weather_data_station.temp)
+
+        #
+        # Humidity
+        calibration_humidity = calibration_data[sensor_key]["calibration"]["humidity"]
+        raw_humidity = get_average(sensor_data["sensors"][sensor_key], "humidity")
+        weather_data_station.humidity_calibration = calibration_humidity
+        weather_data_station.humidity_raw = raw_humidity
+        weather_data_station.humidity = round( raw_humidity + calibration_humidity, 2)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:data " + str(e))
