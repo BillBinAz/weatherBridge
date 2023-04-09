@@ -48,6 +48,16 @@ class SensorSmall(object):
 		self.time = ""
 
 
+class SensorSmallWithCalibration(object):
+	def __init__(self):
+		self.temp = DEFAULT_TEMP
+		self.temp_calibration = 0.0
+		self.temp_c = DEFAULT_TEMP
+		self.humidity = 0.0
+		self.humidity_calibration = 0.0
+		self.time = ""
+
+
 class Sensor6In1(object):
 
 	def __init__(self):
@@ -97,11 +107,11 @@ class WeatherData(object):
 		self.theater = Sensor6In1()
 		self.back_yard = SensorMajor()
 		self.library = EcobeeSensor()
-		self.humidor = SensorSmall()
-		self.safe = SensorSmall()
+		self.humidor = SensorSmallWithCalibration()
+		self.safe = SensorSmallWithCalibration()
 		self.rack = SensorSmall()
 		self.panel = SensorSmall()
-		self.main_garage = SensorSmall()
+		self.main_garage = SensorSmallWithCalibration()
 		self.living_room = Sensor6In1()
 		self.master_bedroom_thermostat = SensorThermostat()
 		self.kitchen_thermostat = SensorThermostat()
@@ -113,7 +123,7 @@ class WeatherData(object):
 		self.guest = EcobeeSensor()
 		self.cheese = EcobeeSensor()
 		self.whole_house_fan = WholeHomeFan()
-		self.main_garage_freezer = SensorSmall()
+		self.main_garage_freezer = SensorSmallWithCalibration()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):

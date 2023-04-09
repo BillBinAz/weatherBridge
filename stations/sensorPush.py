@@ -12,6 +12,7 @@ SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
 ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"
+CALIBRATION_URL = "https://api.sensorpush.com/api/v1/devices/sensors"
 TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
 FREEZER_ID = "16838664"
 HUMIDOR_ID = "16869529"
@@ -100,14 +101,14 @@ def get_average(data, key):
     return round(float(sum_temp / how_many), 1)
 
 
-def get_sensor_data(access_token):
+def get_sensor_data(access_token, url):
     try:
         data_to = datetime.datetime.utcnow()
         data_from = data_to - timedelta(minutes=30)
         data = {"limit": 10}
         json_post_data = json.dumps(data)
 
-        ret = requests.post(DATA_URL, data=json_post_data, headers={"Accept": "application/json",
+        ret = requests.post(url, data=json_post_data, headers={"Accept": "application/json",
                                                                     "Authorization": access_token})
         if ret.status_code != 200:
             logging.error("Bad response from sensor_push " + str(ret.status_code))
@@ -128,13 +129,45 @@ def get_sensor_data(access_token):
     return
 
 
+def apply_calibration(value, adjustment):
+    return round( value + adjustment, 2)
+
+
+def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key):
+
+    try:
+        #
+        # Apply Sensor
+        time_zone_delta = datetime.timedelta(hours=-7)
+        time_zone_object = datetime.timezone(time_zone_delta, name="MST")
+
+        time_stamp = sensor_data["sensors"][sensor_key][0]["observed"]
+        time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
+
+        calibration_temp = calibration_data[sensor_key]["calibration"]["temperature"]
+        calibration_humidity = calibration_data[sensor_key]["calibration"]["humidity"]
+
+        weather_data_station.time = time_stamp.strftime(TIME_FORMAT_STR)
+        weather_data_station.temp_calibration = calibration_temp
+        weather_data_station.humidity_calibration = calibration_humidity
+        weather_data_station.humidity = apply_calibration(get_average(sensor_data["sensors"][sensor_key], "humidity"), calibration_humidity)
+        weather_data_station.temp = apply_calibration(get_average(sensor_data["sensors"][sensor_key], "temperature"), calibration_temp)
+        weather_data_station.temp_c = f_to_c(weather_data_station.temp)
+
+    except Exception as e:
+        logging.error("Unable to get sensor_push:data " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
+    return
+
+
 def get_weather(weather_data):
     try:
         time_zone_delta = datetime.timedelta(hours=-7)
         time_zone_object = datetime.timezone(time_zone_delta, name="MST")
         auth_token = get_authorization()
         access_token = get_access_token(auth_token)
-        sensor_data = get_sensor_data(access_token)
+        calibration_data = get_sensor_data(access_token, CALIBRATION_URL)
+        sensor_data = get_sensor_data(access_token, DATA_URL)
 
         if sensor_data:
             #
@@ -151,43 +184,19 @@ def get_weather(weather_data):
                     safe_key = sensor_key
             #
             # Humidor Sensor
-            time_stamp = sensor_data["sensors"][humidor_key][0]["observed"]
-            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
-
-            weather_data.humidor.time = time_stamp.strftime(TIME_FORMAT_STR)
-            weather_data.humidor.humidity = get_average(sensor_data["sensors"][humidor_key], "humidity")
-            weather_data.humidor.temp = get_average(sensor_data["sensors"][humidor_key], "temperature")
-            weather_data.humidor.temp_c = f_to_c(weather_data.humidor.temp)
+            apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
 
             #
             # Freezer Sensor
-            time_stamp = sensor_data["sensors"][garage_freezer_key][0]["observed"]
-            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
-
-            weather_data.main_garage_freezer.humidity = get_average(sensor_data["sensors"][garage_freezer_key], "humidity")
-            weather_data.main_garage_freezer.temp = get_average(sensor_data["sensors"][garage_freezer_key], "temperature")
-            weather_data.main_garage_freezer.temp_c = f_to_c(weather_data.main_garage_freezer.temp)
-            weather_data.main_garage_freezer.time = time_stamp.strftime(TIME_FORMAT_STR)
+            apply_sensor(weather_data.main_garage_freezer, sensor_data, calibration_data, garage_freezer_key)
 
             #
             # Main Garage Sensor
-            time_stamp = sensor_data["sensors"][garage_key][0]["observed"]
-            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
-
-            weather_data.main_garage.humidity = get_average(sensor_data["sensors"][garage_key], "humidity")
-            weather_data.main_garage.temp = get_average(sensor_data["sensors"][garage_key], "temperature")
-            weather_data.main_garage.temp_c = f_to_c(weather_data.main_garage.temp)
-            weather_data.main_garage.time = time_stamp.strftime(TIME_FORMAT_STR)
+            apply_sensor(weather_data.main_garage, sensor_data, calibration_data, garage_key)
 
             #
             # Safe Sensor
-            time_stamp = sensor_data["sensors"][safe_key][0]["observed"]
-            time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
-
-            weather_data.safe.humidity = get_average(sensor_data["sensors"][safe_key], "humidity")
-            weather_data.safe.temp = get_average(sensor_data["sensors"][safe_key], "temperature")
-            weather_data.safe.temp_c = f_to_c(weather_data.safe.temp)
-            weather_data.safe.time = time_stamp.strftime(TIME_FORMAT_STR)
+            apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:data " + str(e))
