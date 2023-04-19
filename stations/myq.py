@@ -13,6 +13,11 @@ MOTORCYCLE_GARAGE = 'CG0846887726'
 async def async_get_myq(weather_data) -> None:
 
     try:
+
+        # default to closed
+        weather_data.alarm.main_garage = 1
+        weather_data.alarm.mc_garage = 1
+
         with open(SECRET_FILE, "r") as secret_file:
             user_name = secret_file.readline().strip('\n')
             password = secret_file.readline().strip('\n')
