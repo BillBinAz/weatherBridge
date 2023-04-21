@@ -14,10 +14,6 @@ async def async_get_myq(weather_data) -> None:
 
     try:
 
-        # default to closed
-        weather_data.alarm.main_garage = 1
-        weather_data.alarm.mc_garage = 1
-
         with open(SECRET_FILE, "r") as secret_file:
             user_name = secret_file.readline().strip('\n')
             password = secret_file.readline().strip('\n')
@@ -66,10 +62,15 @@ async def async_get_myq(weather_data) -> None:
 
 def get_weather(weather_data):
     try:
+        # default to closed
+        weather_data.alarm.main_garage = 1
+        weather_data.alarm.mc_garage = 1
+
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         coroutine = async_get_myq(weather_data)
         loop.run_until_complete(coroutine)
+
     except Exception as e:
         logging.error("MyQ: get_weather " + str(e))
         print(datetime.datetime.now().time(), "MyQ: get_weather  " + str(e))
