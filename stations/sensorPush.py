@@ -4,6 +4,7 @@ import datetime
 import requests
 import logging
 import json
+import sys
 from datetime import timedelta
 
 from weather import stations
@@ -202,6 +203,10 @@ def get_weather(weather_data):
             apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
 
     except Exception as e:
+        logging.error("Unable to get sensor_push:data " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
+    except:
+        e = sys.exc_info()[0]
         logging.error("Unable to get sensor_push:data " + str(e))
         print(datetime.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
         return
