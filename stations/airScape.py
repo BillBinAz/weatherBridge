@@ -47,7 +47,7 @@ def clean_up_xml(content):
 		str_content = content.decode("utf=8", "ignore")
 		start = str_content.find("<server_response>")
 		end = str_content.find("</server_response>") + len("</server_response>")
-		return str_content.replace(str_content[start:end], "")
+		return str_content.replace(str_content[start:end], "").replace("\n", "")
 	except Exception as e:
 		logging.error("Unable to get AirScape " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get AirScape " + str(e))
