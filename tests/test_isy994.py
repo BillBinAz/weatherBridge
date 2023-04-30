@@ -9,17 +9,17 @@ class TestISY994(unittest.TestCase):
     # get zone status closed
     def test_get_zone_status_closed(self):
         # Test closed
-        assert stations.isy994.get_zone_status(ALARM_ZONES_CLOSED) == 1
+        self.assertEqual(1, stations.isy994.get_zone_status(ALARM_ZONES_CLOSED))
 
     # get zone status open
     def test_get_zone_status_open(self):
         # Test open
-        assert stations.isy994.get_zone_status(ALARM_ZONES_OPEN) == 0
+        self.assertEqual(0, stations.isy994.get_zone_status(ALARM_ZONES_OPEN))
 
     # get zone status unknown
     def test_get_zone_status_unknown(self):
         # Test unknown
-        assert stations.isy994.get_zone_status("unknown") == 0
+        self.assertEqual(0, stations.isy994.get_zone_status("unknown"))
 
     # get zone status exception
     @unittest.skip("Not implemented")

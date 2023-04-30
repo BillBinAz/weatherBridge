@@ -58,6 +58,7 @@ ALARM_ARMED_STAY = "Armed Stay"
 ALARM_ARMED_INSTANT = "Armed Instant"
 ALARM_ARMED_NIGHT = "Night Armed"
 ALARM_ALARMING = "Alarming"
+ALARM_ZONE_CLOSED = '0'
 SECRET_FILE = "./secret/isy994"
 
 
@@ -80,7 +81,7 @@ def get_node_xml(node, s, user_name, password):
 
 def get_zone_status(zone_status):
 
-	if str(zone_status) == ALARM_ZONES_CLOSED:
+	if str(zone_status) == ALARM_ZONE_CLOSED:
 		return 1
 	return 0
 

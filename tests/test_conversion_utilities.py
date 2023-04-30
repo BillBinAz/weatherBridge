@@ -6,8 +6,7 @@ class TestUtilities(unittest.TestCase):
 
     def test_c_to_f(self):
         # Test 0C
-        assert conversion_utilities.c_to_f(0) == 32.0
-        # Test 100C
+        self.assertEqual(32.0, conversion_utilities.c_to_f(0))
         assert conversion_utilities.c_to_f(100) == 212.0
         # Test -40C
         assert conversion_utilities.c_to_f(-40) == -40.0

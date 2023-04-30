@@ -5,13 +5,13 @@ import sys
 
 def c_to_f(c_temp):
     #
-    # Convert from celsius to fahrenheit
+    # Convert from Celsius to Fahrenheit
     return round(9.0 / 5.0 * float(c_temp) + 32, 1)
 
 
 def f_to_c(f_temp):
     #
-    # Convert from celsius to fahrenheit
+    # Convert from Fahrenheit to Celsius
     return round(float(f_temp - 32) * 5.0 / 9.0, 1)
 
 
@@ -37,12 +37,6 @@ def get_average(data, key):
     if how_many == 0:
         return 0
     return round(float(sum_temp / how_many), 1)
-
-
-# def c_to_f(c_temp):
-    #
-    # Convert from celsius to fahrenheit
-    # return round(9.0 / 5.0 * float(c_temp) + 32, 1)
 
 
 def mps_to_mph(mps):
