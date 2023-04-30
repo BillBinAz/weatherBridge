@@ -4,9 +4,10 @@ import datetime
 import requests
 import logging
 import json
+import sys
 from datetime import timedelta
+from stations import conversion_utilities
 
-from weather import stations
 
 SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
@@ -18,29 +19,6 @@ FREEZER_ID = "16838664"
 HUMIDOR_ID = "16869529"
 MAIN_GARAGE_ID = "16803031"
 SAFE_ID = "16866908"
-
-def c_to_f(c_temp):
-    #
-    # Convert from celsius to fahrenheit
-    return round(9.0 / 5.0 * float(c_temp) + 32, 1)
-
-
-def f_to_c(f_temp):
-    #
-    # Convert from celsius to fahrenheit
-    return round(float(f_temp - 32) * 5.0 / 9.0, 1)
-
-
-def format_f(value, source):
-    #
-    # add decimal place
-    formatted_value = 0
-    try:
-        formatted_value = round(float(value) / 10.0, 1)
-    except:
-        logging.error("Bad Data from sensorPush " + str(value) + " " + source)
-        print(datetime.datetime.now().time(), " -  Bad Data from sensorPush " + str(source) + " " + source)
-    return formatted_value
 
 
 def get_authorization():
@@ -90,17 +68,6 @@ def get_access_token(authorization_header):
     return
 
 
-def get_average(data, key):
-    how_many = 0
-    sum_temp = 0.0
-    for sensor in data:
-        how_many += 1
-        sum_temp += sensor[key]
-    if how_many == 0:
-        return 0
-    return round(float(sum_temp / how_many), 1)
-
-
 def get_sensor_data(access_token, url):
     try:
         data_to = datetime.datetime.utcnow()
@@ -143,19 +110,19 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
         #
         # Temperature
         calibration_temp = calibration_data[sensor_key]["calibration"]["temperature"]
-        raw_temp = get_average(sensor_data["sensors"][sensor_key], "temperature")
+        raw_temp = conversion_utilities.get_average(sensor_data["sensors"][sensor_key], "temperature")
         weather_data_station.temp_calibration = calibration_temp
         weather_data_station.temp_raw = raw_temp
         weather_data_station.temp = round(raw_temp + calibration_temp, 2)
-        weather_data_station.temp_c = f_to_c(weather_data_station.temp)
+        weather_data_station.temp_c = conversion_utilities.f_to_c(weather_data_station.temp)
 
         #
         # Humidity
         calibration_humidity = calibration_data[sensor_key]["calibration"]["humidity"]
-        raw_humidity = get_average(sensor_data["sensors"][sensor_key], "humidity")
+        raw_humidity = conversion_utilities.get_average(sensor_data["sensors"][sensor_key], "humidity")
         weather_data_station.humidity_calibration = calibration_humidity
         weather_data_station.humidity_raw = raw_humidity
-        weather_data_station.humidity = round( raw_humidity + calibration_humidity, 2)
+        weather_data_station.humidity = round(raw_humidity + calibration_humidity, 2)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:data " + str(e))
@@ -175,6 +142,11 @@ def get_weather(weather_data):
         if sensor_data:
             #
             # Get full keys
+            humidor_key = 0
+            garage_key = 0
+            garage_freezer_key = 0
+            safe_key = 0
+
             for sensor in sensor_data["sensors"]:
                 sensor_key = str(sensor)
                 if sensor_key.startswith(HUMIDOR_ID):
@@ -202,7 +174,11 @@ def get_weather(weather_data):
             apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
 
     except Exception as e:
-        logging.error("Unable to get sensor_push:data " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
-        return
+        logging.error("Unable to get sensor_push:get_weather " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
+    except:
+        e = sys.exc_info()[0]
+        logging.error("Unable to get sensor_push:get_weather " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
+    return
 

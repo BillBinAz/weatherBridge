@@ -1,6 +1,7 @@
-Flask
-Requests
-jsonpickle
-pymyq
-aiohttp
-urllib3
+Flask~=2.2.2
+Requests~=2.28.1
+jsonpickle~=2.2.0
+pymyq~=3.1.5
+aiohttp~=3.8.1
+urllib3~=1.26.12
+pytest~=7.3.1

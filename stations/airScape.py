@@ -2,27 +2,10 @@
 
 import datetime
 import xml.etree.ElementTree
-
+from stations import conversion_utilities
 import requests
 import logging
-
-
-def c_to_f(c_temp):
-	#
-	# Convert from celsius to fahrenheit
-	return round(9.0 / 5.0 * float(c_temp) + 32, 1)
-
-
-def format_f(value, source):
-	#
-	# add decimal place
-	formatted_value = 0
-	try:
-		formatted_value = round(float(value), 2)
-	except:
-		logging.error("Bad Data from AirScape " + str(value) + " " + source)
-		print(datetime.datetime.now().time(), " -  Bad Data from AirScape " + str(source) + " " + source)
-	return formatted_value
+import sys
 
 
 def get_node_xml():
@@ -47,7 +30,7 @@ def clean_up_xml(content):
 		str_content = content.decode("utf=8", "ignore")
 		start = str_content.find("<server_response>")
 		end = str_content.find("</server_response>") + len("</server_response>")
-		return str_content.replace(str_content[start:end], "")
+		return str_content.replace(str_content[start:end], "").replace("\n", "")
 	except Exception as e:
 		logging.error("Unable to get AirScape " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get AirScape " + str(e))
@@ -85,10 +68,14 @@ def get_weather(weather_data):
 		weather_data.whole_house_fan.cubitFeetPerMinute = xml_response.find('cfm').text
 		weather_data.whole_house_fan.power = xml_response.find('power').text
 		hours = int(xml_response.find('timeremaining').text) / 60
-		weather_data.whole_house_fan.timeRemaining = format_f(hours, 'timeremaining')
-	except xml.etree.ElementTree.ParseError as e:
-		logging.error("Unable to parse AirScape " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
-	finally:
-		return
+		weather_data.whole_house_fan.timeRemaining = conversion_utilities.format_f(hours, 'timeremaining')
+	except Exception as e:
+		logging.error("Unable to get AirScape:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
+	except:
+		e = sys.exc_info()[0]
+		logging.error("Unable to get AirScape:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
+	return
+
 

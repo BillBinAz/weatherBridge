@@ -4,6 +4,7 @@ import datetime
 import xml.etree.ElementTree
 import requests
 import logging
+import sys
 
 NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
@@ -58,27 +59,8 @@ ALARM_ARMED_STAY = "Armed Stay"
 ALARM_ARMED_INSTANT = "Armed Instant"
 ALARM_ARMED_NIGHT = "Night Armed"
 ALARM_ALARMING = "Alarming"
-ALARM_ZONES_CLOSED = '0'
-
+ALARM_ZONE_CLOSED = '0'
 SECRET_FILE = "./secret/isy994"
-
-
-def c_to_f(c_temp):
-	#
-	# Convert from celsius to fahrenheit
-	return round(9.0 / 5.0 * float(c_temp) + 32, 1)
-
-
-def format_f(value, source):
-	#
-	# add decimal place
-	formatted_value = 0
-	try:
-		formatted_value = round(float(value) / 10.0, 1)
-	except:
-		logging.error("Bad Data from isy994 " + str(value) + " " + source)
-		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
-	return formatted_value
 
 
 def get_node_xml(node, s, user_name, password):
@@ -100,7 +82,7 @@ def get_node_xml(node, s, user_name, password):
 
 def get_zone_status(zone_status):
 
-	if str(zone_status) == ALARM_ZONES_CLOSED:
+	if str(zone_status) == ALARM_ZONE_CLOSED:
 		return 1
 	return 0
 
@@ -278,10 +260,13 @@ def get_weather(weather_data):
 														float(weather_data.cheese.temp) +
 														float(weather_data.guest.temp) +
 														float(weather_data.theater.sensor.temp)) / 9.0, 1)
-
 	except Exception as e:
-		logging.error("Unable to parse isy994 " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse isy994 " + str(e))
-	finally:
-		return
+		logging.error("Unable to get isy994:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+	except:
+		e = sys.exc_info()[0]
+		logging.error("Unable to get isy994:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+	return
+
 

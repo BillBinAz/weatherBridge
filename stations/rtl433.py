@@ -2,7 +2,7 @@
 
 import datetime
 import json
-
+import sys
 import logging
 import requests
 from weather import data
@@ -72,12 +72,17 @@ def get_weather(weather_data, host):
 			weather_data.panel.time = sensor.get(TIME)
 
 	except json.JSONDecodeError as e:
-		logging.error("Unable to parse kiosk " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse kiosk " + str(e))
+		logging.error("Unable to parse rtl433 " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse rtl433 " + str(e))
 	except TypeError as e:
-		logging.error("Unable to parse kiosk: TypeError " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse kiosk: TypeError " + str(e))
-	finally:
-		return
-
+		logging.error("Unable to parse rtl433: TypeError " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse rtl433: TypeError " + str(e))
+	except Exception as e:
+		logging.error("Unable to get rtl433:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get rtl433:get_weather " + str(e))
+	except:
+		e = sys.exc_info()[0]
+		logging.error("Unable to get rtl433:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get rtl433:get_weather " + str(e))
+	return
 

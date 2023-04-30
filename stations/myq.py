@@ -3,6 +3,7 @@ from aiohttp import ClientSession
 import pymyq
 import logging
 import datetime
+import sys
 
 SECRET_FILE = "./secret/myq"
 BIKE_GARAGE = 'CG08469920F5'
@@ -72,6 +73,10 @@ def get_weather(weather_data):
         loop.run_until_complete(coroutine)
 
     except Exception as e:
-        logging.error("MyQ: get_weather " + str(e))
-        print(datetime.datetime.now().time(), "MyQ: get_weather  " + str(e))
+        logging.error("Unable to get myq:get_weather " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
+    except:
+        e = sys.exc_info()[0]
+        logging.error("Unable to get myq:get_weather " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
     return
