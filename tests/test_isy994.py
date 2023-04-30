@@ -1,7 +1,7 @@
 import unittest
 import stations.isy994
-ALARM_ZONES_CLOSED = '0'
-ALARM_ZONES_OPEN = '1'
+ALARM_ZONE_CLOSED = '0'
+ALARM_ZONE_OPEN = '1'
 
 
 class TestISY994(unittest.TestCase):
@@ -9,12 +9,12 @@ class TestISY994(unittest.TestCase):
     # get zone status closed
     def test_get_zone_status_closed(self):
         # Test closed
-        self.assertEqual(1, stations.isy994.get_zone_status(ALARM_ZONES_CLOSED))
+        self.assertEqual(1, stations.isy994.get_zone_status(ALARM_ZONE_CLOSED))
 
     # get zone status open
     def test_get_zone_status_open(self):
         # Test open
-        self.assertEqual(0, stations.isy994.get_zone_status(ALARM_ZONES_OPEN))
+        self.assertEqual(0, stations.isy994.get_zone_status(ALARM_ZONE_OPEN))
 
     # get zone status unknown
     def test_get_zone_status_unknown(self):
