@@ -58,27 +58,7 @@ ALARM_ARMED_STAY = "Armed Stay"
 ALARM_ARMED_INSTANT = "Armed Instant"
 ALARM_ARMED_NIGHT = "Night Armed"
 ALARM_ALARMING = "Alarming"
-ALARM_ZONES_CLOSED = '0'
-
 SECRET_FILE = "./secret/isy994"
-
-
-def c_to_f(c_temp):
-	#
-	# Convert from celsius to fahrenheit
-	return round(9.0 / 5.0 * float(c_temp) + 32, 1)
-
-
-def format_f(value, source):
-	#
-	# add decimal place
-	formatted_value = 0
-	try:
-		formatted_value = round(float(value) / 10.0, 1)
-	except:
-		logging.error("Bad Data from isy994 " + str(value) + " " + source)
-		print(datetime.datetime.now().time(), " -  Bad Data from isy994 " + str(source) + " " + source)
-	return formatted_value
 
 
 def get_node_xml(node, s, user_name, password):

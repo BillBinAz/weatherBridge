@@ -1,10 +1,10 @@
-import pytest
+import unittest
 import stations.isy994
 ALARM_ZONES_CLOSED = '0'
 ALARM_ZONES_OPEN = '1'
 
 
-class TestISY994:
+class TestISY994(unittest.TestCase):
 
     # get zone status closed
     def test_get_zone_status_closed(self):
@@ -22,15 +22,15 @@ class TestISY994:
         assert stations.isy994.get_zone_status("unknown") == 0
 
     # get zone status exception
+    @unittest.skip("Not implemented")
     def test_get_zone_status_exception(self):
-        # ignore test
-        pytest.skip("Not implemented")
+
         # Test exception
         with self.assertRaises(ValueError):
             stations.isy994.get_zone_status("test")
 
-
-
+    if __name__ == '__main__':
+        unittest.main()
 
 
 
