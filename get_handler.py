@@ -2,8 +2,6 @@ from flask import Flask
 from weather import stations
 import logging
 import sys
-import os
-import waitress
 
 sys.path.append('/home/admin/.local/usr/bin')
 
