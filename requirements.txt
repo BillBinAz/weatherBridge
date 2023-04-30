@@ -1,7 +1,8 @@
-Flask~=2.2.2
-Requests~=2.28.1
-jsonpickle~=2.2.0
-pymyq~=3.1.5
-aiohttp~=3.8.1
-urllib3~=1.26.12
+Flask==2.3.1
+Requests==2.29.0
+jsonpickle==3.0.1
+pymyq==3.1.6
+aiohttp==3.8.4
+urllib3==2.0.1
 pytest~=7.3.1
+waitress~=2.1.2
