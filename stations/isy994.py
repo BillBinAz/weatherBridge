@@ -4,6 +4,7 @@ import datetime
 import xml.etree.ElementTree
 import requests
 import logging
+import sys
 
 NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
@@ -259,10 +260,13 @@ def get_weather(weather_data):
 														float(weather_data.cheese.temp) +
 														float(weather_data.guest.temp) +
 														float(weather_data.theater.sensor.temp)) / 9.0, 1)
-
 	except Exception as e:
-		logging.error("Unable to parse isy994 " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse isy994 " + str(e))
-	finally:
-		return
+		logging.error("Unable to get isy994:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+	except:
+		e = sys.exc_info()[0]
+		logging.error("Unable to get isy994:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+	return
+
 

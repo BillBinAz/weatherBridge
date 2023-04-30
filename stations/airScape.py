@@ -5,6 +5,7 @@ import xml.etree.ElementTree
 from stations import conversion_utilities
 import requests
 import logging
+import sys
 
 
 def get_node_xml():
@@ -68,9 +69,13 @@ def get_weather(weather_data):
 		weather_data.whole_house_fan.power = xml_response.find('power').text
 		hours = int(xml_response.find('timeremaining').text) / 60
 		weather_data.whole_house_fan.timeRemaining = conversion_utilities.format_f(hours, 'timeremaining')
-	except xml.etree.ElementTree.ParseError as e:
-		logging.error("Unable to parse AirScape " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse AirScape " + e.msg)
-	finally:
-		return
+	except Exception as e:
+		logging.error("Unable to get AirScape:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
+	except:
+		e = sys.exc_info()[0]
+		logging.error("Unable to get AirScape:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
+	return
+
 

@@ -4,6 +4,7 @@ import datetime
 import json
 import requests
 import logging
+import sys
 from stations import conversion_utilities
 
 S_OK = 200
@@ -68,12 +69,16 @@ def get_weather(weather_data):
 		# Temperature - Pool
 		weather_data.pool.temp = round(float(wifi_logger_data[LEAF_TEMP][0]), 2)
 	except json.JSONDecodeError as e:
-		logging.error("Unable to parse wifi_logger_data " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data " + str(e))
+		logging.error("Unable to parse wifi_logger_data:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data:get_weather " + str(e))
 	except Exception as e:
-		logging.error("Unable to parse wifi_logger_data: Exception " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: Exception " + str(e))
-	finally:
-		return
+		logging.error("Unable to parse wifi_logger_data: get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: get_weather " + str(e))
+	except:
+		e = sys.exc_info()[0]
+		logging.error("Unable to get wifi_logger_data:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get wifi_logger_data:get_weather " + str(e))
+	return
+
 
 
