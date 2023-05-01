@@ -62,12 +62,13 @@ async def async_get_myq(weather_data) -> None:
 
 
 def get_weather(weather_data):
+    loop = asyncio.new_event_loop()
+
     try:
         # default to closed
         weather_data.alarm.main_garage = 1
         weather_data.alarm.mc_garage = 1
 
-        loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         coroutine = async_get_myq(weather_data)
         loop.run_until_complete(coroutine)
@@ -79,4 +80,6 @@ def get_weather(weather_data):
         e = sys.exc_info()[0]
         logging.error("Unable to get myq:get_weather " + str(e))
         print(datetime.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
-    return
+    finally:
+        loop.run_until_complete(loop.shutdown_asyncgens())
+        loop.close()
