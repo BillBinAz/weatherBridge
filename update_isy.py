@@ -23,6 +23,7 @@ MAIN_GARAGE_STATE = 2
 BIKE_GARAGE_STATE = 3
 MOTORCYCLE_GARAGE_STATE = 4
 IS_RAINING_STATE = 5
+ALARM_STATUS_STATE = 7
 SECRET_FILE = "secret/isy994"
 
 
@@ -97,6 +98,7 @@ def update_isy(weather_dict, s, user_name, password):
         push_data_isy(s, user_name, password, ISY_STATE, MOTORCYCLE_GARAGE_STATE, weather_dict["alarm"]["mc_garage"], '  MC_GARAGE_CLOSED')
         push_data_isy(s, user_name, password, ISY_STATE, MAIN_GARAGE_STATE, weather_dict["alarm"]["main_garage"], '  MAIN_GARAGE_CLOSED')
         push_data_isy(s, user_name, password, ISY_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), '  IS_RAINING')
+        push_data_isy(s, user_name, password, ISY_STATE, ALARM_STATUS_STATE, (weather_dict["alarm"]["alarm_status"] > 0), '  Alarm: Status')
         logging.error("ISY pushed")
 
     except Exception as e:

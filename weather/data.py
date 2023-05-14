@@ -6,7 +6,8 @@ DEFAULT_TEMP = 0
 
 class Alarm(object):
 	def __init__(self):
-		self.status = ""
+		self.status = 0
+		self.status_label = "None"
 		self.front_garage_door = ""
 		self.sliding_glass_door = ""
 		self.living_great = ""

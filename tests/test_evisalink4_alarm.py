@@ -26,6 +26,8 @@ class TestEvisalink4(unittest.TestCase):
         self.assertEqual(cur_weather.alarm.master, 0)
         self.assertEqual(cur_weather.alarm.sliding_glass_door, 1)
         self.assertEqual(cur_weather.alarm.west_wing, 0)
+        self.assertEqual(cur_weather.alarm.status, 0)
+        self.assertEqual(cur_weather.alarm.status_label, "Not Ready")
 
     def test_get_weather_data(self):
         cur_weather = data.WeatherData()
