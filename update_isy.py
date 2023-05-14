@@ -16,6 +16,7 @@ MAIN_GARAGE_TEMP = 18
 AVERAGE_HOUSE_TEMP = 25
 FAN_ZONES_ALL = 9
 FAN_ZONES_SOME = 22
+ALARM_ALL_ZONES_CLOSED = 12
 
 ISY_STATE = 2
 MAIN_GARAGE_STATE = 2
@@ -87,6 +88,7 @@ def update_isy(weather_dict, s, user_name, password):
         push_temp_isy(s, user_name, password, ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
 
         # alarm status
+        push_data_isy(s, user_name, password, ISY_INTEGER, ALARM_ALL_ZONES_CLOSED, weather_dict["alarm"]["all_zones_closed"], ' Alarm: all_zones_closed')
         push_data_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], '  FAN_ZONES_ALL')
         push_data_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], ' FAN_ZONES_SOME')
 
