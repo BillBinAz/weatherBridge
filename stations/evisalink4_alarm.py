@@ -139,6 +139,7 @@ def populate_status(weather_data, label, color):
             weather_data.alarm.status = ALARM_STATUS_NOT_READY_ENTRY_DELAY
 
         elif label == ALARM_STATUS_ARMED_BUSY_LABEL:
+            weather_data.alarm.status_label = ALARM_STATUS_ARMED_NIGHT_LABEL
             weather_data.alarm.status = ALARM_STATUS_ARMED_BUSY
 
         else:
