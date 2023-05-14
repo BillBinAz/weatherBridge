@@ -57,26 +57,34 @@ def parse_html(weather_data, html_document):
 
 def populate_zone(weather_data, zone, color):
 
-    zone_status = is_zone_open(color)
+    try:
+        zone_status = is_zone_open(color)
 
-    if zone != 2 and zone_status == ZONE_OPEN:
-        weather_data.whole_house_fan.fan_zones_some = FAN_ON
+        if zone != 2 and zone_status == ZONE_OPEN:
+            weather_data.whole_house_fan.fan_zones_some = FAN_ON
 
-    # case on zone
-    if zone == '1':
-        weather_data.alarm.front_garage_door = zone_status
-    elif zone == '2':
-        weather_data.alarm.sliding_glass_door = zone_status
-    elif zone == '3':
-        weather_data.alarm.living_great = zone_status
-    elif zone == '4':
-        weather_data.alarm.master = zone_status
-    elif zone == '5':
-        weather_data.alarm.offices = zone_status
-    elif zone == '6':
-        weather_data.alarm.west_wing = zone_status
-    elif zone == '10':
-        weather_data.alarm.bike_garage = zone_status
+        # case on zone
+        if zone == '1':
+            weather_data.alarm.front_garage_door = zone_status
+        elif zone == '2':
+            weather_data.alarm.sliding_glass_door = zone_status
+        elif zone == '3':
+            weather_data.alarm.living_great = zone_status
+        elif zone == '4':
+            weather_data.alarm.master = zone_status
+        elif zone == '5':
+            weather_data.alarm.offices = zone_status
+        elif zone == '6':
+            weather_data.alarm.west_wing = zone_status
+        elif zone == '10':
+            weather_data.alarm.bike_garage = zone_status
+    except Exception as e:
+        logging.error("Unable to populate_zone:" + zone + " " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
+    except:
+        e = sys.exc_info()[0]
+        logging.error("Unable to populate_zone:" + zone + " " + str(e))
+        print(datetime.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
 
 
 def is_zone_open(color):
