@@ -8,15 +8,15 @@ class Alarm(object):
 	def __init__(self):
 		self.status = 0
 		self.status_label = "None"
-		self.front_garage_door = ""
-		self.sliding_glass_door = ""
-		self.living_great = ""
-		self.master = ""
-		self.offices = ""
-		self.west_wing = ""
-		self.bike_garage = ""
-		self.mc_garage = ""
-		self.main_garage = ""
+		self.front_garage_door = 0
+		self.sliding_glass_door = 0
+		self.living_great = 0
+		self.master = 0
+		self.offices = 0
+		self.west_wing = 0
+		self.bike_garage = 0
+		self.mc_garage = 0
+		self.main_garage = 0
 		self.all_zones_closed = 0
 
 

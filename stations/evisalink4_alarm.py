@@ -85,6 +85,11 @@ def parse_html(weather_data, html_document):
     # remove all tabs
     html_document = html_document.replace('\t', '')
 
+    # safe defaults for alarm
+    weather_data.alarm.all_zones_closed = 1
+    weather_data.whole_house_fan.fan_zones_some = 0
+    weather_data.whole_house_fan.fan_zones_all = 0
+
     soup = BeautifulSoup(html_document, 'html.parser')
     all_html_tds = soup.find_all('td')
     previous_label = ""
@@ -162,9 +167,10 @@ def populate_zone(weather_data, zone, color):
     try:
         zone_status = is_zone_open(color)
 
-        if zone != 2 and zone_status == ZONE_OPEN:
+        if zone != '1' and zone != '2' and zone_status == ZONE_OPEN:
             weather_data.whole_house_fan.fan_zones_some = FAN_ON
             weather_data.alarm.all_zones_closed = ZONE_OPEN
+
         # case on zone
         if zone == '1':
             weather_data.alarm.front_garage_door = zone_status
