@@ -53,6 +53,10 @@ def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, la
         print(datetime.datetime.now().time(), msg)
         return
 
+    push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label)
+
+
+def push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
     #
     # do a get on isy994 to update the data
     url = stations.isy994.ISY_URL + "/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
@@ -75,14 +79,14 @@ def update_isy(weather_dict, s, user_name, password):
         push_temp_isy(s, user_name, password, ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
 
         # alarm status
-        push_temp_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], 'FAN_ZONES_ALL')
-        push_temp_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], 'FAN_ZONES_SOME')
+        push_data_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], 'FAN_ZONES_ALL')
+        push_data_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], 'FAN_ZONES_SOME')
 
         # garage doors
-        push_temp_isy(s, user_name, password, ISY_STATE, BIKE_GARAGE, weather_dict["alarm"]["bike_garage"], 'bike_garage')
-        push_temp_isy(s, user_name, password, ISY_STATE, MOTORCYCLE_GARAGE, weather_dict["alarm"]["mc_garage"], 'mc_garage')
-        push_temp_isy(s, user_name, password, ISY_STATE, MAIN_GARAGE, weather_dict["alarm"]["main_garage"], 'main_garage')
-        push_temp_isy(s, user_name, password, ISY_STATE, IS_RAINING, (weather_dict["back_yard"]["rain_rate"] > 0), 'rain_rate')
+        push_data_isy(s, user_name, password, ISY_STATE, BIKE_GARAGE, weather_dict["alarm"]["bike_garage"], 'bike_garage')
+        push_data_isy(s, user_name, password, ISY_STATE, MOTORCYCLE_GARAGE, weather_dict["alarm"]["mc_garage"], 'mc_garage')
+        push_data_isy(s, user_name, password, ISY_STATE, MAIN_GARAGE, weather_dict["alarm"]["main_garage"], 'main_garage')
+        push_data_isy(s, user_name, password, ISY_STATE, IS_RAINING, (weather_dict["back_yard"]["rain_rate"] > 0), 'rain_rate')
         logging.error("ISY pushed")
 
     except Exception as e:
