@@ -26,6 +26,8 @@ class WholeHomeFan(object):
 		self.power = ""
 		self.atticTemp = ""
 		self.houseTemp = ""
+		self.fan_zones_all = 0
+		self.fan_zones_some = 0
 
 
 class Pool(object):

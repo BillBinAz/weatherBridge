@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from stations import isy994, rtl433, airScape, wifiLogger, sensorPush, myq
+from stations import isy994, rtl433, airScape, wifiLogger, sensorPush, myq, evisalink4_alarm
 from weather import data
 import datetime
 import logging
@@ -20,6 +20,7 @@ def get_weather():
 		rtl433.get_weather(cur_weather, "rtl433.evilminions.org")
 		myq.get_weather(cur_weather)
 		sensorPush.get_weather(cur_weather)
+		evisalink4_alarm.get_weather(cur_weather)
 
 	except Exception as e:
 		logging.error("Unable to get station:get_weather " + str(e))

@@ -28,10 +28,6 @@ ZW_SPA_PUMP = "nodes/ZW044_1"
 ZW_POOL_LIGHT = "nodes/ZW080_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
 
-MYQ_MAIN_GARAGE = "nodes/n001_gw33001391fd"
-MYQ_MC_GARAGE = "nodes/n001_cg0846887726"
-MYQ_BIKE_GARAGE = "nodes/n001_cg08469920f5"
-
 TEMPERATURE = "ST"
 CLIMATE_HEAT_POINT = "CLISPH"
 CLIMATE_COOL_POINT = "CLISPC"
@@ -219,35 +215,11 @@ def get_weather(weather_data):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.status = get_alarm_status(sensor.get('formatted'))
 
-		xml_response = get_node_xml(ALARM_FRONT_GARAGE_DOOR, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.front_garage_door = get_zone_status(sensor.get('value'))
-
-		xml_response = get_node_xml(ALARM_SLIDING_GLASS_DOOR, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.sliding_glass_door = get_zone_status(sensor.get('value'))
-
-		xml_response = get_node_xml(ALARM_LIVING_GREAT, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.living_great = get_zone_status(sensor.get('value'))
-
 		xml_response = get_node_xml(ALARM_MASTER, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
 			if sensor.get('id') == 'ST':
 				weather_data.alarm.master = get_zone_status(sensor.get('value'))
 
-		xml_response = get_node_xml(ALARM_OFFICES, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.offices = get_zone_status(sensor.get('value'))
-
-		xml_response = get_node_xml(ALARM_WEST_WING, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.west_wing = get_zone_status(sensor.get('value'))
 
 		s.close()
 
