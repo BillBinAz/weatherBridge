@@ -4,7 +4,7 @@ import logging
 import sys
 from bs4 import BeautifulSoup
 
-HTTP_URL = 'http://192.168.0.7'
+HTTP_URL = 'http://eve4.evilminions.org/'
 SECRET_FILE = "./secret/evisalink4"
 ZONE_OPEN_COLOR = '#FF0000'
 ZONE_OPEN = 0
