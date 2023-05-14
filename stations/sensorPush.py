@@ -84,8 +84,6 @@ def get_sensor_data(access_token, url):
 
         response = json.loads(ret.content.decode())
         if not response:
-            logging.error("No Data from SensorPush:SensorData " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  No Data from SensorPush:SensorData. " + str(ret.status_code))
             raise Exception("No Data from SensorPush:SensorData.")
 
         return response

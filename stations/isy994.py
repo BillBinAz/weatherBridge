@@ -37,25 +37,6 @@ LUX_6IN1 = "LUMIN"
 HUMIDITY = "CLIHUM"
 OCCUPANCY = "GV1"
 HEAT_COOL_STATE = "CLIHCS"  # 0 = idle | 1 = Heat | 2 = Cool
-
-ALARM_STATUS = "nodes/n008_hwalrm1_part1"
-ALARM_FRONT_GARAGE_DOOR = "nodes/n008_hwalrm1_z01"
-ALARM_SLIDING_GLASS_DOOR = "nodes/n008_hwalrm1_z02"
-ALARM_LIVING_GREAT = "nodes/n008_hwalrm1_z03"
-ALARM_MASTER = "nodes/n008_hwalrm1_z04"
-ALARM_OFFICES = "nodes/n008_hwalrm1_z05"
-ALARM_WEST_WING = "nodes/n008_hwalrm1_z06"
-ALARM_LIVING_GREAT_MOTION = "nodes/n008_hwalrm1_z07"
-ALARM_MASTER_MOTION = "nodes/n008_hwalrm1_z08"
-ALARM_READY = "Ready"
-ALARM_DISARMED = "Disarmed"
-ALARM_NOT_READY = "Not Ready"
-ALARM_ARMED_AWAY = "Armed Away"
-ALARM_ARMED_STAY = "Armed Stay"
-ALARM_ARMED_INSTANT = "Armed Instant"
-ALARM_ARMED_NIGHT = "Night Armed"
-ALARM_ALARMING = "Alarming"
-ALARM_ZONE_CLOSED = '0'
 SECRET_FILE = "./secret/isy994"
 
 
@@ -66,28 +47,12 @@ def get_node_xml(node, s, user_name, password):
 		url = ISY_URL + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
-			logging.error("Bad response from isy994 " + str(ret.status_code))
-			print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
-			return xml.etree.ElementTree.fromstring(ERROR_XML)
+			raise Exception("Bad response from isy994 " + str(ret.status_code))
 		return xml.etree.ElementTree.fromstring(ret.content.decode())
 	except Exception as e:
 		logging.error("Unable to get isy994 " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994 " + str(e))
 	return
-
-
-def get_zone_status(zone_status):
-
-	if str(zone_status) == ALARM_ZONE_CLOSED:
-		return 1
-	return 0
-
-
-def get_alarm_status(alarm_status):
-
-	if str(alarm_status) != ALARM_DISARMED:
-		return 1
-	return 0
 
 
 def get_weather(weather_data):
@@ -210,17 +175,6 @@ def get_weather(weather_data):
 			if sensor.get('id') == 'ST':
 				weather_data.main_garage.fan = sensor.get('formatted')
 
-		xml_response = get_node_xml(ALARM_STATUS, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.status = get_alarm_status(sensor.get('formatted'))
-
-		xml_response = get_node_xml(ALARM_MASTER, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.alarm.master = get_zone_status(sensor.get('value'))
-
-
 		s.close()
 
 		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.sensor.temp) +
@@ -235,10 +189,11 @@ def get_weather(weather_data):
 	except Exception as e:
 		logging.error("Unable to get isy994:get_weather " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
-	except:
+	finally:
 		e = sys.exc_info()[0]
-		logging.error("Unable to get isy994:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+		if e:
+			logging.error("Unable to get isy994:get_weather " + str(e))
+			print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
 	return
 
 
