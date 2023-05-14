@@ -1,16 +1,17 @@
 import datetime
 import requests
 import logging
-import xml.etree.ElementTree
 import sys
+from bs4 import BeautifulSoup
 
 HTTP_URL = 'http://192.168.0.7'
 SECRET_FILE = "./secret/evisalink4"
-COLOR_ZONE_OPEN = 'FF0000'
+COLOR_ZONE_OPEN = '#FF0000'
 ZONE_OPEN = 0
 ZONE_CLOSED = 1
 FAN_ON = 1
 FAN_OFF = 0
+COLOR_ATTRIBUTE = 'bgcolor'
 
 
 def get_html():
@@ -35,25 +36,23 @@ def get_html():
     return
 
 
-def parse_zone_info(weather_data, http_response):
+def parse_html(weather_data, html_document):
 
-    try:
-        zone_info = extract_zone(http_response)
-        zone_id = 0
-        start = 0
+    # remove all new lines
+    html_document = html_document.replace('\n', '')
+    # remove all tabs
+    html_document = html_document.replace('\t', '')
 
-        for i in range(16):
-            zone_id += 1
-            start = zone_info.find("<TD BGCOLOR=", start)
-            color = zone_info[start+13:start+19]
-            populate_zone(weather_data, zone_id, color)
+    soup = BeautifulSoup(html_document, 'html.parser')
+    all_html_tds = soup.find_all('td')
 
-            start += len("<TD BGCOLOR=")
-
-    except Exception as e:
-        logging.error("Unable to get Evisalink4 " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
-    return
+    for td_html in all_html_tds:
+        # find the ones with colors
+        attributes = td_html.attrs
+        color = attributes.get(COLOR_ATTRIBUTE)
+        label = td_html.text
+        if color and label:
+            populate_zone(weather_data, label, color)
 
 
 def populate_zone(weather_data, zone, color):
@@ -64,19 +63,19 @@ def populate_zone(weather_data, zone, color):
         weather_data.whole_house_fan.fan_zones_some = FAN_ON
 
     # case on zone
-    if zone == 1:
+    if zone == '1':
         weather_data.alarm.front_garage_door = zone_status
-    elif zone == 2:
+    elif zone == '2':
         weather_data.alarm.sliding_glass_door = zone_status
-    elif zone == 3:
+    elif zone == '3':
         weather_data.alarm.living_great = zone_status
-    elif zone == 4:
+    elif zone == '4':
         weather_data.alarm.master = zone_status
-    elif zone == 5:
+    elif zone == '5':
         weather_data.alarm.offices = zone_status
-    elif zone == 6:
+    elif zone == '6':
         weather_data.alarm.west_wing = zone_status
-    elif zone == 10:
+    elif zone == '10':
         weather_data.alarm.bike_garage = zone_status
 
 
@@ -85,22 +84,6 @@ def is_zone_open(color):
     if color == COLOR_ZONE_OPEN:
         return ZONE_OPEN
     return ZONE_CLOSED
-
-
-def extract_zone(http_response):
-
-    # remove all new lines
-    http_response = http_response.replace('\n', '')
-    # remove all tabs
-    http_response = http_response.replace('\t', '')
-    # find location of string
-    start = http_response.find("<TABLE BORDER=2 CLASS=keypad>")
-    # from start find </table>
-    end = http_response.find("</TABLE>", start) + len("</TABLE>")
-    # get substring
-    zone_info = http_response[start:end]
-
-    return zone_info
 
 
 def determine_fan_status(weather_data):
@@ -116,7 +99,7 @@ def get_weather(weather_data):
 
     try:
         html_response = get_html()
-        parse_zone_info(weather_data, html_response)
+        parse_html(weather_data, html_response)
         determine_fan_status(weather_data)
 
     except Exception as e:
