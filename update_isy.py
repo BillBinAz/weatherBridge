@@ -20,6 +20,8 @@ BIKE_GARAGE = 3
 MAIN_GARAGE = 18
 MOTORCYCLE_GARAGE = 4
 IS_RAINING = 5
+FAN_ZONES_ALL = 9
+FAN_ZONES_SOME = 22
 SECRET_FILE = "secret/isy994"
 
 
@@ -71,6 +73,10 @@ def update_isy(weather_dict, s, user_name, password):
         push_temp_isy(s, user_name, password, ISY_INTEGER, MAIN_GARAGE, weather_dict["main_garage"]["temp"], 'MAIN_GARAGE_TEMP')
         push_temp_isy(s, user_name, password, ISY_INTEGER, GARAGE_FREEZER_TEMP, weather_dict["main_garage_freezer"]["temp"], 'GARAGE_FREEZER_TEMP')
         push_temp_isy(s, user_name, password, ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
+
+        # alarm status
+        push_temp_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], 'FAN_ZONES_ALL')
+        push_temp_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], 'FAN_ZONES_SOME')
 
         # garage doors
         push_temp_isy(s, user_name, password, ISY_STATE, BIKE_GARAGE, weather_dict["alarm"]["bike_garage"], 'bike_garage')
