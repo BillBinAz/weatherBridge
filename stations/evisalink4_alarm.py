@@ -12,6 +12,12 @@ ZONE_CLOSED = 1
 FAN_ON = 1
 FAN_OFF = 0
 COLOR_ATTRIBUTE = 'bgcolor'
+# Alarm Status Map
+# -1 = Alarm
+# 0 = Ready
+# >= 10 and < 20 = Not Ready
+# >= 20 = Armed
+
 # alarming status
 ALARM_STATUS_ALARM_LABEL = 'Alarm'
 ALARM_STATUS_ALARM = -1
