@@ -45,28 +45,36 @@ def get_rest():
 
 
 def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
-    #
-    # Never push defaults to ISY
-    if f_temp == data.DEFAULT_TEMP and variable_type == ISY_INTEGER:
-        msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
-        logging.error(msg)
-        print(datetime.datetime.now().time(), msg)
-        return
+    try:
+        #
+        # Never push defaults to ISY
+        if f_temp == data.DEFAULT_TEMP and variable_type == ISY_INTEGER:
+            msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
+            logging.error(msg)
+            print(datetime.datetime.now().time(), msg)
+            return
 
-    push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label)
+        push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label)
+    except Exception as e:
+        logging.error("Unable to push_temp_isy to isy " + str(e))
+        print(datetime.datetime.now().time(), "Unable to push_temp_isy to isy " + str(e))
 
 
 def push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
-    #
-    # do a get on isy994 to update the data
-    url = stations.isy994.ISY_URL + "/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
-        round(float(f_temp)))
-    ret = s.get(url, auth=(user_name, password), verify=False)
-    if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
-        logging.error("Failed URL: " + url + " Response: " + str(ret.content))
-        print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content), " ", label)
-    else:
-        print(datetime.datetime.now().time(), " - Success URL: ", url, " ", label)
+    try:
+        #
+        # do a get on isy994 to update the data
+        url = stations.isy994.ISY_URL + "/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
+            round(float(f_temp)))
+        ret = s.get(url, auth=(user_name, password), verify=False)
+        if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
+            logging.error("Failed URL: " + url + " Response: " + str(ret.content))
+            print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content), " ", label)
+        else:
+            print(datetime.datetime.now().time(), " - Success URL: ", url, " ", label)
+    except Exception as e:
+        logging.error("Unable to push_data_isy to isy " + str(e))
+        print(datetime.datetime.now().time(), "Unable to push_data_isy to isy " + str(e))
 
 
 def update_isy(weather_dict, s, user_name, password):
