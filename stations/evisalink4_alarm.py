@@ -33,6 +33,10 @@ def get_html():
     except Exception as e:
         logging.error("Unable to get Evisalink4 " + str(e))
         print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
+    finally:
+        e = sys.exc_info()[0]
+        if e:
+            print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
     return
 
 
@@ -62,7 +66,7 @@ def populate_zone(weather_data, zone, color):
 
         if zone != 2 and zone_status == ZONE_OPEN:
             weather_data.whole_house_fan.fan_zones_some = FAN_ON
-
+            weather_data.alarm.all_zones_closed = ZONE_OPEN
         # case on zone
         if zone == '1':
             weather_data.alarm.front_garage_door = zone_status
@@ -81,10 +85,11 @@ def populate_zone(weather_data, zone, color):
     except Exception as e:
         logging.error("Unable to populate_zone:" + zone + " " + str(e))
         print(datetime.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
-    except:
+    finally:
         e = sys.exc_info()[0]
-        logging.error("Unable to populate_zone:" + zone + " " + str(e))
-        print(datetime.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
+        if e:
+            logging.error("Unable to populate_zone:" + zone + " " + str(e))
+            print(datetime.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
 
 
 def is_zone_open(color):
@@ -96,8 +101,19 @@ def is_zone_open(color):
 
 def determine_fan_status(weather_data):
 
+    if weather_data.alarm.front_garage_door == ZONE_CLOSED and \
+            weather_data.alarm.living_great == ZONE_CLOSED and \
+            weather_data.alarm.master == ZONE_CLOSED and \
+            weather_data.alarm.offices == ZONE_CLOSED and \
+            weather_data.alarm.west_wing == ZONE_CLOSED:
+        weather_data.whole_house_fan.fan_zones_some = FAN_OFF
+        weather_data.alarm.all_zones_closed = ZONE_CLOSED
+    else:
+        weather_data.alarm.all_zones_closed = ZONE_OPEN
+
     if weather_data.alarm.west_wing == ZONE_OPEN \
-            and weather_data.alarm.master == ZONE_OPEN and weather_data.alarm.living_great == ZONE_OPEN:
+            and weather_data.alarm.master == ZONE_OPEN \
+            and weather_data.alarm.living_great == ZONE_OPEN:
         weather_data.whole_house_fan.fan_zones_all = FAN_ON
     else:
         weather_data.whole_house_fan.fan_zones_all = FAN_OFF
@@ -113,8 +129,9 @@ def get_weather(weather_data):
     except Exception as e:
         logging.error("Unable to get isy994:get_weather " + str(e))
         print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
-    except:
+    finally:
         e = sys.exc_info()[0]
-        logging.error("Unable to get isy994:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+        if e:
+            logging.error("Unable to get isy994:get_weather " + str(e))
+            print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
     return

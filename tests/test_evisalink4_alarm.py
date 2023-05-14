@@ -2,6 +2,7 @@ import unittest
 
 import stations.evisalink4_alarm as evisalink4_alarm
 from weather import data
+from weather.data import WeatherData
 
 
 class TestEvisalink4(unittest.TestCase):
@@ -12,9 +13,13 @@ class TestEvisalink4(unittest.TestCase):
 
     def test_parse_html(self):
         http_return = self.get_test_html()
-        cur_weather = data.WeatherData()
+        cur_weather: WeatherData = data.WeatherData()
         evisalink4_alarm.parse_html(cur_weather, http_return)
+        evisalink4_alarm.determine_fan_status(cur_weather)
 
+        self.assertEqual(cur_weather.alarm.all_zones_closed, 0)
+        self.assertEqual(cur_weather.whole_house_fan.fan_zones_all, 1)
+        self.assertEqual(cur_weather.whole_house_fan.fan_zones_some, 1)
         self.assertEqual(cur_weather.alarm.offices, 1)
         self.assertEqual(cur_weather.alarm.front_garage_door, 1)
         self.assertEqual(cur_weather.alarm.living_great, 0)

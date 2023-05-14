@@ -16,6 +16,7 @@ class Alarm(object):
 		self.bike_garage = ""
 		self.mc_garage = ""
 		self.main_garage = ""
+		self.all_zones_closed = 0
 
 
 class WholeHomeFan(object):
