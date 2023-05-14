@@ -86,7 +86,7 @@ def update_isy(weather_dict, s, user_name, password):
         push_data_isy(s, user_name, password, ISY_STATE, BIKE_GARAGE_STATE, weather_dict["alarm"]["bike_garage"], 'BIKE_GARAGE')
         push_data_isy(s, user_name, password, ISY_STATE, MOTORCYCLE_GARAGE_STATE, weather_dict["alarm"]["mc_garage"], 'MC_GARAGE')
         push_data_isy(s, user_name, password, ISY_STATE, MAIN_GARAGE_STATE, weather_dict["alarm"]["main_garage"], 'MAIN_GARAGE')
-        push_data_isy(s, user_name, password, ISY_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), 'RAIN_RATE')
+        push_data_isy(s, user_name, password, ISY_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), 'IS_RAINTING')
         logging.error("ISY pushed")
 
     except Exception as e:
