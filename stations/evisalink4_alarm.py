@@ -1,16 +1,55 @@
 import datetime
 import requests
 import logging
-import xml.etree.ElementTree
 import sys
+from bs4 import BeautifulSoup
 
 HTTP_URL = 'http://192.168.0.7'
 SECRET_FILE = "./secret/evisalink4"
-COLOR_ZONE_OPEN = 'FF0000'
+ZONE_OPEN_COLOR = '#FF0000'
 ZONE_OPEN = 0
 ZONE_CLOSED = 1
 FAN_ON = 1
 FAN_OFF = 0
+COLOR_ATTRIBUTE = 'bgcolor'
+# Alarm Status Map
+# -1 = Alarm
+# 0 = Ready
+# >= 10 and < 20 = Not Ready
+# >= 20 = Armed
+
+# alarming status
+ALARM_STATUS_ALARM_LABEL = 'Alarm'
+ALARM_STATUS_ALARM = -1
+# not ready status
+ALARM_STATUS_NOT_READY_LABEL = 'Not Ready'
+ALARM_STATUS_NOT_READY = 10
+ALARM_STATUS_NOT_READY_BYPASS_LABEL = 'Not Ready Bypass'
+ALARM_STATUS_NOT_READY_BYPASS = 11
+ALARM_STATUS_NOT_READY_INSTANT_LABEL = 'Not Ready Instant'
+ALARM_STATUS_NOT_READY_INSTANT = 12
+ALARM_STATUS_NOT_READY_ALARM_IN_MEMORY_LABEL = 'Not Ready Alarm in Memory'
+ALARM_STATUS_NOT_READY_ALARM_IN_MEMORY = 13
+ALARM_STATUS_NOT_READY_ENTRY_DELAY_LABEL = 'Not Ready Entry Delay'
+ALARM_STATUS_NOT_READY_ENTRY_DELAY = 14
+ALARM_STATUS_BUSY_LABEL = 'BUSY'
+ALARM_STATUS_BUSY = 15
+# ready status
+ALARM_STATUS_READY_LABEL = 'Ready'
+ALARM_STATUS_READY = 0
+# armed status
+ALARM_STATUS_ARMED_LABEL = 'Armed'
+ALARM_STATUS_ARMED = 20
+ALARM_STATUS_ARMED_AWAY_LABEL = 'Armed Away'
+ALARM_STATUS_ARMED_AWAY = 21
+ALARM_STATUS_ARMED_STAY_LABEL = 'Armed Stay'
+ALARM_STATUS_ARMED_STAY = 22
+ALARM_STATUS_ARMED_NIGHT_LABEL = 'Armed Night'
+ALARM_STATUS_ARMED_NIGHT = 23
+ALARM_STATUS_ARMED_BUSY_LABEL = 'BUSY'
+ALARM_STATUS_ARMED_BUSY = 24
+# alarm status unknown
+ALARM_STATUS_UNKNOWN = -999
 
 
 def get_html():
@@ -32,81 +71,147 @@ def get_html():
     except Exception as e:
         logging.error("Unable to get Evisalink4 " + str(e))
         print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
+    finally:
+        e = sys.exc_info()[0]
+        if e:
+            print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
     return
 
 
-def parse_zone_info(weather_data, http_response):
+def parse_html(weather_data, html_document):
 
+    # remove all new lines
+    html_document = html_document.replace('\n', '')
+    # remove all tabs
+    html_document = html_document.replace('\t', '')
+
+    soup = BeautifulSoup(html_document, 'html.parser')
+    all_html_tds = soup.find_all('td')
+    previous_label = ""
+
+    for td_html in all_html_tds:
+        # find the ones with colors
+        attributes = td_html.attrs
+        color = attributes.get(COLOR_ATTRIBUTE)
+        label = td_html.text.strip()
+        if color and label:
+            populate_zone(weather_data, label, color)
+        if previous_label == "System":
+            populate_status(weather_data, label, color)
+        previous_label = label
+
+
+def populate_status(weather_data, label, color):
     try:
-        zone_info = extract_zone(http_response)
-        zone_id = 0
-        start = 0
+        weather_data.alarm.status_label = label
 
-        for i in range(16):
-            zone_id += 1
-            start = zone_info.find("<TD BGCOLOR=", start)
-            color = zone_info[start+13:start+19]
-            populate_zone(weather_data, zone_id, color)
+        if label == ALARM_STATUS_NOT_READY_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_NOT_READY
 
-            start += len("<TD BGCOLOR=")
+        elif label == ALARM_STATUS_READY_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_READY
+
+        elif label == ALARM_STATUS_ARMED_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_ARMED
+
+        elif label == ALARM_STATUS_ARMED_AWAY_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_ARMED_AWAY
+
+        elif label == ALARM_STATUS_ARMED_STAY_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_ARMED_STAY
+
+        elif label == ALARM_STATUS_ARMED_NIGHT_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_ARMED_NIGHT
+
+        elif label == ALARM_STATUS_ALARM_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_ALARM
+
+        elif label == ALARM_STATUS_NOT_READY_BYPASS_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_NOT_READY_BYPASS
+
+        elif label == ALARM_STATUS_NOT_READY_INSTANT_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_NOT_READY_INSTANT
+
+        elif label == ALARM_STATUS_NOT_READY_ALARM_IN_MEMORY_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_NOT_READY_ALARM_IN_MEMORY
+
+        elif label == ALARM_STATUS_NOT_READY_ENTRY_DELAY_LABEL:
+            weather_data.alarm.status = ALARM_STATUS_NOT_READY_ENTRY_DELAY
+
+        elif label == ALARM_STATUS_ARMED_BUSY_LABEL:
+            weather_data.alarm.status_label = ALARM_STATUS_ARMED_NIGHT_LABEL
+            weather_data.alarm.status = ALARM_STATUS_ARMED_BUSY
+
+        else:
+            weather_data.alarm.status = ALARM_STATUS_UNKNOWN
+            logging.error("Unable to get alarm status: " + label)
+            print(datetime.datetime.now().time(), "Unable to get alarm status: " + label)
 
     except Exception as e:
-        logging.error("Unable to get Evisalink4 " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
-    return
+        logging.error("Unable to get alarm status:" + label + " " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
+    finally:
+        e = sys.exc_info()[0]
+        if e:
+            logging.error("Unable to get alarm status:" + label + " " + str(e))
+            print(datetime.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
 
 
 def populate_zone(weather_data, zone, color):
 
-    zone_status = is_zone_open(color)
+    try:
+        zone_status = is_zone_open(color)
 
-    if zone != 2 and zone_status == ZONE_OPEN:
-        weather_data.whole_house_fan.fan_zones_some = FAN_ON
-
-    # case on zone
-    if zone == 1:
-        weather_data.alarm.front_garage_door = zone_status
-    elif zone == 2:
-        weather_data.alarm.sliding_glass_door = zone_status
-    elif zone == 3:
-        weather_data.alarm.living_great = zone_status
-    elif zone == 4:
-        weather_data.alarm.master = zone_status
-    elif zone == 5:
-        weather_data.alarm.offices = zone_status
-    elif zone == 6:
-        weather_data.alarm.west_wing = zone_status
-    elif zone == 10:
-        weather_data.alarm.bike_garage = zone_status
+        if zone != 2 and zone_status == ZONE_OPEN:
+            weather_data.whole_house_fan.fan_zones_some = FAN_ON
+            weather_data.alarm.all_zones_closed = ZONE_OPEN
+        # case on zone
+        if zone == '1':
+            weather_data.alarm.front_garage_door = zone_status
+        elif zone == '2':
+            weather_data.alarm.sliding_glass_door = zone_status
+        elif zone == '3':
+            weather_data.alarm.living_great = zone_status
+        elif zone == '4':
+            weather_data.alarm.master = zone_status
+        elif zone == '5':
+            weather_data.alarm.offices = zone_status
+        elif zone == '6':
+            weather_data.alarm.west_wing = zone_status
+        elif zone == '10':
+            weather_data.alarm.bike_garage = zone_status
+    except Exception as e:
+        logging.error("Unable to populate_zone:" + zone + " " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
+    finally:
+        e = sys.exc_info()[0]
+        if e:
+            logging.error("Unable to populate_zone:" + zone + " " + str(e))
+            print(datetime.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
 
 
 def is_zone_open(color):
 
-    if color == COLOR_ZONE_OPEN:
+    if color == ZONE_OPEN_COLOR:
         return ZONE_OPEN
     return ZONE_CLOSED
 
 
-def extract_zone(http_response):
-
-    # remove all new lines
-    http_response = http_response.replace('\n', '')
-    # remove all tabs
-    http_response = http_response.replace('\t', '')
-    # find location of string
-    start = http_response.find("<TABLE BORDER=2 CLASS=keypad>")
-    # from start find </table>
-    end = http_response.find("</TABLE>", start) + len("</TABLE>")
-    # get substring
-    zone_info = http_response[start:end]
-
-    return zone_info
-
-
 def determine_fan_status(weather_data):
 
+    if weather_data.alarm.front_garage_door == ZONE_CLOSED and \
+            weather_data.alarm.living_great == ZONE_CLOSED and \
+            weather_data.alarm.master == ZONE_CLOSED and \
+            weather_data.alarm.offices == ZONE_CLOSED and \
+            weather_data.alarm.west_wing == ZONE_CLOSED:
+        weather_data.whole_house_fan.fan_zones_some = FAN_OFF
+        weather_data.alarm.all_zones_closed = ZONE_CLOSED
+    else:
+        weather_data.alarm.all_zones_closed = ZONE_OPEN
+
     if weather_data.alarm.west_wing == ZONE_OPEN \
-            and weather_data.alarm.master == ZONE_OPEN and weather_data.alarm.living_great == ZONE_OPEN:
+            and weather_data.alarm.master == ZONE_OPEN \
+            and weather_data.alarm.living_great == ZONE_OPEN:
         weather_data.whole_house_fan.fan_zones_all = FAN_ON
     else:
         weather_data.whole_house_fan.fan_zones_all = FAN_OFF
@@ -116,14 +221,15 @@ def get_weather(weather_data):
 
     try:
         html_response = get_html()
-        parse_zone_info(weather_data, html_response)
+        parse_html(weather_data, html_response)
         determine_fan_status(weather_data)
 
     except Exception as e:
         logging.error("Unable to get isy994:get_weather " + str(e))
         print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
-    except:
+    finally:
         e = sys.exc_info()[0]
-        logging.error("Unable to get isy994:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+        if e:
+            logging.error("Unable to get isy994:get_weather " + str(e))
+            print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
     return

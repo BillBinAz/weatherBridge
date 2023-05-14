@@ -80,13 +80,11 @@ def get_sensor_data(access_token, url):
         if ret.status_code != 200:
             logging.error("Bad response from sensor_push " + str(ret.status_code))
             print(datetime.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
-            return
+            raise Exception("Bad response from sensor_push. " + str(ret.status_code))
 
         response = json.loads(ret.content.decode())
         if not response:
-            logging.error("No Data from SensorPush:SensorData " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  No Data from SensorPush:SensorData. " + str(ret.status_code))
-            return
+            raise Exception("No Data from SensorPush:SensorData.")
 
         return response
 
@@ -176,9 +174,10 @@ def get_weather(weather_data):
     except Exception as e:
         logging.error("Unable to get sensor_push:get_weather " + str(e))
         print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
-    except:
+    finally:
         e = sys.exc_info()[0]
-        logging.error("Unable to get sensor_push:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
+        if e:
+            logging.error("Unable to get sensor_push:get_weather " + str(e))
+            print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
     return
 
