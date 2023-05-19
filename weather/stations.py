@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from stations import isy994, airScape, wifiLogger, sensorPush, myq, evisalink4_alarm
+from stations import IoX, airScape, wifiLogger, sensorPush, myq, evisalink4_alarm
 from weather import data
 import datetime
 import logging
@@ -14,7 +14,7 @@ def get_weather():
 		logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt='%Y-%m-%d,%H:%M:%S:%f', level=logging.INFO)
 
 		cur_weather = data.WeatherData()
-		isy994.get_weather(cur_weather)
+		IoX.get_weather(cur_weather)
 		wifiLogger.get_weather(cur_weather)
 		airScape.get_weather(cur_weather)
 		# rtl433.get_weather(cur_weather, "rtl433.evilminions.org")

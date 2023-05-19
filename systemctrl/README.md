@@ -16,7 +16,7 @@ WantedBy=multi-user.target
 ##nodelink.service
 
 [Unit]
-Description=NodeLink ISY Service
+Description=NodeLink IoX Service
 
 [Service]
 Restart=always

@@ -10,7 +10,7 @@ NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-ISY_URL = "http://polisy.evilminions.org:8080/rest/"
+URL = "http://polisy.evilminions.org:8080/rest/"
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_t521752427579"
 ZW_LIBRARY_ECOBEE = "nodes/n001_rs_ptth"
 ZW_GUEST_ECOBEE = "nodes/n001_rs_x9pl"
@@ -23,9 +23,9 @@ ZW_MASTER_THERMOSTAT = "nodes/n001_t521778805292"
 ZW_GYM_ECOBEE = "nodes/n001_rs_kz2j"
 ZW_MASTER_ECOBEE = "nodes/n001_rs_gbfs"
 ZW_OFFICE_ECOBEE = "nodes/n001_rs_f869"
-ZW_MAIN_GARAGE_FAN = "nodes/ZW078_1"
-ZW_SPA_PUMP = "nodes/ZW044_1"
-ZW_POOL_LIGHT = "nodes/ZW080_1"
+ZW_MAIN_GARAGE_FAN = "nodes/ZY078_1"
+ZW_SPA_PUMP = "nodes/ZY044_1"
+ZW_POOL_LIGHT = "nodes/ZY080_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
 
 TEMPERATURE = "ST"
@@ -37,14 +37,14 @@ LUX_6IN1 = "LUMIN"
 HUMIDITY = "CLIHUM"
 OCCUPANCY = "GV1"
 HEAT_COOL_STATE = "CLIHCS"  # 0 = idle | 1 = Heat | 2 = Cool
-SECRET_FILE = "./secret/isy994"
+SECRET_FILE = "./secret/IoX"
 
 
 def get_node_xml(node, s, user_name, password):
 
 	try:
-		# do a get on isy994 to update the data
-		url = ISY_URL + str(node)
+		# do a get on IoX to update the data
+		url = URL + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
 			raise Exception(f'Bad response from IoX:{str(ret.status_code)} {url}')
@@ -57,15 +57,15 @@ def get_node_xml(node, s, user_name, password):
 
 def get_weather(weather_data):
 
+	s = requests.Session()
+
 	try:
 		#
-		# Get ISY security data
+		# Get IoX security data
 
 		with open(SECRET_FILE, "r") as secret_file:
 			user_name = secret_file.readline().strip('\n')
 			password = secret_file.readline().strip('\n')
-
-		s = requests.Session()
 
 		xml_response = get_node_xml(ZW_THEATER_ECOBEE, s, user_name, password)
 		if xml_response:
@@ -200,14 +200,14 @@ def get_weather(weather_data):
 					weather_data.pool.light = sensor.get('formatted')
 
 	except Exception as e:
-		logging.error("Unable to get isy994:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+		logging.error("Unable to get IoX:get_weather " + str(e))
+		print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
 	finally:
 		s.close()
 		e = sys.exc_info()[0]
 		if e:
-			logging.error("Unable to get isy994:get_weather " + str(e))
-			print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+			logging.error("Unable to get IoX:get_weather " + str(e))
+			print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
 	return
 
 

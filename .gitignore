@@ -108,3 +108,4 @@ secret/
 # ide
 .idea/
 /tests/.pytest_cache/
+/.pytest_cache/
