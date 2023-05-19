@@ -9,7 +9,7 @@ import jsonpickle
 from weather import data
 from weather import stations
 
-ISY_INTEGER = 1
+IOX_INTEGER = 1
 GARAGE_FREEZER_TEMP = 14
 BACK_YARD_TEMP = 13
 MAIN_GARAGE_TEMP = 18
@@ -18,7 +18,7 @@ FAN_ZONES_ALL = 9
 FAN_ZONES_SOME = 22
 ALARM_ALL_ZONES_CLOSED = 12
 
-ISY_STATE = 2
+IOX_STATE = 2
 MAIN_GARAGE_STATE = 2
 BIKE_GARAGE_STATE = 3
 MOTORCYCLE_GARAGE_STATE = 4
@@ -46,27 +46,27 @@ def get_rest():
     return
 
 
-def push_temp_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
+def push_temp_iox(s, user_name, password, variable_type, variable_id, f_temp, label):
     try:
         #
         # Never push defaults to ISY
-        if f_temp == data.DEFAULT_TEMP and variable_type == ISY_INTEGER:
+        if f_temp == data.DEFAULT_TEMP and variable_type == IOX_INTEGER:
             msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
             logging.error(msg)
             print(datetime.datetime.now().time(), msg)
             return
 
-        push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label)
+        push_data_iox(s, user_name, password, variable_type, variable_id, f_temp, label)
     except Exception as e:
-        logging.error("Unable to push_temp_isy to isy " + str(e))
-        print(datetime.datetime.now().time(), "Unable to push_temp_isy to isy " + str(e))
+        logging.error("Unable to push_data_iox to isy " + str(e))
+        print(datetime.datetime.now().time(), "Unable to push_data_iox to IoX " + str(e))
 
 
-def push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, label):
+def push_data_iox(s, user_name, password, variable_type, variable_id, f_temp, label):
     try:
         #
         # do a get on isy994 to update the data
-        url = stations.isy994.ISY_URL + "/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
+        url = stations.IoX.IOX_URL + "/vars/set/" + str(variable_type) + "/" + str(variable_id) + "/" + str(
             round(float(f_temp)))
         ret = s.get(url, auth=(user_name, password), verify=False)
         if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
@@ -76,34 +76,34 @@ def push_data_isy(s, user_name, password, variable_type, variable_id, f_temp, la
             print(datetime.datetime.now().time(), " - Success URL: ", url, " ", label)
     except Exception as e:
         logging.error("Unable to push_data_isy to isy " + str(e))
-        print(datetime.datetime.now().time(), "Unable to push_data_isy to isy " + str(e))
+        print(datetime.datetime.now().time(), "Unable to push_data_isy to IoX " + str(e))
 
 
 def update_isy(weather_dict, s, user_name, password):
 
     try:
         # temps
-        push_temp_isy(s, user_name, password, ISY_INTEGER, BACK_YARD_TEMP, weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
-        push_temp_isy(s, user_name, password, ISY_INTEGER, MAIN_GARAGE_TEMP, weather_dict["main_garage"]["temp"], 'MAIN_GARAGE_TEMP')
-        push_temp_isy(s, user_name, password, ISY_INTEGER, GARAGE_FREEZER_TEMP, weather_dict["main_garage_freezer"]["temp"], ' GARAGE_FREEZER_TEMP')
-        push_temp_isy(s, user_name, password, ISY_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, BACK_YARD_TEMP, weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, MAIN_GARAGE_TEMP, weather_dict["main_garage"]["temp"], 'MAIN_GARAGE_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, GARAGE_FREEZER_TEMP, weather_dict["main_garage_freezer"]["temp"], ' GARAGE_FREEZER_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
 
         # alarm status
-        push_data_isy(s, user_name, password, ISY_INTEGER, ALARM_ALL_ZONES_CLOSED, weather_dict["alarm"]["all_zones_closed"], ' Alarm: all_zones_closed')
-        push_data_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], '  FAN_ZONES_ALL')
-        push_data_isy(s, user_name, password, ISY_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], ' FAN_ZONES_SOME')
+        push_data_iox(s, user_name, password, IOX_INTEGER, ALARM_ALL_ZONES_CLOSED, weather_dict["alarm"]["all_zones_closed"], ' Alarm: all_zones_closed')
+        push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], '  FAN_ZONES_ALL')
+        push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], ' FAN_ZONES_SOME')
 
         # garage doors
-        push_data_isy(s, user_name, password, ISY_STATE, BIKE_GARAGE_STATE, weather_dict["alarm"]["bike_garage"], '  BIKE_GARAGE_CLOSED')
-        push_data_isy(s, user_name, password, ISY_STATE, MOTORCYCLE_GARAGE_STATE, weather_dict["alarm"]["mc_garage"], '  MC_GARAGE_CLOSED')
-        push_data_isy(s, user_name, password, ISY_STATE, MAIN_GARAGE_STATE, weather_dict["alarm"]["main_garage"], '  MAIN_GARAGE_CLOSED')
-        push_data_isy(s, user_name, password, ISY_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), '  IS_RAINING')
-        push_data_isy(s, user_name, password, ISY_STATE, ALARM_STATUS_STATE, (weather_dict["alarm"]["status"] ), '  Alarm: Status')
+        push_data_iox(s, user_name, password, IOX_STATE, BIKE_GARAGE_STATE, weather_dict["alarm"]["bike_garage"], '  BIKE_GARAGE_CLOSED')
+        push_data_iox(s, user_name, password, IOX_STATE, MOTORCYCLE_GARAGE_STATE, weather_dict["alarm"]["mc_garage"], '  MC_GARAGE_CLOSED')
+        push_data_iox(s, user_name, password, IOX_STATE, MAIN_GARAGE_STATE, weather_dict["alarm"]["main_garage"], '  MAIN_GARAGE_CLOSED')
+        push_data_iox(s, user_name, password, IOX_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), '  IS_RAINING')
+        push_data_iox(s, user_name, password, IOX_STATE, ALARM_STATUS_STATE, (weather_dict["alarm"]["status"]), '  Alarm: Status')
         logging.error("ISY pushed")
 
     except Exception as e:
         logging.error("Unable to push weather to isy " + str(e))
-        print(datetime.datetime.now().time(), "Unable to push weather to isy " + str(e))
+        print(datetime.datetime.now().time(), "Unable to push weather to IoX " + str(e))
 
 
 def main():
@@ -130,7 +130,7 @@ def main():
         s.close()
     except Exception as e:
         logging.error("Unable to update ISY " + str(e))
-        print(datetime.datetime.now().time(), "Unable to update ISY " + str(e))
+        print(datetime.datetime.now().time(), "Unable to update IoX " + str(e))
 
 
 main()

@@ -1,20 +1,9 @@
 #!/usr/bin/python3
 
 import datetime
-
 import requests
 import urllib3
 import logging
-
-ISY_INTEGER = 1
-ISY_STATE = 2
-FRONT_DOOR_TEMP = 12
-BACK_YARD_TEMP = 13
-THEATER_WINDOW_TEMP = 14
-MASTER_BEDROOM_TEMP = 17
-LIVING_ROOM_WINDOW = 22
-MAIN_GARAGE = 18
-AVERAGE_HOUSE_TEMP = 25
 
 
 def get_rest():
@@ -25,8 +14,8 @@ def get_rest():
         ret = requests.get(url, verify=False)
 
         if ret.status_code != 200:
-            logging.error("Bad response from isy994 " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  Bad response from isy994. " + str(ret.status_code))
+            logging.error("Bad response from IoX " + str(ret.status_code))
+            print(datetime.datetime.now().time(), " -  Bad response from IoX. " + str(ret.status_code))
             return
         return ret.content.decode()
 
