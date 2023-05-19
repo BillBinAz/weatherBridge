@@ -47,7 +47,7 @@ def get_node_xml(node, s, user_name, password):
 		url = ISY_URL + str(node)
 		ret = s.get(url, auth=(user_name, password), verify=False)
 		if ret.status_code != 200:
-			raise Exception("Bad response from IoX:  " + url + str(ret.status_code))
+			raise Exception(f'Bad response from IoX:{str(ret.status_code)} {url}')
 		return xml.etree.ElementTree.fromstring(ret.content.decode())
 	except Exception as e:
 		logging.error(str(e))
