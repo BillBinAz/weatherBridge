@@ -10,7 +10,7 @@ NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
 ZW_THEATER_6IN1 = "nodes/ZW047_1"
 ZW_LIVING_ROOM_6IN1 = "nodes/ZW048_1"
-ISY_URL = "http://isy994.evilminions.org/rest/"
+ISY_URL = "http://polisy.evilminions.org:8080/rest/"
 ZW_KITCHEN_THERMOSTAT = "nodes/n001_t521752427579"
 ZW_LIBRARY_ECOBEE = "nodes/n001_rs_ptth"
 ZW_GUEST_ECOBEE = "nodes/n001_rs_x9pl"
@@ -160,10 +160,15 @@ def get_weather(weather_data):
 			elif sensor.get('id') == HEAT_COOL_STATE:
 				weather_data.master_bedroom_thermostat.state = sensor.get('value')
 
-		xml_response = get_node_xml(ZW_POOL_LIGHT, s, user_name, password)
-		for sensor in xml_response.find('properties').findall('property'):
-			if sensor.get('id') == 'ST':
-				weather_data.pool.light = sensor.get('formatted')
+		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.sensor.temp) +
+														float(weather_data.master_bedroom_thermostat.sensor.temp) +
+														float(weather_data.office.temp) +
+														float(weather_data.gym.temp) +
+														float(weather_data.library.temp) +
+														float(weather_data.living_room.sensor.temp) +
+														float(weather_data.cheese.temp) +
+														float(weather_data.guest.temp) +
+														float(weather_data.theater.sensor.temp)) / 9.0, 1)
 
 		xml_response = get_node_xml(ZW_SPA_PUMP, s, user_name, password)
 		for sensor in xml_response.find('properties').findall('property'):
@@ -175,21 +180,16 @@ def get_weather(weather_data):
 			if sensor.get('id') == 'ST':
 				weather_data.main_garage.fan = sensor.get('formatted')
 
-		s.close()
+		xml_response = get_node_xml(ZW_POOL_LIGHT, s, user_name, password)
+		for sensor in xml_response.find('properties').findall('property'):
+			if sensor.get('id') == 'ST':
+				weather_data.pool.light = sensor.get('formatted')
 
-		weather_data.whole_house_fan.houseTemp = round((float(weather_data.kitchen_thermostat.sensor.temp) +
-														float(weather_data.master_bedroom_thermostat.sensor.temp) +
-														float(weather_data.office.temp) +
-														float(weather_data.gym.temp) +
-														float(weather_data.library.temp) +
-														float(weather_data.living_room.sensor.temp) +
-														float(weather_data.cheese.temp) +
-														float(weather_data.guest.temp) +
-														float(weather_data.theater.sensor.temp)) / 9.0, 1)
 	except Exception as e:
 		logging.error("Unable to get isy994:get_weather " + str(e))
 		print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
 	finally:
+		s.close()
 		e = sys.exc_info()[0]
 		if e:
 			logging.error("Unable to get isy994:get_weather " + str(e))
