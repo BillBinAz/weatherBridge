@@ -1,5 +1,5 @@
 # WeatherBridge
-Python3 code to upload weather data from wifiLogger, and rtl_433 to isy994.
+Python3 code to upload weather data from wifiLogger, and rtl_433 to IoX.
 
 
 ## Dependencies  
@@ -28,7 +28,7 @@ https://github.com/merbanan/rtl_433
     6.) restart the Pi
 
 ### crontab -e
-*/5 * * * *  cd ~/weatherBridge && ./update_isy.py > /tmp/weatherBridge.log 2>&1 <br>
+*/5 * * * *  cd ~/weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1 <br>
 */10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
 
 ## copy config to /etc

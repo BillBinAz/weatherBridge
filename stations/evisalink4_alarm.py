@@ -231,11 +231,11 @@ def get_weather(weather_data):
         determine_fan_status(weather_data)
 
     except Exception as e:
-        logging.error("Unable to get isy994:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+        logging.error("Unable to get IoX:get_weather " + str(e))
+        print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
     finally:
         e = sys.exc_info()[0]
         if e:
-            logging.error("Unable to get isy994:get_weather " + str(e))
-            print(datetime.datetime.now().time(), "Unable to get isy994:get_weather " + str(e))
+            logging.error("Unable to get IoX:get_weather " + str(e))
+            print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
     return
