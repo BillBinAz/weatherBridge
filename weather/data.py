@@ -21,6 +21,8 @@ class Alarm(object):
 		self.water_flow = 0
 		self.west_wing_smoke = 0
 		self.master_hall_smoke = 0
+		self.living_great_motion = 0
+		self.master_motion = 0
 
 
 class WholeHomeFan(object):

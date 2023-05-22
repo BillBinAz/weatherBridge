@@ -199,9 +199,9 @@ def populate_zone(weather_data, zone, title):
         elif zone == '6':
             weather_data.alarm.west_wing = zone_status
         elif zone == '7':
-            weather_data.alarm.west_wing = zone_status
+            weather_data.alarm.living_great_motion = zone_status
         elif zone == '8':
-            weather_data.alarm.west_wing = zone_status
+            weather_data.alarm.master_motion = zone_status
         elif zone == '10':
             weather_data.alarm.bike_garage = zone_status
         elif zone == '11':
