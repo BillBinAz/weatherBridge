@@ -198,8 +198,18 @@ def populate_zone(weather_data, zone, title):
             weather_data.alarm.offices = zone_status
         elif zone == '6':
             weather_data.alarm.west_wing = zone_status
+        elif zone == '7':
+            weather_data.alarm.west_wing = zone_status
+        elif zone == '8':
+            weather_data.alarm.west_wing = zone_status
         elif zone == '10':
             weather_data.alarm.bike_garage = zone_status
+        elif zone == '11':
+            weather_data.alarm.master_hall_smoke = zone_status
+        elif zone == '12':
+            weather_data.alarm.west_wing_smoke = zone_status
+        elif zone == '15':
+            weather_data.alarm.water_flow = zone_status
     except Exception as e:
         logging.error("Unable to populate_zone:" + zone + " " + str(e))
         print(datetime.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
