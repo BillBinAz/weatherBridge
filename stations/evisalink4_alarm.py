@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 HTTP_URL = 'http://eve4.evilminions.org/'
 SECRET_FILE = "./secret/evisalink4"
 ZONE_OPEN_COLOR = '#FF0000'
+ZONE_OPEN_LABEL = 'OPEN'
 ZONE_OPEN = 0
 ZONE_CLOSED = 1
 FAN_ON = 1
@@ -91,22 +92,35 @@ def parse_html(weather_data, html_document):
     weather_data.whole_house_fan.fan_zones_all = 0
 
     soup = BeautifulSoup(html_document, 'html.parser')
+
+    get_zones(weather_data, soup)
+    get_status(weather_data, soup)
+
+
+def get_zones(weather_data, soup):
+
+    all_html_spans = soup.find_all('span')
+    for span_html in all_html_spans:
+        attributes = span_html.attrs
+        title = attributes.get('title')
+        label = span_html.text.strip()
+        if title and label:
+            populate_zone(weather_data, label, title)
+
+
+def get_status(weather_data, soup):
     all_html_tds = soup.find_all('td')
     previous_label = ""
 
     for td_html in all_html_tds:
-        # find the ones with colors
-        attributes = td_html.attrs
-        color = attributes.get(COLOR_ATTRIBUTE)
         label = td_html.text.strip()
-        if color and label:
-            populate_zone(weather_data, label, color)
         if previous_label == "System":
-            populate_status(weather_data, label, color)
+            populate_status(weather_data, label)
         previous_label = label
 
 
-def populate_status(weather_data, label, color):
+def populate_status(weather_data, label):
+
     try:
         weather_data.alarm.status_label = label
 
@@ -162,10 +176,10 @@ def populate_status(weather_data, label, color):
             print(datetime.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
 
 
-def populate_zone(weather_data, zone, color):
+def populate_zone(weather_data, zone, title):
 
     try:
-        zone_status = is_zone_open(color)
+        zone_status = is_zone_open(title)
 
         if zone != '1' and zone != '2' and zone_status == ZONE_OPEN:
             weather_data.whole_house_fan.fan_zones_some = FAN_ON
@@ -196,9 +210,9 @@ def populate_zone(weather_data, zone, color):
             print(datetime.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
 
 
-def is_zone_open(color):
+def is_zone_open(title):
 
-    if color == ZONE_OPEN_COLOR:
+    if title.startswith(ZONE_OPEN_LABEL):
         return ZONE_OPEN
     return ZONE_CLOSED
 
