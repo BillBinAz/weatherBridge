@@ -112,6 +112,22 @@ class EcobeeSensor(object):
 		self.occupied = 0
 
 
+class Locks(object):
+
+	def __init__(self):
+		self.locked = 0
+
+
+class Doors(object):
+
+	def __init__(self):
+		self.front_entry_door = Locks()
+		self.master_bedroom_entry_door = Locks()
+		self.main_garage_side_door = Locks()
+		self.main_garage_entry_door = Locks()
+		self.bike_garage_entry_door = Locks()
+
+
 class WeatherData(object):
 
 	def __init__(self):
@@ -123,6 +139,7 @@ class WeatherData(object):
 		self.rack = SensorSmall()
 		self.panel = SensorSmall()
 		self.main_garage = SensorSmallWithCalibration()
+		self.bike_garage = SensorSmallWithCalibration()
 		self.living_room = Sensor6In1()
 		self.master_bedroom_thermostat = SensorThermostat()
 		self.kitchen_thermostat = SensorThermostat()
@@ -134,6 +151,7 @@ class WeatherData(object):
 		self.guest = EcobeeSensor()
 		self.cheese = EcobeeSensor()
 		self.whole_house_fan = WholeHomeFan()
+		self.doors = Doors()
 		self.main_garage_freezer = SensorSmallWithCalibration()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 

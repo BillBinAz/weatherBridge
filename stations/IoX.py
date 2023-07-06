@@ -19,6 +19,11 @@ ZW_CHEESE_ECOBEE = "nodes/n001_rs_x9lx"
 ZW_THEATER_ECOBEE = "nodes/n001_rs_bwn4"
 ZW_LIVING_ROOM_ECOBEE = "nodes/n001_rs_bw6z"
 
+ZW_FRONT_ENTRY_DOOR_LOCK = "nodes/ZY105_1"
+ZW_GARAGE_SIDE_DOOR_LOCK = "nodes/ZY074_1"
+ZW_GARAGE_ENTRY_DOOR_LOCK = "nodes/ZY083_1"
+ZW_MASTER_BEDROOM_ENTRY_DOOR_LOCK = "nodes/ZY052_1"
+
 ZW_MASTER_THERMOSTAT = "nodes/n001_t521778805292"
 ZW_GYM_ECOBEE = "nodes/n001_rs_kz2j"
 ZW_MASTER_ECOBEE = "nodes/n001_rs_gbfs"
@@ -29,6 +34,8 @@ ZW_POOL_LIGHT = "nodes/ZY080_1"
 ALARM_ZONES_CLOSED = "vars/get/2/4"
 
 TEMPERATURE = "ST"
+LOCK_STATUS = "ST"
+LOCKED = "Locked"
 CLIMATE_HEAT_POINT = "CLISPH"
 CLIMATE_COOL_POINT = "CLISPC"
 CLIMATE_MODE = "CLIMD"
@@ -66,6 +73,34 @@ def get_weather(weather_data):
 		with open(SECRET_FILE, "r") as secret_file:
 			user_name = secret_file.readline().strip('\n')
 			password = secret_file.readline().strip('\n')
+
+		xml_response = get_node_xml(ZW_FRONT_ENTRY_DOOR_LOCK, s, user_name, password)
+		if xml_response:
+			for sensor in xml_response.find('properties').findall('property'):
+				if sensor.get('id') == LOCK_STATUS:
+					if sensor.get('formatted') == LOCKED:
+						weather_data.doors.front_entry_door.locked = 1
+
+		xml_response = get_node_xml(ZW_GARAGE_SIDE_DOOR_LOCK, s, user_name, password)
+		if xml_response:
+			for sensor in xml_response.find('properties').findall('property'):
+				if sensor.get('id') == LOCK_STATUS:
+					if sensor.get('formatted') == LOCKED:
+						weather_data.doors.main_garage_side_door.locked = 1
+
+		xml_response = get_node_xml(ZW_GARAGE_ENTRY_DOOR_LOCK, s, user_name, password)
+		if xml_response:
+			for sensor in xml_response.find('properties').findall('property'):
+				if sensor.get('id') == LOCK_STATUS:
+					if sensor.get('formatted') == LOCKED:
+						weather_data.doors.main_garage_entry_door.locked = 1
+
+		xml_response = get_node_xml(ZW_MASTER_BEDROOM_ENTRY_DOOR_LOCK, s, user_name, password)
+		if xml_response:
+			for sensor in xml_response.find('properties').findall('property'):
+				if sensor.get('id') == LOCK_STATUS:
+					if sensor.get('formatted') == LOCKED:
+						weather_data.doors.master_bedroom_entry_door.locked = 1
 
 		xml_response = get_node_xml(ZW_THEATER_ECOBEE, s, user_name, password)
 		if xml_response:
