@@ -18,6 +18,11 @@ class Alarm(object):
 		self.mc_garage = 0
 		self.main_garage = 0
 		self.all_zones_closed = 0
+		self.water_flow = 0
+		self.west_wing_smoke = 0
+		self.master_hall_smoke = 0
+		self.living_great_motion = 0
+		self.master_motion = 0
 
 
 class WholeHomeFan(object):
