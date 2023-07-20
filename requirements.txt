@@ -2,6 +2,6 @@ Flask==2.3.2
 Requests==2.29.0
 jsonpickle==3.0.1
 pymyq==3.1.6
-aiohttp==3.8.4
+aiohttp==3.8.5
 urllib3==1.26.15
 beautifulsoup4~=4.11.1
