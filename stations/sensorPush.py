@@ -17,7 +17,7 @@ CALIBRATION_URL = "https://api.sensorpush.com/api/v1/devices/sensors"
 TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
 FREEZER_ID = "16838664"
 HUMIDOR_ID = "16869529"
-MAIN_GARAGE_ID = "16803031"
+GARAGE_ID = "16803031"
 SAFE_ID = "16866908"
 
 
@@ -149,7 +149,7 @@ def get_weather(weather_data):
                 sensor_key = str(sensor)
                 if sensor_key.startswith(HUMIDOR_ID):
                     humidor_key = sensor_key
-                elif sensor_key.startswith(MAIN_GARAGE_ID):
+                elif sensor_key.startswith(GARAGE_ID):
                     garage_key = sensor_key
                 elif sensor_key.startswith(FREEZER_ID):
                     garage_freezer_key = sensor_key
@@ -164,8 +164,8 @@ def get_weather(weather_data):
             apply_sensor(weather_data.main_garage_freezer, sensor_data, calibration_data, garage_freezer_key)
 
             #
-            # Main Garage Sensor
-            apply_sensor(weather_data.main_garage, sensor_data, calibration_data, garage_key)
+            # Garage Sensor
+            apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
 
             #
             # Safe Sensor

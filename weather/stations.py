@@ -16,7 +16,7 @@ def get_weather():
 		cur_weather = data.WeatherData()
 		IoX.get_weather(cur_weather)
 		wifiLogger.get_weather(cur_weather)
-		airScape.get_weather(cur_weather)
+		# airScape.get_weather(cur_weather)
 		# rtl433.get_weather(cur_weather, "rtl433.evilminions.org")
 		myq.get_weather(cur_weather)
 		sensorPush.get_weather(cur_weather)

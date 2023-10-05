@@ -40,34 +40,41 @@ def get_data():
 	return
 
 
+def convert_to_float(value, precision):
+	try:
+		return round(float(value), precision)
+	except ValueError:
+		return 0.0
+
+
 def get_weather(weather_data):
 
 	try:
 		wifi_logger_data = get_data()
 
 		# Temperature - Back yard
-		weather_data.back_yard.temp = round(float(wifi_logger_data[TEMPERATURE_OUTDOOR]), 2)
-		weather_data.back_yard.humidity = round(float(wifi_logger_data[HUMIDITY_OUTDOOR]), 2)
-		weather_data.back_yard.dew_point = round(float(wifi_logger_data[DEP_POINT]), 2)
+		weather_data.back_yard.temp = convert_to_float(wifi_logger_data[TEMPERATURE_OUTDOOR], 2)
+		weather_data.back_yard.humidity = convert_to_float(wifi_logger_data[HUMIDITY_OUTDOOR], 2)
+		weather_data.back_yard.dew_point = convert_to_float(wifi_logger_data[DEP_POINT], 2)
 
 		# Rain
-		weather_data.back_yard.rain_rate = round(float(wifi_logger_data[RAIN_RATE]), 2)
-		weather_data.back_yard.rain_total = round(float(wifi_logger_data[RAIN_24_HOURS]), 2)
+		weather_data.back_yard.rain_rate = convert_to_float(wifi_logger_data[RAIN_RATE], 2)
+		weather_data.back_yard.rain_total = convert_to_float(wifi_logger_data[RAIN_24_HOURS], 2)
 
 		# Wind
-		weather_data.back_yard.wind_speed = round(float(wifi_logger_data[WIND_SPEED]), 2)
-		weather_data.back_yard.wind_gust = round(float(wifi_logger_data[WIND_GUST]), 2)
+		weather_data.back_yard.wind_speed = convert_to_float(wifi_logger_data[WIND_SPEED], 2)
+		weather_data.back_yard.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
 		weather_data.back_yard.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
-		weather_data.back_yard.wind_chill = round(float(wifi_logger_data[WIND_CHILL]), 2)
+		weather_data.back_yard.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
 
 		# Pressure
-		weather_data.back_yard.pressure = round(float(wifi_logger_data[PRESSURE]), 4)
+		weather_data.back_yard.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
 
 		# Temperature - Spa
-		weather_data.spa.temp = round(float(wifi_logger_data[LEAF_TEMP][1]), 2)
+		weather_data.spa.temp = convert_to_float(wifi_logger_data[LEAF_TEMP][1], 2)
 
 		# Temperature - Pool
-		weather_data.pool.temp = round(float(wifi_logger_data[LEAF_TEMP][0]), 2)
+		weather_data.pool.temp = convert_to_float(wifi_logger_data[LEAF_TEMP][0], 2)
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse wifi_logger_data:get_weather " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data:get_weather " + str(e))

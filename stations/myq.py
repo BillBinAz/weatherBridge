@@ -6,9 +6,10 @@ import datetime
 import sys
 
 SECRET_FILE = "./secret/myq"
-BIKE_GARAGE = 'CG08469920F5'
-MAIN_GARAGE = 'CG0846887725'
-MOTORCYCLE_GARAGE = 'CG0846887726'
+GAMBIT_MAIN_GARAGE = 'CG0846887725'
+GAMBIT_MOTORCYCLE_GARAGE = 'CG0846887726'
+SHOTGUN_DOUBLE_GARAGE = 'CG0850450103'
+SHOTGUN_SINGLE_GARAGE = 'CG085045011E'
 
 
 async def async_get_myq(weather_data) -> None:
@@ -23,14 +24,17 @@ async def async_get_myq(weather_data) -> None:
             myq = await pymyq.login(user_name, password, web_session)
             devices = myq.covers
 
-            # Bike Garage
-            weather_data.alarm.bike_garage = update(devices, BIKE_GARAGE)
+            # Shotgun Double Garage
+            weather_data.alarm.double_garage = update(devices, SHOTGUN_DOUBLE_GARAGE)
+
+            # Shotgun Single Garage
+            weather_data.alarm.single_garage = update(devices, SHOTGUN_SINGLE_GARAGE)
 
             # Motorcycle Garage
-            weather_data.alarm.mc_garage = update(devices, MOTORCYCLE_GARAGE)
+            weather_data.alarm.mc_garage = update(devices, GAMBIT_MOTORCYCLE_GARAGE)
 
             # Main Garage
-            weather_data.alarm.main_garage = update(devices, MAIN_GARAGE)
+            weather_data.alarm.main_garage = update(devices, GAMBIT_MAIN_GARAGE)
 
     except Exception as e:
         logging.error("Unable to retrieve myq.covers " + str(e))

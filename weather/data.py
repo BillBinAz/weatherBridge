@@ -8,21 +8,22 @@ class Alarm(object):
 	def __init__(self):
 		self.status = 0
 		self.status_label = "None"
-		self.front_garage_door = 0
-		self.sliding_glass_door = 0
-		self.living_great = 0
-		self.master = 0
-		self.offices = 0
-		self.west_wing = 0
-		self.bike_garage = 0
-		self.mc_garage = 0
-		self.main_garage = 0
+		self.great_room_motion = 0
+		self.garage_entry_door = 0
+		self.guest_bedrooms_bath = 0
+		self.great_room_windows = 0
+		self.great_room_french_doors = 0
+		self.master_bedroom_window = 0
+		self.master_bathroom_windows = 0
+		self.master_bedroom_motion = 0
+		self.front_entry_door = 0
+		self.den_window = 0
+		self.dining_room_window = 0
+		self.back_patio_door = 0
+
+		self.single_garage = 0
+		self.double_garage = 0
 		self.all_zones_closed = 0
-		self.water_flow = 0
-		self.west_wing_smoke = 0
-		self.master_hall_smoke = 0
-		self.living_great_motion = 0
-		self.master_motion = 0
 
 
 class WholeHomeFan(object):
@@ -35,18 +36,6 @@ class WholeHomeFan(object):
 		self.houseTemp = ""
 		self.fan_zones_all = 0
 		self.fan_zones_some = 0
-
-
-class Pool(object):
-	def __init__(self):
-		self.light = ""
-		self.temp = DEFAULT_TEMP
-
-
-class Spa(object):
-	def __init__(self):
-		self.pump = ""
-		self.temp = DEFAULT_TEMP
 
 
 class SensorSmall(object):
@@ -115,26 +104,29 @@ class EcobeeSensor(object):
 class WeatherData(object):
 
 	def __init__(self):
-		self.theater = Sensor6In1()
+		# Davis Weather Station
 		self.back_yard = SensorMajor()
-		self.library = EcobeeSensor()
+
+		# Envisalink
+		self.alarm = Alarm()
+
+		# Sensor Push
 		self.humidor = SensorSmallWithCalibration()
 		self.safe = SensorSmallWithCalibration()
-		self.rack = SensorSmall()
-		self.panel = SensorSmall()
-		self.main_garage = SensorSmallWithCalibration()
-		self.living_room = Sensor6In1()
-		self.master_bedroom_thermostat = SensorThermostat()
-		self.kitchen_thermostat = SensorThermostat()
-		self.alarm = Alarm()
-		self.pool = Pool()
-		self.spa = Spa()
-		self.office = EcobeeSensor()
-		self.gym = EcobeeSensor()
-		self.guest = EcobeeSensor()
-		self.cheese = EcobeeSensor()
-		self.whole_house_fan = WholeHomeFan()
+		self.garage = SensorSmallWithCalibration()
+		self.rack = SensorSmallWithCalibration()
 		self.main_garage_freezer = SensorSmallWithCalibration()
+
+		# Ecobee
+		self.hallway_thermostat = SensorThermostat()
+		self.bedroom_left = EcobeeSensor()
+		self.bedroom_right = EcobeeSensor()
+		self.living_room = EcobeeSensor()
+		self.master_bedroom = EcobeeSensor()
+		self.office = EcobeeSensor()
+
+		# Airscape
+		self.whole_house_fan = WholeHomeFan()
 		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):
