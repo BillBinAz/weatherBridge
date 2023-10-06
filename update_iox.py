@@ -17,6 +17,8 @@ AVERAGE_HOUSE_TEMP = 25
 FAN_ZONES_ALL = 9
 FAN_ZONES_SOME = 22
 ALARM_ALL_ZONES_CLOSED = 12
+ENTRY_DOOR_FRONT_CLOSED = 32
+ENTRY_DOOR_GARAGE_CLOSED = 33
 
 IOX_STATE = 2
 MAIN_GARAGE_STATE = 2
@@ -93,6 +95,10 @@ def update_iox(weather_dict, s, user_name, password):
         push_data_iox(s, user_name, password, IOX_INTEGER, ALARM_ALL_ZONES_CLOSED, weather_dict["alarm"]["all_zones_closed"], ' Alarm: all_zones_closed')
         push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], '  FAN_ZONES_ALL')
         push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], ' FAN_ZONES_SOME')
+
+        # entry doors
+        push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_FRONT_CLOSED, weather_dict["alarm"]["front_entry_door"], ' ENTRY_DOOR_FRONT_CLOSED')
+        push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_GARAGE_CLOSED, weather_dict["alarm"]["garage_entry_door"], ' ENTRY_DOOR_GARAGE_CLOSED')
 
         # garage doors
         push_data_iox(s, user_name, password, IOX_STATE, MOTORCYCLE_GARAGE_STATE, weather_dict["alarm"]["mc_garage"], '  MC_GARAGE_CLOSED')
