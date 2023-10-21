@@ -70,11 +70,6 @@ def get_weather(weather_data):
 		# Pressure
 		weather_data.back_yard.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
 
-		# Temperature - Spa
-		weather_data.spa.temp = convert_to_float(wifi_logger_data[LEAF_TEMP][1], 2)
-
-		# Temperature - Pool
-		weather_data.pool.temp = convert_to_float(wifi_logger_data[LEAF_TEMP][0], 2)
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse wifi_logger_data:get_weather " + str(e))
 		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data:get_weather " + str(e))
