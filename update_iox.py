@@ -34,7 +34,7 @@ def get_rest():
     try:
         #
         # call home for data
-        url = "https://home.evilminions.org/weather/data"
+        url = "http://home.evilminions.org/weather/data"
         ret = requests.get(url, verify=False)
 
         if ret.status_code != 200:
