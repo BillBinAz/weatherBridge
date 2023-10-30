@@ -101,6 +101,22 @@ class EcobeeSensor(object):
 		self.occupied = 0
 
 
+class Locks(object):
+
+	def __init__(self):
+		self.locked = 0
+
+
+class Doors(object):
+
+	def __init__(self):
+		self.front_entry_door = Locks()
+		self.master_bedroom_entry_door = Locks()
+		self.main_garage_side_door = Locks()
+		self.main_garage_entry_door = Locks()
+		self.bike_garage_entry_door = Locks()
+
+
 class WeatherData(object):
 
 	def __init__(self):

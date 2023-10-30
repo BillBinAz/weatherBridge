@@ -10,7 +10,6 @@ NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
 URL = "http://polisy.evilminions.org:8080/rest/"
 
-
 ZW_HALLWAY_THERMOSTAT = "nodes/n001_t531693010738"
 ZW_HALLWAY_THERMOSTAT_SENSOR = "nodes/n001_s531693010738"
 ZW_BEDROOM_LEFT = "nodes/n001_rs_ldtb"
@@ -22,6 +21,8 @@ ZW_GARAGE_SINGLE = "nodes/ZY139_1"
 ZW_GARAGE_DOUBLE = "nodes/ZY049_1"
 
 TEMPERATURE = "ST"
+LOCK_STATUS = "ST"
+LOCKED = "Locked"
 CLIMATE_HEAT_POINT = "CLISPH"
 CLIMATE_COOL_POINT = "CLISPC"
 CLIMATE_MODE = "CLIMD"
@@ -59,7 +60,7 @@ def get_weather(weather_data):
 		with open(SECRET_FILE, "r") as secret_file:
 			user_name = secret_file.readline().strip('\n')
 			password = secret_file.readline().strip('\n')
-
+      
 		xml_response = get_node_xml(ZW_BEDROOM_LEFT, s, user_name, password)
 		if xml_response:
 			for sensor in xml_response.find('properties').findall('property'):
