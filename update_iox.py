@@ -101,10 +101,8 @@ def update_iox(weather_dict, s, user_name, password):
         push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_GARAGE_CLOSED, weather_dict["alarm"]["garage_entry_door"], ' ENTRY_DOOR_GARAGE_CLOSED')
 
         # garage doors
-        push_data_iox(s, user_name, password, IOX_STATE, MOTORCYCLE_GARAGE_STATE, weather_dict["alarm"]["mc_garage"], '  MC_GARAGE_CLOSED')
-        push_data_iox(s, user_name, password, IOX_STATE, MAIN_GARAGE_STATE, weather_dict["alarm"]["main_garage"], '  MAIN_GARAGE_CLOSED')
-        push_data_iox(s, user_name, password, IOX_STATE, SINGLE_GARAGE_STATE, weather_dict["alarm"]["single_garage"], '  SINGLE_GARAGE_CLOSED')
-        push_data_iox(s, user_name, password, IOX_STATE, DOUBLE_GARAGE_STATE, weather_dict["alarm"]["double_garage"], '  DOUBLE_GARAGE_CLOSED')
+        # push_data_iox(s, user_name, password, IOX_STATE, SINGLE_GARAGE_STATE, weather_dict["alarm"]["single_garage"], '  SINGLE_GARAGE_CLOSED')
+        # push_data_iox(s, user_name, password, IOX_STATE, DOUBLE_GARAGE_STATE, weather_dict["alarm"]["double_garage"], '  DOUBLE_GARAGE_CLOSED')
 
         push_data_iox(s, user_name, password, IOX_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), '  IS_RAINING')
         push_data_iox(s, user_name, password, IOX_STATE, ALARM_STATUS_STATE, (weather_dict["alarm"]["status"]), '  Alarm: Status')

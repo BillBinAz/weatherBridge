@@ -18,6 +18,8 @@ ZW_BEDROOM_RIGHT = "nodes/n001_rs_8lzm"
 ZW_LIVING_ROOM = "nodes/n001_rs_lzs4"
 ZW_MASTER_BEDROOM = "nodes/n001_rs_lvf5"
 ZW_OFFICE = "nodes/n001_rs_l2dq"
+ZW_GARAGE_SINGLE = "nodes/ZY139_1"
+ZW_GARAGE_DOUBLE = "nodes/ZY049_1"
 
 TEMPERATURE = "ST"
 CLIMATE_HEAT_POINT = "CLISPH"
@@ -121,6 +123,24 @@ def get_weather(weather_data):
 					weather_data.hallway_thermostat.humidity = sensor.get('value')
 				elif sensor.get('id') == HEAT_COOL_STATE:
 					weather_data.hallway_thermostat.state = sensor.get('value')
+
+		xml_response = get_node_xml(ZW_GARAGE_SINGLE, s, user_name, password)
+		if xml_response:
+			for sensor in xml_response.find('properties').findall('property'):
+				if sensor.get('id') == TEMPERATURE:
+					if sensor.get('formatted') == 'Off':
+						weather_data.alarm.single_garage = 1
+					else:
+						weather_data.alarm.single_garage = 0
+
+		xml_response = get_node_xml(ZW_GARAGE_DOUBLE, s, user_name, password)
+		if xml_response:
+			for sensor in xml_response.find('properties').findall('property'):
+				if sensor.get('id') == TEMPERATURE:
+					if sensor.get('formatted') == 'Off':
+						weather_data.alarm.double_garage = 1
+					else:
+						weather_data.alarm.double_garage = 0
 
 		weather_data.whole_house_fan.houseTemp = round((float(weather_data.hallway_thermostat.sensor.temp) +
 														float(weather_data.bedroom_left.temp) +
