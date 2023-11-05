@@ -19,7 +19,7 @@ FREEZER_ID = "16838664"
 HUMIDOR_ID = "16869529"
 GARAGE_ID = "16803031"
 SAFE_ID = "16866908"
-BIKE_GARAGE = "16867526"
+SERVER_RACK = "16867526"
 
 
 def get_authorization():
@@ -156,8 +156,8 @@ def get_weather(weather_data):
                     garage_freezer_key = sensor_key
                 elif sensor_key.startswith(SAFE_ID):
                     safe_key = sensor_key
-                elif sensor_key.startswith(BIKE_GARAGE):
-                    bike_garage_key = sensor_key
+                elif sensor_key.startswith(SERVER_RACK):
+                    server_rack_key = sensor_key
             #
             # Humidor Sensor
             apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
@@ -171,8 +171,8 @@ def get_weather(weather_data):
             apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
 
             #
-            # Bike Garage Sensor
-            apply_sensor(weather_data.bike_garage, sensor_data, calibration_data, bike_garage_key)
+            # Rack Sensor
+            apply_sensor(weather_data.rack, sensor_data, calibration_data, server_rack_key)
 
             #
             # Safe Sensor

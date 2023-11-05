@@ -10,8 +10,8 @@ NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
 URL = "http://polisy.evilminions.org:8080/rest/"
 
-ZW_HALLWAY_THERMOSTAT = "nodes/n001_t531693010738"
-ZW_HALLWAY_THERMOSTAT_SENSOR = "nodes/n001_s531693010738"
+ZW_HALLWAY_THERMOSTAT = "nodes/n001_t531695453465"
+ZW_HALLWAY_THERMOSTAT_SENSOR = "nodes/n001_s531695453465"
 ZW_BEDROOM_LEFT = "nodes/n001_rs_ldtb"
 ZW_BEDROOM_RIGHT = "nodes/n001_rs_8lzm"
 ZW_LIVING_ROOM = "nodes/n001_rs_lzs4"
