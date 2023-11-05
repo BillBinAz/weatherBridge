@@ -181,35 +181,36 @@ def populate_zone(weather_data, zone, title):
     try:
         zone_status = is_zone_open(title)
 
-        if zone != '1' and zone != '2' and zone_status == ZONE_OPEN:
+        if zone != '1' and zone != '2' and zone != '10' and zone_status == ZONE_OPEN:
             weather_data.whole_house_fan.fan_zones_some = FAN_ON
             weather_data.alarm.all_zones_closed = ZONE_OPEN
 
         # case on zone
-        if zone == '1':
-            weather_data.alarm.front_garage_door = zone_status
-        elif zone == '2':
-            weather_data.alarm.sliding_glass_door = zone_status
+        if zone == '2':
+            weather_data.alarm.great_room_motion = zone_status
         elif zone == '3':
-            weather_data.alarm.living_great = zone_status
+            weather_data.alarm.garage_entry_door = zone_status
         elif zone == '4':
-            weather_data.alarm.master = zone_status
+            weather_data.alarm.guest_bedrooms_bath = zone_status
         elif zone == '5':
-            weather_data.alarm.offices = zone_status
+            weather_data.alarm.great_room_windows = zone_status
         elif zone == '6':
-            weather_data.alarm.west_wing = zone_status
+            weather_data.alarm.great_room_french_doors = zone_status
         elif zone == '7':
-            weather_data.alarm.living_great_motion = zone_status
+            weather_data.alarm.master_bedroom_window = zone_status
         elif zone == '8':
-            weather_data.alarm.master_motion = zone_status
+            weather_data.alarm.master_bathroom_windows = zone_status
         elif zone == '10':
-            weather_data.alarm.bike_garage = zone_status
+            weather_data.alarm.master_bedroom_motion = zone_status
         elif zone == '11':
-            weather_data.alarm.master_hall_smoke = zone_status
+            weather_data.alarm.front_entry_door = zone_status
         elif zone == '12':
-            weather_data.alarm.west_wing_smoke = zone_status
-        elif zone == '15':
-            weather_data.alarm.water_flow = zone_status
+            weather_data.alarm.den_window = zone_status
+        elif zone == '13':
+            weather_data.alarm.dining_room_window = zone_status
+        elif zone == '14':
+            weather_data.alarm.back_patio_door = zone_status
+
     except Exception as e:
         logging.error("Unable to populate_zone:" + zone + " " + str(e))
         print(datetime.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
@@ -229,19 +230,24 @@ def is_zone_open(title):
 
 def determine_fan_status(weather_data):
 
-    if weather_data.alarm.front_garage_door == ZONE_CLOSED and \
-            weather_data.alarm.living_great == ZONE_CLOSED and \
-            weather_data.alarm.master == ZONE_CLOSED and \
-            weather_data.alarm.offices == ZONE_CLOSED and \
-            weather_data.alarm.west_wing == ZONE_CLOSED:
+    if weather_data.alarm.garage_entry_door == ZONE_CLOSED and \
+            weather_data.alarm.guest_bedrooms_bath == ZONE_CLOSED and \
+            weather_data.alarm.great_room_windows == ZONE_CLOSED and \
+            weather_data.alarm.great_room_french_doors == ZONE_CLOSED and \
+            weather_data.alarm.master_bedroom_window == ZONE_CLOSED and \
+            weather_data.alarm.master_bathroom_windows == ZONE_CLOSED and \
+            weather_data.alarm.front_entry_door == ZONE_CLOSED and \
+            weather_data.alarm.den_window == ZONE_CLOSED and \
+            weather_data.alarm.dining_room_window == ZONE_CLOSED and \
+            weather_data.alarm.back_patio_door == ZONE_CLOSED:
         weather_data.whole_house_fan.fan_zones_some = FAN_OFF
         weather_data.alarm.all_zones_closed = ZONE_CLOSED
     else:
         weather_data.alarm.all_zones_closed = ZONE_OPEN
 
-    if weather_data.alarm.west_wing == ZONE_OPEN \
-            and weather_data.alarm.master == ZONE_OPEN \
-            and weather_data.alarm.living_great == ZONE_OPEN:
+    if weather_data.alarm.guest_bedrooms_bath == ZONE_OPEN \
+            and weather_data.alarm.master_bathroom_windows == ZONE_OPEN \
+            and weather_data.alarm.master_bedroom_window == ZONE_OPEN:
         weather_data.whole_house_fan.fan_zones_all = FAN_ON
     else:
         weather_data.whole_house_fan.fan_zones_all = FAN_OFF
