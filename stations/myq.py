@@ -4,21 +4,23 @@ import pymyq
 import logging
 import datetime
 import sys
+import Utilities.connect as connect
 
-SECRET_FILE = "./secret/myq"
 GAMBIT_MAIN_GARAGE = 'CG0846887725'
 GAMBIT_MOTORCYCLE_GARAGE = 'CG0846887726'
 SHOTGUN_DOUBLE_GARAGE = 'CG0850450103'
 SHOTGUN_SINGLE_GARAGE = 'CG085045011E'
+CONNECT_ITEM_ID = "7z57celfaxx275hrlue5wn6etu"
 
 
 async def async_get_myq(weather_data) -> None:
 
     try:
-
-        with open(SECRET_FILE, "r") as secret_file:
-            user_name = secret_file.readline().strip('\n')
-            password = secret_file.readline().strip('\n')
+        #
+        # Get security data
+        credentials = connect.get_credentials(CONNECT_ITEM_ID)
+        user_name = credentials[0].value
+        password = credentials[1].value
 
         async with ClientSession() as web_session:
             myq = await pymyq.login(user_name, password, web_session)

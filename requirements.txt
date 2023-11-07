@@ -5,3 +5,6 @@ pymyq==3.1.6
 aiohttp==3.8.4
 urllib3==1.26.15
 beautifulsoup4~=4.11.1
+ring_doorbell
+onepasswordconnectsdk~=1.4.0
+oauthlib~=3.2.2

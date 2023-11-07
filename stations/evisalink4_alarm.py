@@ -2,10 +2,11 @@ import datetime
 import requests
 import logging
 import sys
+import Utilities.connect as connect
 from bs4 import BeautifulSoup
 
 HTTP_URL = 'http://eve4.evilminions.org/'
-SECRET_FILE = "./secret/evisalink4"
+CONNECT_ITEM_ID = "6a7uy2oo5dtwoomtrojxhaikui"
 ZONE_OPEN_COLOR = '#FF0000'
 ZONE_OPEN_LABEL = 'OPEN'
 ZONE_OPEN = 0
@@ -56,10 +57,11 @@ ALARM_STATUS_UNKNOWN = -999
 def get_html():
 
     try:
-        # Get Evisalink4 security data
-        with open(SECRET_FILE, "r") as secret_file:
-            user_name = secret_file.readline().strip('\n')
-            password = secret_file.readline().strip('\n')
+        #
+        # Get security data
+        credentials = connect.get_credentials(CONNECT_ITEM_ID)
+        user_name = credentials[0].value
+        password = credentials[1].value
 
         # get EvisaLink4 web
         ret = requests.get(HTTP_URL, auth=(user_name, password), verify=False)
