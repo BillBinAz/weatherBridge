@@ -5,6 +5,7 @@ import datetime
 import requests
 import logging
 import jsonpickle
+import Utilities.connect as connect
 
 from weather import data
 from weather import stations
@@ -27,7 +28,7 @@ DOUBLE_GARAGE_STATE = 3
 MOTORCYCLE_GARAGE_STATE = 4
 IS_RAINING_STATE = 5
 ALARM_STATUS_STATE = 7
-SECRET_FILE = "secret/IoX"
+CONNECT_ITEM_ID = "ymulwralgldqemmer2bx4exr3q"
 
 
 def get_rest():
@@ -127,10 +128,10 @@ def main():
         weather_dict = get_rest()
 
         #
-        # Get IoX security data
-        with open(SECRET_FILE, "r") as secret_file:
-            user_name = secret_file.readline().strip('\n')
-            password = secret_file.readline().strip('\n')
+        # Get security data
+        credentials = connect.get_credentials(CONNECT_ITEM_ID)
+        user_name = credentials[0].value
+        password = credentials[1].value
 
         s = requests.Session()
         update_iox(weather_dict, s, user_name, password)
