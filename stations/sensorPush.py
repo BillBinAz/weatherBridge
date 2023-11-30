@@ -7,7 +7,7 @@ import json
 import sys
 from datetime import timedelta
 from stations import conversion_utilities
-
+import Utilities.connect as connect
 
 SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
@@ -19,14 +19,17 @@ FREEZER_ID = "16838664"
 HUMIDOR_ID = "16869529"
 GARAGE_ID = "16803031"
 SAFE_ID = "16866908"
-BIKE_GARAGE = "16867526"
+SERVER_RACK = "16867526"
+CONNECT_ITEM_ID = "axpjey2v3x2szvumkjukz2w5m4"
 
 
 def get_authorization():
     try:
-        with open(SECRET_FILE, "r") as secret_file:
-            user_name = secret_file.readline().strip('\n')
-            password = secret_file.readline().strip('\n')
+        #
+        # Get security data
+        credentials = connect.get_credentials(CONNECT_ITEM_ID)
+        user_name = credentials[0].value
+        password = credentials[1].value
 
         data = {"email": user_name, "password": password}
         json_post_data = json.dumps(data)
@@ -156,8 +159,8 @@ def get_weather(weather_data):
                     garage_freezer_key = sensor_key
                 elif sensor_key.startswith(SAFE_ID):
                     safe_key = sensor_key
-                elif sensor_key.startswith(BIKE_GARAGE):
-                    bike_garage_key = sensor_key
+                elif sensor_key.startswith(SERVER_RACK):
+                    server_rack_key = sensor_key
             #
             # Humidor Sensor
             apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
@@ -171,8 +174,8 @@ def get_weather(weather_data):
             apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
 
             #
-            # Bike Garage Sensor
-            apply_sensor(weather_data.bike_garage, sensor_data, calibration_data, bike_garage_key)
+            # Rack Sensor
+            apply_sensor(weather_data.rack, sensor_data, calibration_data, server_rack_key)
 
             #
             # Safe Sensor
