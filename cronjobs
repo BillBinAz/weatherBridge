@@ -1,1 +1,2 @@
-*/5 * * * *  cd /weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1
+*/5 * * * *  cd /weatherBridge && /usr/local/bin/python3 /weatherBridge/update_iox.py > /var/log/weather_bridge_cron.log 2>&1
+

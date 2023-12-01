@@ -6,7 +6,7 @@ import sys
 sys.path.append('/home/admin/.local/usr/bin')
 
 app = Flask(__name__)
-logging.basicConfig(filename='/tmp/weather_bridge_rest.log',
+logging.basicConfig(filename='/var/log/weather_bridge_rest.log',
                     format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
                     datefmt='%Y-%m-%d,%H:%M:%S', level=logging.INFO)
 
