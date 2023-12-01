@@ -1,0 +1,1 @@
+*/5 * * * *  cd /weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1
