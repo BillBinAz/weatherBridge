@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 
 import requests
 import logging
 import jsonpickle
-import Utilities.connect as connect
+import utilities.connect as connect
 
-from weather import data
-from weather import stations
+from weather import data, stations
 
 IOX_INTEGER = 1
 GARAGE_FREEZER_TEMP = 14
@@ -40,13 +39,13 @@ def get_rest():
 
         if ret.status_code != 200:
             logging.error(f'Bad response from {url} {str(ret.status_code)}')
-            print(datetime.datetime.now().time(), f'Bad response from {url} {str(ret.status_code)}')
+            print(dt.datetime.now().time(), f'Bad response from {url} {str(ret.status_code)}')
             return
         json_content = ret.content.decode()
         return jsonpickle.decode(json_content)
     except Exception as e:
         logging.error(f'Unable to get weather data from home {str(e)}')
-        print(datetime.datetime.now().time(), "Unable to get weather data from home " + str(e))
+        print(dt.datetime.now().time(), "Unable to get weather data from home " + str(e))
     return
 
 
@@ -57,13 +56,13 @@ def push_temp_iox(s, user_name, password, variable_type, variable_id, f_temp, la
         if f_temp == data.DEFAULT_TEMP and variable_type == IOX_INTEGER:
             msg = "Default Temp found for " + label + " Type:" + str(variable_type) + " Id:" + str(variable_id)
             logging.error(msg)
-            print(datetime.datetime.now().time(), msg)
+            print(dt.datetime.now().time(), msg)
             return
 
         push_data_iox(s, user_name, password, variable_type, variable_id, f_temp, label)
     except Exception as e:
         logging.error("Unable to push_temp_iox to IoX " + str(e))
-        print(datetime.datetime.now().time(), "Unable to push_temp_iox " + str(e))
+        print(dt.datetime.now().time(), "Unable to push_temp_iox " + str(e))
 
 
 def push_data_iox(s, user_name, password, variable_type, variable_id, f_temp, label):
@@ -75,12 +74,12 @@ def push_data_iox(s, user_name, password, variable_type, variable_id, f_temp, la
         ret = s.get(url, auth=(user_name, password), verify=False)
         if not str(ret.content).find("<RestResponse succeeded=\"true\"><status>200</status></RestResponse>"):
             logging.error("Failed URL: " + url + " Response: " + str(ret.content))
-            print(datetime.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content), " ", label)
+            print(dt.datetime.now().time(), " - Failed URL: ", url, " Response: ", str(ret.content), " ", label)
         else:
-            print(datetime.datetime.now().time(), " - Success URL: ", url, " ", label)
+            print(dt.datetime.now().time(), " - Success URL: ", url, " ", label)
     except Exception as e:
         logging.error("Unable to push_data_iox " + str(e))
-        print(datetime.datetime.now().time(), "Unable to push_data_iox " + str(e))
+        print(dt.datetime.now().time(), "Unable to push_data_iox " + str(e))
 
 
 def update_iox(weather_dict, s, user_name, password):
@@ -111,7 +110,7 @@ def update_iox(weather_dict, s, user_name, password):
 
     except Exception as e:
         logging.error("Unable to push weather to IoX " + str(e))
-        print(datetime.datetime.now().time(), "Unable to push weather to IoX " + str(e))
+        print(dt.datetime.now().time(), "Unable to push weather to IoX " + str(e))
 
 
 def main():
@@ -138,7 +137,7 @@ def main():
         s.close()
     except Exception as e:
         logging.error("Unable to update IoX " + str(e))
-        print(datetime.datetime.now().time(), "Unable to update IoX " + str(e))
+        print(dt.datetime.now().time(), "Unable to update IoX " + str(e))
 
 
 main()

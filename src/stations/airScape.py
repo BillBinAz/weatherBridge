@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 import xml.etree.ElementTree
 from stations import conversion_utilities
 import requests
@@ -16,12 +16,12 @@ def get_node_xml():
 		ret.close()
 		if ret.status_code != 200:
 			logging.error("Bad response from AirScape " + str(ret.status_code))
-			print(datetime.datetime.now().time(), " -  Bad response from AirScape. " + str(ret.status_code))
+			print(dt.datetime.now().time(), " -  Bad response from AirScape. " + str(ret.status_code))
 			return
 		return xml.etree.ElementTree.fromstring(clean_up_xml(ret.content))
 	except Exception as e:
 		logging.error("Unable to parse AirScape " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse AirScape " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse AirScape " + str(e))
 	return
 
 
@@ -33,7 +33,7 @@ def clean_up_xml(content):
 		return str_content.replace(str_content[start:end], "").replace("\n", "")
 	except Exception as e:
 		logging.error("Unable to get AirScape " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get AirScape " + str(e))
+		print(dt.datetime.now().time(), "Unable to get AirScape " + str(e))
 	return
 
 
@@ -71,11 +71,11 @@ def get_weather(weather_data):
 		weather_data.whole_house_fan.timeRemaining = conversion_utilities.format_f(hours, 'timeremaining')
 	except Exception as e:
 		logging.error("Unable to get AirScape:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
 	except:
 		e = sys.exc_info()[0]
 		logging.error("Unable to get AirScape:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
 	return
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 import json
 import sys
 import logging
@@ -40,11 +40,11 @@ def rtl_433_json(host):
 		ret.close()
 		if ret.status_code != 200:
 			logging.error("Bad response from rtl_433_json " + str(ret.status_code))
-			print(datetime.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(ret.status_code))
+			print(dt.datetime.now().time(), " -  Bad response from rtl_433_json. " + str(ret.status_code))
 		return json.loads(ret.content.decode())
 	except Exception as e:
 		logging.error( "Unable to parse rtl_433_json " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse rtl_433_json " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse rtl_433_json " + str(e))
 	return
 
 
@@ -71,16 +71,16 @@ def get_weather(weather_data, host):
 
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse rtl433 " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse rtl433 " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse rtl433 " + str(e))
 	except TypeError as e:
 		logging.error("Unable to parse rtl433: TypeError " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse rtl433: TypeError " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse rtl433: TypeError " + str(e))
 	except Exception as e:
 		logging.error("Unable to get rtl433:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get rtl433:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get rtl433:get_weather " + str(e))
 	except:
 		e = sys.exc_info()[0]
 		logging.error("Unable to get rtl433:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get rtl433:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get rtl433:get_weather " + str(e))
 	return
 

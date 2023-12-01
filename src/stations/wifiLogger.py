@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 import json
 import requests
 import logging
@@ -32,11 +32,11 @@ def get_data():
 		ret.close()
 		if ret.status_code != 200:
 			logging.error("Bad response from wifilogger " + str(ret.status_code))
-			print(datetime.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))
+			print(dt.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))
 		return json.loads(ret.content.decode())
 	except Exception as e:
 		logging.error("Unable to parse wifilogger " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse wifilogger " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse wifilogger " + str(e))
 	return
 
 
@@ -72,14 +72,14 @@ def get_weather(weather_data):
 
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse wifi_logger_data:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse wifi_logger_data:get_weather " + str(e))
 	except Exception as e:
 		logging.error("Unable to parse wifi_logger_data: get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to parse wifi_logger_data: get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to parse wifi_logger_data: get_weather " + str(e))
 	except:
 		e = sys.exc_info()[0]
 		logging.error("Unable to get wifi_logger_data:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get wifi_logger_data:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get wifi_logger_data:get_weather " + str(e))
 	return
 
 

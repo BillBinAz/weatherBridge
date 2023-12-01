@@ -1,13 +1,12 @@
 #!/usr/bin/python3
-
-import datetime
+import datetime as dt
 import requests
 import logging
 import json
 import sys
 from datetime import timedelta
 from stations import conversion_utilities
-import Utilities.connect as connect
+import utilities.connect as connect
 
 SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
@@ -38,7 +37,7 @@ def get_authorization():
                                                                          "Content-Type": "application/json"})
         if ret.status_code != 200:
             logging.error("Bad response from sensor_push " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
+            print(dt.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
             return
 
         auth_response = json.loads(ret.content.decode())
@@ -46,7 +45,7 @@ def get_authorization():
 
     except Exception as e:
         logging.error("Unable to get sensor_push:authorization " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:authorization " + str(e))
+        print(dt.datetime.now().time(), "Unable to get sensor_push:authorization " + str(e))
     return
 
 
@@ -60,7 +59,7 @@ def get_access_token(authorization_header):
                                                                             "Content-Type": "application/json"})
         if ret.status_code != 200:
             logging.error("Bad response from sensor_push " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
+            print(dt.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
             return
 
         auth_response = json.loads(ret.content.decode())
@@ -68,13 +67,13 @@ def get_access_token(authorization_header):
 
     except Exception as e:
         logging.error("Unable to get sensor_push:accesstoken " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:accesstoken " + str(e))
+        print(dt.datetime.now().time(), "Unable to get sensor_push:accesstoken " + str(e))
     return
 
 
 def get_sensor_data(access_token, url):
     try:
-        data_to = datetime.datetime.utcnow()
+        data_to = dt.datetime.utcnow()
         data_from = data_to - timedelta(minutes=30)
         data = {"limit": 10}
         json_post_data = json.dumps(data)
@@ -83,7 +82,7 @@ def get_sensor_data(access_token, url):
                                                                     "Authorization": access_token})
         if ret.status_code != 200:
             logging.error("Bad response from sensor_push " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
+            print(dt.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
             raise Exception("Bad response from sensor_push. " + str(ret.status_code))
 
         response = json.loads(ret.content.decode())
@@ -94,7 +93,7 @@ def get_sensor_data(access_token, url):
 
     except Exception as e:
         logging.error("Unable to get sensor_push:accesstoken " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:accesstoken " + str(e))
+        print(dt.datetime.now().time(), "Unable to get sensor_push:accesstoken " + str(e))
     return
 
 
@@ -103,10 +102,10 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
     try:
         #
         # Time
-        time_zone_delta = datetime.timedelta(hours=-7)
-        time_zone_object = datetime.timezone(time_zone_delta, name="MST")
+        time_zone_delta = dt.timedelta(hours=-7)
+        time_zone_object = dt.timezone(time_zone_delta, name="MST")
         time_stamp = sensor_data["sensors"][sensor_key][0]["observed"]
-        time_stamp = datetime.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
+        time_stamp = dt.datetime.fromisoformat(time_stamp.replace("Z", "+00:00")).astimezone(time_zone_object)
         weather_data_station.time = time_stamp.strftime(TIME_FORMAT_STR)
 
         #
@@ -128,14 +127,14 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
 
     except Exception as e:
         logging.error("Unable to get sensor_push:data " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
+        print(dt.datetime.now().time(), "Unable to get sensor_push:data " + str(e))
     return
 
 
 def get_weather(weather_data):
     try:
-        time_zone_delta = datetime.timedelta(hours=-7)
-        time_zone_object = datetime.timezone(time_zone_delta, name="MST")
+        time_zone_delta = dt.timedelta(hours=-7)
+        time_zone_object = dt.timezone(time_zone_delta, name="MST")
         auth_token = get_authorization()
         access_token = get_access_token(auth_token)
         calibration_data = get_sensor_data(access_token, CALIBRATION_URL)
@@ -147,6 +146,7 @@ def get_weather(weather_data):
             humidor_key = 0
             garage_key = 0
             garage_freezer_key = 0
+            server_rack_key = 0
             safe_key = 0
 
             for sensor in sensor_data["sensors"]:
@@ -183,11 +183,11 @@ def get_weather(weather_data):
 
     except Exception as e:
         logging.error("Unable to get sensor_push:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
+        print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
     finally:
         e = sys.exc_info()[0]
         if e:
             logging.error("Unable to get sensor_push:get_weather " + str(e))
-            print(datetime.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
+            print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
     return
 

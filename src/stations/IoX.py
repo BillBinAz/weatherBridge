@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 import xml.etree.ElementTree
 import requests
 import logging
 import sys
-import Utilities.connect as connect
+import utilities.connect as connect
 
 NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'
@@ -46,7 +46,7 @@ def get_node_xml(node, s, user_name, password):
 		return xml.etree.ElementTree.fromstring(ret.content.decode())
 	except Exception as e:
 		logging.error(str(e))
-		print(datetime.datetime.now().time(), str(e))
+		print(dt.datetime.now().time(), str(e))
 	return
 
 
@@ -153,13 +153,13 @@ def get_weather(weather_data):
 
 	except Exception as e:
 		logging.error("Unable to get IoX:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
 	finally:
 		s.close()
 		e = sys.exc_info()[0]
 		if e:
 			logging.error("Unable to get IoX:get_weather " + str(e))
-			print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
+			print(dt.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
 	return
 
 
