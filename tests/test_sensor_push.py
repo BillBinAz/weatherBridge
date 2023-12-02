@@ -1,5 +1,5 @@
 import unittest
-import stations.sensorPush
+import stations.sensorPush as sensorPush
 
 
 class TestSensorPush(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestSensorPush(unittest.TestCase):
 
         # Test exception
         with self.assertRaises(ValueError):
-            stations.sensorPush.get_weather("test")
+            sensorPush.get_weather("test")
 
     if __name__ == '__main__':
         unittest.main()

@@ -1,8 +1,8 @@
-import datetime
+import datetime as dt
 import requests
 import logging
 import sys
-import Utilities.connect as connect
+import utilities.connect as connect
 from bs4 import BeautifulSoup
 
 HTTP_URL = 'http://eve4.evilminions.org/'
@@ -68,16 +68,16 @@ def get_html():
         ret.close()
         if ret.status_code != 200:
             logging.error("Bad response from Evisalink4 " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  Bad response from Evisalink4. " + str(ret.status_code))
+            print(dt.datetime.now().time(), " -  Bad response from Evisalink4. " + str(ret.status_code))
             return ""
         return ret.content.decode()
     except Exception as e:
         logging.error("Unable to get Evisalink4 " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
+        print(dt.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
     finally:
         e = sys.exc_info()[0]
         if e:
-            print(datetime.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
+            print(dt.datetime.now().time(), "Unable to get Evisalink4 " + str(e))
     return
 
 
@@ -166,16 +166,16 @@ def populate_status(weather_data, label):
         else:
             weather_data.alarm.status = ALARM_STATUS_UNKNOWN
             logging.error("Unable to get alarm status: " + label)
-            print(datetime.datetime.now().time(), "Unable to get alarm status: " + label)
+            print(dt.datetime.now().time(), "Unable to get alarm status: " + label)
 
     except Exception as e:
         logging.error("Unable to get alarm status:" + label + " " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
+        print(dt.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
     finally:
         e = sys.exc_info()[0]
         if e:
             logging.error("Unable to get alarm status:" + label + " " + str(e))
-            print(datetime.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
+            print(dt.datetime.now().time(), "Unable to get alarm status:" + label + " " + str(e))
 
 
 def populate_zone(weather_data, zone, title):
@@ -215,12 +215,12 @@ def populate_zone(weather_data, zone, title):
 
     except Exception as e:
         logging.error("Unable to populate_zone:" + zone + " " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
+        print(dt.datetime.now().time(), "Unable to get status mya:" + zone + " " + str(e))
     finally:
         e = sys.exc_info()[0]
         if e:
             logging.error("Unable to populate_zone:" + zone + " " + str(e))
-            print(datetime.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
+            print(dt.datetime.now().time(), "Unable to populate_zone:" + zone + " " + str(e))
 
 
 def is_zone_open(title):
@@ -264,10 +264,10 @@ def get_weather(weather_data):
 
     except Exception as e:
         logging.error("Unable to get IoX:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
+        print(dt.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
     finally:
         e = sys.exc_info()[0]
         if e:
             logging.error("Unable to get IoX:get_weather " + str(e))
-            print(datetime.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
+            print(dt.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
     return

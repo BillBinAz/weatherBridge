@@ -77,3 +77,10 @@ def closelog():
 def setlogmask(maskpri):
     pass
 ```
+
+docker build -t billbinaz/weatherbridge:latest -t billbinaz/weatherbridge:2023.12.1 .
+
+
+docker run -P billbinaz/weatherbridge:latest
+
+docker push billbinaz/weatherbridge:latest

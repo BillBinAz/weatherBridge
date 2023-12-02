@@ -1,5 +1,5 @@
 import logging
-import datetime
+import datetime as dt
 import sys
 
 
@@ -24,7 +24,7 @@ def format_f(value, source):
     except:
         e = sys.exc_info()[0]
         logging.error("Unable to get station:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get station:get_weather " + str(e))
+        print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
     return formatted_value
 
 

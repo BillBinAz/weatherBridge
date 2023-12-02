@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import sys
 
-sys.path.append('../')
+sys.path.append('../../')
 
-import datetime
+import datetime as dt
 import json
 import logging
 from weather import data
@@ -34,7 +34,7 @@ def get_weather(weather_data):
 				parse_433_json(weather_data, line)
 	except IOError as e:
 		logging.error("Unable to open file " + FILE_NAME + " " + e.strerror)
-		print(datetime.datetime.now().time(), "Unable to open file " + FILE_NAME + " " + e.strerror)
+		print(dt.datetime.now().time(), "Unable to open file " + FILE_NAME + " " + e.strerror)
 		pass
 	finally:
 		return weather_data
@@ -88,7 +88,7 @@ def parse_433_json(weather_data, line):
 				weather_data.living_room_window.time = parsed_json[TIME]
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse weather433.json " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse weather433.json " + e.msg)
+		print(dt.datetime.now().time(), "Unable to parse weather433.json " + e.msg)
 	finally:
 		return weather_data
 

@@ -4,8 +4,8 @@ from flask import Flask
 from rtl_433 import weather433
 from weather import data
 
-sys.path.append('../')
-sys.path.append('./')
+sys.path.append('../../')
+sys.path.append('/')
 
 app = Flask(__name__)
 logging.basicConfig(filename='/tmp/weather_bridge_rest_433.log', level=logging.INFO)

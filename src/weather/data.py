@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import json
 
 DEFAULT_TEMP = 0
@@ -143,7 +143,7 @@ class WeatherData(object):
 
 		# Airscape
 		self.whole_house_fan = WholeHomeFan()
-		self.date_generated = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
+		self.date_generated = dt.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
 	def to_json(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

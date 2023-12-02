@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-from stations import IoX, airScape, wifiLogger, sensorPush, myq, evisalink4_alarm
+from stations import sensorPush
+from stations import evisalink4_alarm, wifiLogger, IoX
 from weather import data
-import datetime
+import datetime as dt
 import logging
 import sys
 
@@ -24,10 +25,10 @@ def get_weather():
 
 	except Exception as e:
 		logging.error("Unable to get station:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get station:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
 	except:
 		e = sys.exc_info()[0]
 		logging.error("Unable to get station:get_weather " + str(e))
-		print(datetime.datetime.now().time(), "Unable to get station:get_weather " + str(e))
+		print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
 
 	return cur_weather

@@ -1,5 +1,5 @@
 import unittest
-from stations import conversion_utilities
+from src.stations import conversion_utilities
 
 
 class TestUtilities(unittest.TestCase):

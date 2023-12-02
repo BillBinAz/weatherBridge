@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 
 import requests
 import urllib3
@@ -16,13 +16,13 @@ def get_rest():
 
         if ret.status_code != 200:
             logging.error("Bad response from IoX " + str(ret.status_code))
-            print(datetime.datetime.now().time(), " -  Bad response from IoX. " + str(ret.status_code))
+            print(dt.datetime.now().time(), " -  Bad response from IoX. " + str(ret.status_code))
             return
         return ret.content.decode()
 
     except Exception as e:
         logging.error("Unable to get weather data from home " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get weather data from home " + str(e))
+        print(dt.datetime.now().time(), "Unable to get weather data from home " + str(e))
     return
 
 
@@ -35,7 +35,7 @@ def main():
 
     except Exception as e:
         logging.error("Unable to get fan speed " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get fan speed " + str(e))
+        print(dt.datetime.now().time(), "Unable to get fan speed " + str(e))
 
 
 main()

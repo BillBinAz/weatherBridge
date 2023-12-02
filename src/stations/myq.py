@@ -2,9 +2,9 @@ import asyncio
 from aiohttp import ClientSession
 import pymyq
 import logging
-import datetime
+import datetime as dt
 import sys
-import Utilities.connect as connect
+import utilities.connect as connect
 
 GAMBIT_MAIN_GARAGE = 'CG0846887725'
 GAMBIT_MOTORCYCLE_GARAGE = 'CG0846887726'
@@ -40,11 +40,11 @@ async def async_get_myq(weather_data) -> None:
 
     except Exception as e:
         logging.error("Unable to retrieve myq.covers " + str(e))
-        print(datetime.datetime.now().time(), "Unable to retrieve myq.covers " + str(e))
+        print(dt.datetime.now().time(), "Unable to retrieve myq.covers " + str(e))
     except:
         e = sys.exc_info()[0]
         logging.error("Unable to get status myq.covers " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get status myq.covers " + str(e))
+        print(dt.datetime.now().time(), "Unable to get status myq.covers " + str(e))
     return
 
 
@@ -62,11 +62,11 @@ def update(devices, device_id):
             return 1
     except Exception as e:
         logging.error("Unable to get status mya:" + device_id + " " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get status mya:" + device_id + " " + str(e))
+        print(dt.datetime.now().time(), "Unable to get status mya:" + device_id + " " + str(e))
     except:
         e = sys.exc_info()[0]
         logging.error("Unable to get status mya:" + device_id + " " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get status mya:" + device_id + " " + str(e))
+        print(dt.datetime.now().time(), "Unable to get status mya:" + device_id + " " + str(e))
 
     return 0
 
@@ -85,11 +85,11 @@ def get_weather(weather_data):
 
     except Exception as e:
         logging.error("Unable to get myq:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
+        print(dt.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
     except:
         e = sys.exc_info()[0]
         logging.error("Unable to get myq:get_weather " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
+        print(dt.datetime.now().time(), "Unable to get myq:get_weather " + str(e))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import datetime
+import datetime as dt
 import json
 import logging
 
@@ -49,11 +49,11 @@ def get_sensor_data():
 					garage = line
 	except IOError as e:
 		logging.info("Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
-		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
+		print(dt.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		pass
 	except json.JSONDecodeError as e:
 		logging.error("Unable to parse weather433.temp " + e.msg)
-		print(datetime.datetime.now().time(), "Unable to parse weather433.temp " + e.msg)
+		print(dt.datetime.now().time(), "Unable to parse weather433.temp " + e.msg)
 
 	#
 	# build the json string
@@ -79,7 +79,7 @@ def save_sensor_data(all_sensors):
 			f.write(all_sensors)
 	except IOError as e:
 		logging.error("Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
-		print(datetime.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
+		print(dt.datetime.now().time(), "Unable to open file " + JSON_FILE_NAME + " " + e.strerror)
 		pass
 
 

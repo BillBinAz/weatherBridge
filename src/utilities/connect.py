@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime as dt
 import logging
 
 from onepasswordconnectsdk.client import (
@@ -16,5 +16,5 @@ def get_credentials(item_id):
         return item.fields
     except Exception as e:
         logging.error("Unable to get credentials " + str(e))
-        print(datetime.datetime.now().time(), "Unable to get credentials " + str(e))
+        print(dt.datetime.now().time(), "Unable to get credentials " + str(e))
     return
