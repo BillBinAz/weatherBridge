@@ -29,7 +29,7 @@ jobs:
           images: billbinaz/weatherbridge
           tags: |
             value=latest,enable={{is_default_branch}}
-            value=${{ github.ref }}, enable={{is_default_branch}}
+            value=tag_version, enable={{is_default_branch}}
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
