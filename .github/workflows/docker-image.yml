@@ -2,8 +2,8 @@ name: Docker Build from Dockerfile
 
 on:
   push:
-    branches: [ "master" ]
-    tags: v*
+    tags:
+      - '*'
     
   pull_request:
     branches: [ "master" ]
@@ -34,6 +34,7 @@ jobs:
           images: billbinaz/weatherbridge
           tags: |
             value=latest,enable={{is_default_branch}}
+            value={{github.ref_name}},enable={{is_default_branch}}
             value={{github.event.repository.updated_at}}, enable={{is_default_branch}}
             type=ref,event=pr
 
