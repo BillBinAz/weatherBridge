@@ -2,6 +2,7 @@ name: Docker Build from Dockerfile
 
 on:
   push:
+    branches: [ "master" ]
     tags: v*
     
   pull_request:
