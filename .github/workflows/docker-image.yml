@@ -21,10 +21,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
-      - id: get_version
-        uses: battila7/get-version-action@v2
-      
+     
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -36,7 +33,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}          
+            type=semver,pattern={{major}}.{{minor}},enable={{is_default_branch}}          
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
