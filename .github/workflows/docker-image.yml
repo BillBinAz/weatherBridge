@@ -2,8 +2,8 @@ name: Docker Build from Dockerfile
 
 on:
   push:
-    branches: [ "master" ]
-    tags: v*
+    tags:
+      - '*'
     
   pull_request:
     branches: [ "master" ]
@@ -13,6 +13,11 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
+      - name: GitHub Tag Name example
+        run: |
+          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          
       - name: Check out the repo
         uses: actions/checkout@v4
 
@@ -29,6 +34,7 @@ jobs:
           images: billbinaz/weatherbridge
           tags: |
             value=latest,enable={{is_default_branch}}
+            value={{github.ref_name}},enable={{is_default_branch}}
             value={{github.event.repository.updated_at}}, enable={{is_default_branch}}
             type=ref,event=pr
 
