@@ -29,11 +29,9 @@ jobs:
           images: billbinaz/weatherbridge
           tags: |
             value=latest,enable={{is_default_branch}}
-            value={{ steps.get_version.outputs.version-without-v }},enable=true
+            value=value=${{github.event.repository.updated_at}}, enable={{is_default_branch}}
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}},enable={{is_default_branch}}          
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
