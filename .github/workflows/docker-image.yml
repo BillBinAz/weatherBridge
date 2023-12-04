@@ -30,7 +30,6 @@ jobs:
           tags: |
             value=latest,enable={{is_default_branch}}
             value=value=${{github.event.repository.updated_at}}, enable={{is_default_branch}}
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Build and push Docker image
