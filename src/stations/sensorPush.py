@@ -4,7 +4,6 @@ import requests
 import logging
 import json
 import sys
-from datetime import timedelta
 import utilities.connect as connect
 import utilities.conversions as conversions
 
@@ -77,7 +76,7 @@ def get_sensor_data(access_token, url):
         json_post_data = json.dumps(data)
 
         ret = requests.post(url, data=json_post_data, headers={"Accept": "application/json",
-                                                                    "Authorization": access_token})
+                                                               "Authorization": access_token})
         if ret.status_code != 200:
             logging.error("Bad response from sensor_push " + str(ret.status_code))
             print(dt.datetime.now().time(), " -  Bad response from sensor_push. " + str(ret.status_code))
@@ -131,7 +130,6 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
 
 def get_weather(weather_data):
     try:
-        time_zone_delta = dt.timedelta(hours=-7)
         auth_token = get_authorization()
         access_token = get_access_token(auth_token)
         calibration_data = get_sensor_data(access_token, CALIBRATION_URL)
@@ -187,4 +185,3 @@ def get_weather(weather_data):
             logging.error("Unable to get sensor_push:get_weather " + str(e))
             print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
     return
-

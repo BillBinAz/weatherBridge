@@ -136,6 +136,7 @@ def main():
         # Get weather data from data sources
         if __debug__:
             weather_data = stations.get_weather()
+            print(weather_data)
 
         # Get weather data from the rest endpoint
         weather_dict = get_rest()

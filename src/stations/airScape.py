@@ -55,5 +55,3 @@ def get_weather(weather_data):
         logging.error("Unable to get AirScape:get_weather " + str(e))
         print(dt.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))
     return
-
-

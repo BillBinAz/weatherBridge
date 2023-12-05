@@ -149,7 +149,7 @@ def get_weather(weather_data):
                                                         float(weather_data.living_room.temp) +
                                                         float(weather_data.living_room.temp) +
                                                         float(weather_data.master_bedroom.temp) +
-                                                        float(weather_data.office.temp) ) / 7.0, 1)
+                                                        float(weather_data.office.temp)) / 7.0, 1)
 
     except Exception as e:
         logging.error("Unable to get IoX:get_weather " + str(e))
@@ -161,5 +161,3 @@ def get_weather(weather_data):
             logging.error("Unable to get IoX:get_weather " + str(e))
             print(dt.datetime.now().time(), "Unable to get IoX:get_weather " + str(e))
     return
-
-

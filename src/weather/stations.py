@@ -12,7 +12,8 @@ def get_weather():
     cur_weather = data.WeatherData()
 
     try:
-        logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt='%Y-%m-%d,%H:%M:%S:%f', level=logging.INFO)
+        logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
+                            datefmt='%Y-%m-%d,%H:%M:%S:%f', level=logging.INFO)
 
         cur_weather = data.WeatherData()
         IoX.get_weather(cur_weather)

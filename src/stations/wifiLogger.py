@@ -81,6 +81,3 @@ def get_weather(weather_data):
         logging.error("Unable to get wifi_logger_data:get_weather " + str(e))
         print(dt.datetime.now().time(), "Unable to get wifi_logger_data:get_weather " + str(e))
     return
-
-
-
