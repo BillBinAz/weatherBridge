@@ -33,7 +33,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=WeatherBridge
             org.opencontainers.image.description=Connection software for automation
-            org.opencontainers.image.version=${{version}}
+            org.opencontainers.image.tag={{tag}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
