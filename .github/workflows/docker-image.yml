@@ -18,11 +18,11 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Mandatory to use the extract version from tag action
 
-      - id: get_version
-        if: startsWith(github.ref, 'refs/tags/v')
-        name: Get version
-        uses: jannemattila/get-version-from-tag@v1
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
       - name: Display version
         if: startsWith(github.ref, 'refs/tags/v')
@@ -43,7 +43,7 @@ jobs:
           images: billbinaz/weatherbridge
           tags: |
             value=latest, enable=startsWith(github.ref, 'refs/tags/v') 
-            value= $VERSION, enable=startsWith(github.ref, 'refs/tags/v') 
+            value= $MAJOR.$MINOR.$PATCH, enable=startsWith(github.ref, 'refs/tags/v') 
             type=ref,event=pr
 
       - name: Build and push Docker image
