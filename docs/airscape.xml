@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<airscapewhf>
+ 		<fanspd>0</fanspd>
+ 		<doorinprocess>0</doorinprocess>
+ 		<timeremaining>0</timeremaining>
+ 		<macaddr>60:CB:FB:00:80:3F</macaddr>
+ 		<ipaddr>192.168.0.23</ipaddr>
+ 		<model>5300 WHF</model>
+ 		<softver>2.17.1</softver>
+ 		<interlock1>0</interlock1>
+ 		<cfm>0</cfm>
+ 		<power>0</power>
+ 		<house_temp>-99</house_temp>
+ 		<DNS1>192.168.0.1</DNS1>
+ 		<attic_temp>102</attic_temp>
+ 		<oa_temp>-99</oa_temp>
+ 		<server_response>��$�޻@j2a�e0������|�</server_response>
+ 		<DIPS>11110</DIPS>
+ 		<switch2>1111</switch2>
+ 		<Setpoint>0</Setpoint>
+</airscapewhf>

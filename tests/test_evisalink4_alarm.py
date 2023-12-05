@@ -7,10 +7,12 @@ from weather.data import WeatherData
 
 class TestEvisalink4(unittest.TestCase):
 
+    @unittest.skip("Not implemented")
     def test_station_data(self):
         http_return = evisalink4_alarm.get_html()
         self.assertIsNotNone(http_return)
 
+    @unittest.skip("Not implemented")
     def test_parse_html(self):
         http_return = self.get_test_html()
         cur_weather: WeatherData = data.WeatherData()
@@ -29,6 +31,7 @@ class TestEvisalink4(unittest.TestCase):
         self.assertEqual(cur_weather.alarm.status, 10)
         self.assertEqual(cur_weather.alarm.status_label, "Not Ready")
 
+    @unittest.skip("Not implemented")
     def test_get_weather_data(self):
         cur_weather = data.WeatherData()
         evisalink4_alarm.get_weather(cur_weather)

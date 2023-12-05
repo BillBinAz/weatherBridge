@@ -2,10 +2,10 @@
 
 import datetime as dt
 import xml.etree.ElementTree
-from stations import conversion_utilities
 import requests
 import logging
 import sys
+import utilities.conversions as conversions
 
 
 def get_node_xml():
@@ -37,28 +37,6 @@ def clean_up_xml(content):
 	return
 
 
-# 	<?xml version="1.0" encoding="UTF-8"?>
-# 	<airscapewhf>
-# 		<fanspd>0</fanspd>
-# 		<doorinprocess>0</doorinprocess>
-# 		<timeremaining>0</timeremaining>
-# 		<macaddr>60:CB:FB:00:80:3F</macaddr>
-# 		<ipaddr>192.168.0.23</ipaddr>
-# 		<model>5300 WHF</model>
-# 		<softver>2.17.1</softver>
-# 		<interlock1>0</interlock1>
-# 		<cfm>0</cfm>
-# 		<power>0</power>
-# 		<house_temp>-99</house_temp>
-# 		<DNS1>192.168.0.1</DNS1>
-# 		<attic_temp>102</attic_temp>
-# 		<oa_temp>-99</oa_temp>
-# 		<server_response>��$�޻@j2a�e0������|�</server_response>
-# 		<DIPS>11110</DIPS>
-# 		<switch2>1111</switch2>
-# 		<Setpoint>0</Setpoint>
-# 	</airscapewhf>
-
 def get_weather(weather_data):
 
 	try:
@@ -68,7 +46,7 @@ def get_weather(weather_data):
 		weather_data.whole_house_fan.cubitFeetPerMinute = xml_response.find('cfm').text
 		weather_data.whole_house_fan.power = xml_response.find('power').text
 		hours = int(xml_response.find('timeremaining').text) / 60
-		weather_data.whole_house_fan.timeRemaining = conversion_utilities.format_f(hours, 'timeremaining')
+		weather_data.whole_house_fan.timeRemaining = conversions.format_f(hours, 'timeremaining')
 	except Exception as e:
 		logging.error("Unable to get AirScape:get_weather " + str(e))
 		print(dt.datetime.now().time(), "Unable to get AirScape:get_weather " + str(e))

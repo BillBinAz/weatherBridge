@@ -5,8 +5,8 @@ import logging
 import json
 import sys
 from datetime import timedelta
-from stations import conversion_utilities
 import utilities.connect as connect
+import utilities.conversions as conversions
 
 SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
@@ -111,16 +111,16 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
         #
         # Temperature
         calibration_temp = calibration_data[sensor_key]["calibration"]["temperature"]
-        raw_temp = conversion_utilities.get_average(sensor_data["sensors"][sensor_key], "temperature")
+        raw_temp = conversions.get_average(sensor_data["sensors"][sensor_key], "temperature")
         weather_data_station.temp_calibration = calibration_temp
         weather_data_station.temp_raw = raw_temp
         weather_data_station.temp = round(raw_temp + calibration_temp, 2)
-        weather_data_station.temp_c = conversion_utilities.f_to_c(weather_data_station.temp)
+        weather_data_station.temp_c = conversions.f_to_c(weather_data_station.temp)
 
         #
         # Humidity
         calibration_humidity = calibration_data[sensor_key]["calibration"]["humidity"]
-        raw_humidity = conversion_utilities.get_average(sensor_data["sensors"][sensor_key], "humidity")
+        raw_humidity = conversions.get_average(sensor_data["sensors"][sensor_key], "humidity")
         weather_data_station.humidity_calibration = calibration_humidity
         weather_data_station.humidity_raw = raw_humidity
         weather_data_station.humidity = round(raw_humidity + calibration_humidity, 2)
