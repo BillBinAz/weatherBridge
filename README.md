@@ -2,13 +2,12 @@
 Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and serve up for display from rest.
 
 
-### crontab -e
+### crontab -e <br>
 */5 * * * *  cd ~/weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1 <br>
 */10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
 
-**Manual Docker build:**  
-
-docker build -t weatherbridge:testing
+### **Manual Docker build:**   <br>
+docker build -t weatherbridge:testing <br>
 docker run -P weatherbridge:testing
 
 ### On a windows box add this to a syslog.py file on the path
