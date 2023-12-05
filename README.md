@@ -6,7 +6,7 @@ Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and 
 */5 * * * *  cd ~/weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1 <br>
 */10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
 
-**Manual Docker build:**
+**Manual Docker build:**  
 docker build -t weatherbridge:testing
 docker run -P weatherbridge:testing
 
