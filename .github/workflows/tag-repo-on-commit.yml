@@ -40,6 +40,7 @@ jobs:
 
   tag_on_release:
     name: Tag on release
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
