@@ -5,8 +5,8 @@ import logging
 import json
 import sys
 from datetime import timedelta
-from utilities import connect
-from utilities import conversions
+import utilities.connect as connect
+import utilities.conversions as conversions
 
 SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"

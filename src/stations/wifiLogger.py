@@ -5,7 +5,7 @@ import json
 import requests
 import logging
 import sys
-from utilities import conversions
+import utilities.conversions as conversion_utilities
 
 S_OK = 200
 TEMPERATURE_OUTDOOR = 'tempout'
@@ -64,7 +64,7 @@ def get_weather(weather_data):
 		# Wind
 		weather_data.back_yard.wind_speed = convert_to_float(wifi_logger_data[WIND_SPEED], 2)
 		weather_data.back_yard.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
-		weather_data.back_yard.wind_direction = conversions.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
+		weather_data.back_yard.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
 		weather_data.back_yard.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
 
 		# Pressure

@@ -5,7 +5,7 @@ import xml.etree.ElementTree
 import requests
 import logging
 import sys
-from utilities import conversions
+import utilities.conversions as conversions
 
 
 def get_node_xml():
