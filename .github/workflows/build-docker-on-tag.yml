@@ -1,4 +1,4 @@
-name: Docker Build from Dockerfile
+name: Test and Docker Build from Dockerfile on Tag
 
 on:
   push:
