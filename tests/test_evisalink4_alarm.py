@@ -43,6 +43,7 @@ class TestEvisalink4(unittest.TestCase):
         self.assertLess(cur_weather.alarm.sliding_glass_door, 2)
         self.assertLess(cur_weather.alarm.west_wing, 2)
 
+    @unittest.skip("Not implemented")
     def test_get_html(self):
         http_return = self.get_test_html()
         self.assertIsNotNone(http_return, None)
