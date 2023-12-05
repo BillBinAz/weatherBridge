@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 import xml.etree.ElementTree
-from src.stations import airScape
+from stations import airScape
 
 
 XML_DIRTY = """<?xml version="1.0" encoding="UTF-8"?> 

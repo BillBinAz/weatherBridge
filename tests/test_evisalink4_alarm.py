@@ -1,8 +1,8 @@
 import unittest
 
-from src.stations import evisalink4_alarm
-from src.weather import data
-from src.weather.data import WeatherData
+from stations import evisalink4_alarm
+from weather import data
+from weather.data import WeatherData
 
 
 class TestEvisalink4(unittest.TestCase):
