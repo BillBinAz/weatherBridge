@@ -1,5 +1,5 @@
 # syntbillbinaz/weatherbridge:latestax=docker/dockerfile:1
-FROM python
+FROM python:3.11-slim-bookworm
 
 WORKDIR /weatherBridge
 COPY ./src .
