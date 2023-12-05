@@ -60,7 +60,6 @@ jobs:
           images: billbinaz/weatherbridge
           tags: |
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
           labels: |
             org.opencontainers.image.title=WeatherBridge
             org.opencontainers.image.description=Connection software for automation
