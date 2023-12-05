@@ -1,40 +1,14 @@
 # WeatherBridge
-Python3 code to upload weather data from wifiLogger, and rtl_433 to IoX.
+Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and serve up for display from rest.
 
-
-## Dependencies  
-#### SystemCtl runs as root:  sudo -H pip3 install ...
-python3  <br>
-pip3 install Flask  <br>
-pip3 install Requests <br>
-pip3 install jsonpickle <br>
-pip3 install urllib3 <br>
-
-### SDR
-https://github.com/merbanan/rtl_433
-
-#### Permissions errors:
-    1.) enter lsusb - the command should give you a complete list for your USB devices, incl. your RTLSDR
-
-    2.) Note that line which is related to your stick (e.g. Bus 003 Device 018: ID 0bda:2832 Realtek Semiconductor Corp. RTL2832U DVB-T)
-
-    3.) open rtl-sdr.rules file with sudo nano /etc/udev/rules.d/rtl-sdr.rules
-
-    4.) Add the line (e.g.)
-    Code:
-    SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2832", MODE:="0666" -
-    5.) save the file and restart udev with sudo service udev restart
-
-    6.) restart the Pi
 
 ### crontab -e
 */5 * * * *  cd ~/weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1 <br>
 */10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
 
-## copy config to /etc
-sudo mkdir /etc/rtl_433 <br>   
-sudo cp ~/weatherBridge/rtl_433/rtl_433.conf /etc/rtl_433/rtl_433.conf
-
+**Manual Docker build:**
+docker build -t weatherbridge:testing
+docker run -P weatherbridge:testing
 
 ### On a windows box add this to a syslog.py file on the path
 
@@ -77,10 +51,3 @@ def closelog():
 def setlogmask(maskpri):
     pass
 ```
-
-docker build -t billbinaz/weatherbridge:latest -t billbinaz/weatherbridge:2023.12.1 .
-
-
-docker run -P billbinaz/weatherbridge:latest
-
-docker push billbinaz/weatherbridge:latest
