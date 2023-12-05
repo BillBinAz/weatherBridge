@@ -86,26 +86,39 @@ def update_iox(weather_dict, s, user_name, password):
 
     try:
         # temps
-        push_temp_iox(s, user_name, password, IOX_INTEGER, BACK_YARD_TEMP, weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
-        push_temp_iox(s, user_name, password, IOX_INTEGER, MAIN_GARAGE_TEMP, weather_dict["garage"]["temp"], 'GARAGE_TEMP')
-        push_temp_iox(s, user_name, password, IOX_INTEGER, GARAGE_FREEZER_TEMP, weather_dict["main_garage_freezer"]["temp"], ' GARAGE_FREEZER_TEMP')
-        push_temp_iox(s, user_name, password, IOX_INTEGER, AVERAGE_HOUSE_TEMP, round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, BACK_YARD_TEMP,
+                      weather_dict["back_yard"]["temp"], 'BACK_YARD_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, MAIN_GARAGE_TEMP,
+                      weather_dict["garage"]["temp"], 'GARAGE_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, GARAGE_FREEZER_TEMP,
+                      weather_dict["main_garage_freezer"]["temp"], ' GARAGE_FREEZER_TEMP')
+        push_temp_iox(s, user_name, password, IOX_INTEGER, AVERAGE_HOUSE_TEMP,
+                      round(weather_dict["whole_house_fan"]["houseTemp"]), 'AVERAGE_HOUSE_TEMP')
 
         # alarm status
-        push_data_iox(s, user_name, password, IOX_INTEGER, ALARM_ALL_ZONES_CLOSED, weather_dict["alarm"]["all_zones_closed"], ' Alarm: all_zones_closed')
-        push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_ALL, weather_dict["whole_house_fan"]["fan_zones_all"], '  FAN_ZONES_ALL')
-        push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_SOME, weather_dict["whole_house_fan"]["fan_zones_some"], ' FAN_ZONES_SOME')
+        push_data_iox(s, user_name, password, IOX_INTEGER, ALARM_ALL_ZONES_CLOSED,
+                      weather_dict["alarm"]["all_zones_closed"], ' Alarm: all_zones_closed')
+        push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_ALL,
+                      weather_dict["whole_house_fan"]["fan_zones_all"], '  FAN_ZONES_ALL')
+        push_data_iox(s, user_name, password, IOX_INTEGER, FAN_ZONES_SOME,
+                      weather_dict["whole_house_fan"]["fan_zones_some"], ' FAN_ZONES_SOME')
 
         # entry doors
-        push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_FRONT_CLOSED, weather_dict["alarm"]["front_entry_door"], ' ENTRY_DOOR_FRONT_CLOSED')
-        push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_GARAGE_CLOSED, weather_dict["alarm"]["garage_entry_door"], ' ENTRY_DOOR_GARAGE_CLOSED')
+        push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_FRONT_CLOSED,
+                      weather_dict["alarm"]["front_entry_door"], ' ENTRY_DOOR_FRONT_CLOSED')
+        push_data_iox(s, user_name, password, IOX_INTEGER, ENTRY_DOOR_GARAGE_CLOSED,
+                      weather_dict["alarm"]["garage_entry_door"], ' ENTRY_DOOR_GARAGE_CLOSED')
 
         # garage doors
-        # push_data_iox(s, user_name, password, IOX_STATE, SINGLE_GARAGE_STATE, weather_dict["alarm"]["single_garage"], '  SINGLE_GARAGE_CLOSED')
-        # push_data_iox(s, user_name, password, IOX_STATE, DOUBLE_GARAGE_STATE, weather_dict["alarm"]["double_garage"], '  DOUBLE_GARAGE_CLOSED')
+        # push_data_iox(s, user_name, password, IOX_STATE, SINGLE_GARAGE_STATE,
+        # weather_dict["alarm"]["single_garage"], '  SINGLE_GARAGE_CLOSED')
+        # push_data_iox(s, user_name, password, IOX_STATE, DOUBLE_GARAGE_STATE,
+        # weather_dict["alarm"]["double_garage"], '  DOUBLE_GARAGE_CLOSED')
 
-        push_data_iox(s, user_name, password, IOX_STATE, IS_RAINING_STATE, (weather_dict["back_yard"]["rain_rate"] > 0), '  IS_RAINING')
-        push_data_iox(s, user_name, password, IOX_STATE, ALARM_STATUS_STATE, (weather_dict["alarm"]["status"]), '  Alarm: Status')
+        push_data_iox(s, user_name, password, IOX_STATE, IS_RAINING_STATE,
+                      (weather_dict["back_yard"]["rain_rate"] > 0), '  IS_RAINING')
+        push_data_iox(s, user_name, password, IOX_STATE, ALARM_STATUS_STATE,
+                      (weather_dict["alarm"]["status"]), '  Alarm: Status')
         logging.error("IoX pushed")
 
     except Exception as e:
@@ -116,7 +129,8 @@ def update_iox(weather_dict, s, user_name, password):
 def main():
 
     try:
-        logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt='%Y-%m-%d,%H:%M:%S', level=logging.INFO)
+        logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
+                            datefmt='%Y-%m-%d,%H:%M:%S', level=logging.INFO)
 
         #
         # Get weather data from data sources

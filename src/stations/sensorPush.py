@@ -73,8 +73,6 @@ def get_access_token(authorization_header):
 
 def get_sensor_data(access_token, url):
     try:
-        data_to = dt.datetime.utcnow()
-        data_from = data_to - timedelta(minutes=30)
         data = {"limit": 10}
         json_post_data = json.dumps(data)
 
@@ -134,7 +132,6 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
 def get_weather(weather_data):
     try:
         time_zone_delta = dt.timedelta(hours=-7)
-        time_zone_object = dt.timezone(time_zone_delta, name="MST")
         auth_token = get_authorization()
         access_token = get_access_token(auth_token)
         calibration_data = get_sensor_data(access_token, CALIBRATION_URL)
