@@ -1,5 +1,5 @@
 import unittest
-import stations.sensorPush as sensorPush
+from src.stations import sensorPush
 
 
 class TestSensorPush(unittest.TestCase):

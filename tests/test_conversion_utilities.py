@@ -1,5 +1,5 @@
 import unittest
-import utilities.conversions as utilities
+from src.utilities import conversions as utilities
 
 
 class TestUtilities(unittest.TestCase):

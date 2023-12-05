@@ -4,7 +4,6 @@ import xml.etree.ElementTree
 from src.stations import airScape
 
 
-
 XML_DIRTY = """<?xml version="1.0" encoding="UTF-8"?> 
                     <airscapewhf>
                         <server_response>��$�޻@j2a�e0������|�</server_response>
