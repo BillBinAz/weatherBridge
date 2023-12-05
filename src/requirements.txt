@@ -1,10 +1,9 @@
-Flask==3.0.0
-Requests==2.31.0
+flask==3.0.0
+requests==2.31.0
 jsonpickle==3.0.2
 pymyq==3.1.6
 aiohttp==3.9.1
 urllib3==2.1.0
 beautifulsoup4==4.12.2
-ring_doorbell==0.8.3
 onepasswordconnectsdk~=1.4.0
 datetime==5.3

@@ -7,7 +7,7 @@ Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and 
 */10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
 
 ### **Manual Docker build:**   <br>
-docker build -t weatherbridge:testing <br>
+docker build -t weatherbridge:testing . <br>
 docker run -P weatherbridge:testing
 
 ### On a windows box add this to a syslog.py file on the path

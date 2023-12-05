@@ -5,7 +5,7 @@ import json
 import requests
 import logging
 import sys
-from stations import conversion_utilities
+import utilities.conversions as conversion_utilities
 
 S_OK = 200
 TEMPERATURE_OUTDOOR = 'tempout'

@@ -1,4 +1,5 @@
 import unittest
+
 ALARM_ZONE_CLOSED = '0'
 ALARM_ZONE_OPEN = '1'
 
