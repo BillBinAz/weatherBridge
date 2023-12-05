@@ -1,7 +1,9 @@
 import unittest
-import stations.airScape
 from unittest import mock
 import xml.etree.ElementTree
+from src.stations import airScape
+
+
 
 XML_DIRTY = """<?xml version="1.0" encoding="UTF-8"?> 
                     <airscapewhf>
@@ -34,7 +36,7 @@ class TestAirScape(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     def test_get_node_xml(self, mock_post):
 
-        clean_node = stations.airScape.get_node_xml()
+        clean_node = airScape.get_node_xml()
         test_node = xml.etree.ElementTree.fromstring(XML_CLEAN)
 
         # Test get_node_xml
@@ -44,7 +46,7 @@ class TestAirScape(unittest.TestCase):
     def test_clean_up_xml(self):
 
         # Test clean_up_xml
-        cleaned_xml = stations.airScape.clean_up_xml(XML_DIRTY.encode("utf=8", "ignore"))\
+        cleaned_xml = airScape.clean_up_xml(XML_DIRTY.encode("utf=8", "ignore"))\
             .replace("\n", "")\
             .replace("\t", "")
 
