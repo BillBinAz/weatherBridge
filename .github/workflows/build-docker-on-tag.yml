@@ -28,7 +28,6 @@ jobs:
         with:
           images: billbinaz/weatherbridge
           tags: |
-            value=latest
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
