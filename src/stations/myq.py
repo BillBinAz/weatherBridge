@@ -4,7 +4,7 @@ import pymyq
 import logging
 import datetime as dt
 import sys
-import utilities.connect as connect
+from utilities import connect
 
 GAMBIT_MAIN_GARAGE = 'CG0846887725'
 GAMBIT_MOTORCYCLE_GARAGE = 'CG0846887726'

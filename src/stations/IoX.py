@@ -5,7 +5,7 @@ import xml.etree.ElementTree
 import requests
 import logging
 import sys
-import utilities.connect as connect
+from utilities import connect
 
 NODES = 'nodes/'
 ERROR_XML = '<?xml version="1.0" encoding="UTF-8"?><nodeInfo><node/><properties/></nodeInfo>'

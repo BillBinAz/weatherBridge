@@ -2,7 +2,7 @@ import datetime as dt
 import requests
 import logging
 import sys
-import utilities.connect as connect
+from utilities import connect
 from bs4 import BeautifulSoup
 
 HTTP_URL = 'http://eve4.evilminions.org/'
