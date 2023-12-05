@@ -30,14 +30,10 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-
-      - name: Build
-        uses: docker/bake-action@v3
-        with:
-          files: |
-            ./docker-bake.hcl
-            ${{ steps.meta.outputs.bake-file }}
-          targets: build
+          labels: |
+            org.opencontainers.image.title=WeatherBridge
+            org.opencontainers.image.description=Connection software for automation
+            org.opencontainers.image.version={{version}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
