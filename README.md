@@ -1,5 +1,5 @@
 # WeatherBridge
-Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and serve up for display from rest.
+Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and serve up via rest for display.
 
 
 ### crontab -e <br>
