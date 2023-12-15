@@ -13,12 +13,6 @@ RUN chmod 655 startup.sh
 RUN chmod 655 update_iox.sh
 RUN pip3 install -r requirements.txt
 
-# install cron
-RUN apt -y install cron
-
-# Add crontab
-RUN (crontab -l 2>/dev/null; tr -d '\r' < cronjobs) | crontab -
-
 ENV FLASK_APP=get_handler.py
 EXPOSE 8080
 CMD [ "/weatherBridge/startup.sh" ]
