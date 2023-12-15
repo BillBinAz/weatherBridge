@@ -4,8 +4,6 @@ FROM python:3.11-slim-bookworm
 WORKDIR /weatherBridge
 COPY ./src .
 ADD ./config/startup.sh /weatherBridge/startup.sh
-ADD ./config/cronjobs /weatherBridge/cronjobs
-
 
 RUN apt update && apt upgrade -y
 RUN pip3 install --upgrade pip
