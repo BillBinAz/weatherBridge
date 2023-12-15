@@ -106,7 +106,9 @@ def get_zone_status(bearer_token, key, s):
 
 def get_alarm_label(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
-    return sensor_data["state"]
+    label = sensor_data["state"]
+    label = label.replace("*", "")
+    return label[:10]
 
 
 def get_alarm_status(bearer_token, key, s):
@@ -115,6 +117,44 @@ def get_alarm_status(bearer_token, key, s):
         return 1
     else:
         return 0
+
+
+def get_alarm_data(weather_data, bearer_token, s):
+    weather_data.alarm.back_patio_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_BACK_PATIO_DOOR, s)
+    weather_data.alarm.den_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DEN, s)
+    weather_data.alarm.dining_room_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DINING_ROOM, s)
+    weather_data.alarm.front_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_FRONT_ENTRY_DOOR, s)
+    weather_data.alarm.garage_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_GARAGE, s)
+    weather_data.alarm.great_room_french_doors = get_zone_status(bearer_token,
+                                                                 ENTITY_ID_ALARM_GREAT_ROOM_FRENCH_DOORS, s)
+    weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
+    weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_MOTION, s)
+    weather_data.alarm.great_room_windows = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
+    weather_data.alarm.guest_bedrooms_bath = get_zone_status(bearer_token, ENTITY_ID_ALARM_GUEST_BEDROOMS, s)
+    weather_data.alarm.master_bathroom_windows = get_zone_status(bearer_token,
+                                                                 ENTITY_ID_ALARM_MASTER_BATHROOM_WINDOWS, s)
+    weather_data.alarm.master_bedroom_motion = get_zone_status(bearer_token,
+                                                               ENTITY_ID_ALARM_MASTER_BEDROOM_MOTION, s)
+    weather_data.alarm.master_bedroom_window = get_zone_status(bearer_token,
+                                                               ENTITY_ID_ALARM_MASTER_BEDROOM_WINDOWS, s)
+    weather_data.alarm.status_label = get_alarm_label(bearer_token, ENTITY_ID_ALARM_STATUS_LABEL, s)
+    weather_data.alarm.status = get_alarm_status(bearer_token, ENTITY_ID_ALARM_STATUS, s)
+
+
+def get_thermostat_data(weather_data, bearer_token, s):
+
+    sensor_data = get_sensor_data(bearer_token, ENTITY_ID_HALLWAY_THERMOSTAT, s)
+
+    weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_high"]
+    weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_low"]
+    weather_data.hallway_thermostat.humidity = sensor_data["attributes"]["current_humidity"]
+    weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
+    weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
+
+    if sensor_data["state"] == "heal_cool":
+        weather_data.hallway_thermostat.mode = "Auto"
+    else:
+        weather_data.hallway_thermostat.mode = sensor_data["state"]
 
 
 def get_weather(weather_data):
@@ -155,34 +195,10 @@ def get_weather(weather_data):
         weather_data.alarm.double_garage = get_garage_door(bearer_token, ENTITY_ID_GARAGE_DOUBLE, s)
 
         # get Thermostat
-        sensor_data = get_sensor_data(bearer_token, ENTITY_ID_HALLWAY_THERMOSTAT, s)
-        weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_high"]
-        weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_low"]
-        weather_data.hallway_thermostat.humidity = sensor_data["attributes"]["current_humidity"]
-        weather_data.hallway_thermostat.mode = sensor_data["state"]
-        weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
-        weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
+        get_thermostat_data(weather_data, bearer_token, s)
 
         # Get Alarm
-        weather_data.alarm.back_patio_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_BACK_PATIO_DOOR, s)
-        weather_data.alarm.den_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DEN, s)
-        weather_data.alarm.dining_room_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DINING_ROOM, s)
-        weather_data.alarm.front_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_FRONT_ENTRY_DOOR, s)
-        weather_data.alarm.garage_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_GARAGE, s)
-        weather_data.alarm.great_room_french_doors = get_zone_status(bearer_token,
-                                                                     ENTITY_ID_ALARM_GREAT_ROOM_FRENCH_DOORS, s)
-        weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
-        weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_MOTION, s)
-        weather_data.alarm.great_room_windows = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
-        weather_data.alarm.guest_bedrooms_bath = get_zone_status(bearer_token, ENTITY_ID_ALARM_GUEST_BEDROOMS, s)
-        weather_data.alarm.master_bathroom_windows = get_zone_status(bearer_token,
-                                                                     ENTITY_ID_ALARM_MASTER_BATHROOM_WINDOWS, s)
-        weather_data.alarm.master_bedroom_motion = get_zone_status(bearer_token,
-                                                                   ENTITY_ID_ALARM_MASTER_BEDROOM_MOTION, s)
-        weather_data.alarm.master_bedroom_window = get_zone_status(bearer_token,
-                                                                   ENTITY_ID_ALARM_MASTER_BEDROOM_WINDOWS, s)
-        weather_data.alarm.status_label = get_alarm_label(bearer_token, ENTITY_ID_ALARM_STATUS_LABEL, s)
-        weather_data.alarm.status = get_alarm_status(bearer_token, ENTITY_ID_ALARM_STATUS, s)
+        get_alarm_data(weather_data, bearer_token, s)
 
     except Exception as e:
         logging.error("Unable to get home-assistant:get_weather " + str(e))
