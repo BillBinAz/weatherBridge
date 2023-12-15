@@ -120,6 +120,7 @@ def get_alarm_status(bearer_token, key, s):
 def get_weather(weather_data):
 
     s = requests.Session()
+
     try:
         bearer_token = get_bearer_token()
         if not bearer_token:
