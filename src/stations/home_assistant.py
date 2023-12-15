@@ -151,7 +151,7 @@ def get_thermostat_data(weather_data, bearer_token, s):
     weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
     weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
 
-    if sensor_data["state"] == "heal_cool":
+    if sensor_data["state"] == "heat_cool":
         weather_data.hallway_thermostat.mode = "Auto"
     else:
         weather_data.hallway_thermostat.mode = sensor_data["state"]
