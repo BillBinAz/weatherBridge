@@ -108,7 +108,7 @@ def get_alarm_label(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     label = sensor_data["state"]
     label = label.replace("*", "")
-    return label[:10]
+    return label[:9].title()
 
 
 def get_alarm_status(bearer_token, key, s):
