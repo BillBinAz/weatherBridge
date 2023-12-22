@@ -6,7 +6,7 @@ import json
 import utilities.connect as connect
 
 CONNECT_ITEM_ID = "r6menry2h3yxd7nrfjgop7oktu"
-HOME_ASSISTANT_URL = "http://home-assistant.evilminions.org:8123/api/states/"
+HOME_ASSISTANT_URL = "https://home-assistant.evilminions.org:8123/api/states/"
 ENTITY_ID_OFFICE_TEMPERATURE = "sensor.bills_office_temperature"
 ENTITY_ID_OFFICE_OCCUPANCY = "binary_sensor.bills_office_occupancy"
 ENTITY_ID_LEFT_BEDROOM_TEMPERATURE = "sensor.ambers_office_temperature"
