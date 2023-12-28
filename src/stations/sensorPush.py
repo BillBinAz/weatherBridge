@@ -166,11 +166,11 @@ def get_weather(weather_data):
 
             #
             # Garage Sensor
-            apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
+            apply_sensor(weather_data.bedroom_left, sensor_data, calibration_data, garage_key)
 
             #
             # Rack Sensor
-            apply_sensor(weather_data.rack, sensor_data, calibration_data, server_rack_key)
+            apply_sensor(weather_data.master_bedroom, sensor_data, calibration_data, server_rack_key)
 
             #
             # Safe Sensor

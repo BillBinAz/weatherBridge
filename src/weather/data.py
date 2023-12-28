@@ -135,10 +135,10 @@ class WeatherData(object):
 
         # Ecobee
         self.hallway_thermostat = SensorThermostat()
-        self.bedroom_left = EcobeeSensor()
+        self.bedroom_left = SensorSmallWithCalibration()
         self.bedroom_right = EcobeeSensor()
         self.living_room = EcobeeSensor()
-        self.master_bedroom = EcobeeSensor()
+        self.master_bedroom = SensorSmallWithCalibration()
         self.office = EcobeeSensor()
 
         # Airscape

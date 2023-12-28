@@ -17,10 +17,10 @@ ENTITY_ID_LIVING_ROOM_TEMPERATURE = "sensor.great_room_temperature"
 ENTITY_ID_LIVING_ROOM_OCCUPANCY = "binary_sensor.great_room_occupancy"
 ENTITY_ID_MASTER_BEDROOM_TEMPERATURE = "sensor.master_bedroom_temperature"
 ENTITY_ID_MASTER_BEDROOM_OCCUPANCY = "binary_sensor.master_bedroom_occupancy"
-ENTITY_ID_HALLWAY_TEMPERATURE = "sensor.shotgun_temperature"
+ENTITY_ID_HALLWAY_TEMPERATURE = "sensor.thermostat_indoor_temperature"
 ENTITY_ID_HALLWAY_OCCUPANCY = "binary_sensor.shotgun_occupancy"
 ENTITY_ID_HALLWAY_HUMIDITY = "sensor.shotgun_humidity"
-ENTITY_ID_HALLWAY_THERMOSTAT = "climate.shotgun"
+ENTITY_ID_HALLWAY_THERMOSTAT = "climate.thermostat"
 ENTITY_ID_GARAGE_SINGLE = "binary_sensor.garagesingledooropen"
 ENTITY_ID_GARAGE_DOUBLE = "binary_sensor.garagedoubledooropen"
 
@@ -147,7 +147,6 @@ def get_thermostat_data(weather_data, bearer_token, s):
 
     weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_high"]
     weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_low"]
-    weather_data.hallway_thermostat.humidity = sensor_data["attributes"]["current_humidity"]
     weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
     weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
     weather_data.whole_house_fan.houseTemp = sensor_data["attributes"]["current_temperature"]
@@ -166,30 +165,9 @@ def get_weather(weather_data):
         bearer_token = get_bearer_token()
         if not bearer_token:
             raise Exception("No Data from home-assistant:BearerToken.")
-        #
-        # Get Office
-        weather_data.office.temp = get_temperature(bearer_token, ENTITY_ID_OFFICE_TEMPERATURE, s)
-        weather_data.office.occupied = get_occupancy(bearer_token, ENTITY_ID_OFFICE_OCCUPANCY, s)
-
-        # Get Left Bedroom
-        weather_data.bedroom_left.temp= get_temperature(bearer_token, ENTITY_ID_LEFT_BEDROOM_TEMPERATURE, s)
-        weather_data.bedroom_left.occupied = get_occupancy(bearer_token, ENTITY_ID_LEFT_BEDROOM_OCCUPANCY, s)
-
-        # Get Right Bedroom
-        weather_data.bedroom_right.temp = get_temperature(bearer_token, ENTITY_ID_RIGHT_BEDROOM_TEMPERATURE, s)
-        weather_data.bedroom_right.occupied = get_occupancy(bearer_token, ENTITY_ID_RIGHT_BEDROOM_OCCUPANCY, s)
-
-        # Get Living Room
-        weather_data.living_room.temp = get_temperature(bearer_token, ENTITY_ID_LIVING_ROOM_TEMPERATURE, s)
-        weather_data.living_room.occupied = get_occupancy(bearer_token, ENTITY_ID_LIVING_ROOM_OCCUPANCY, s)
-
-        # Get Master Bedroom
-        weather_data.master_bedroom.temp = get_temperature(bearer_token, ENTITY_ID_MASTER_BEDROOM_TEMPERATURE, s)
-        weather_data.master_bedroom.occupied = get_occupancy(bearer_token, ENTITY_ID_MASTER_BEDROOM_OCCUPANCY, s)
 
         # Get Hallway
         weather_data.hallway_thermostat.sensor.temp = get_temperature(bearer_token, ENTITY_ID_HALLWAY_TEMPERATURE, s)
-        weather_data.hallway_thermostat.sensor.occupied = get_occupancy(bearer_token, ENTITY_ID_HALLWAY_OCCUPANCY, s)
 
         # Get Garage
         weather_data.alarm.single_garage = get_garage_door(bearer_token, ENTITY_ID_GARAGE_SINGLE, s)
