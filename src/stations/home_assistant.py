@@ -145,8 +145,8 @@ def get_thermostat_data(weather_data, bearer_token, s):
 
     sensor_data = get_sensor_data(bearer_token, ENTITY_ID_HALLWAY_THERMOSTAT, s)
 
-    weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_high"]
-    weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_low"]
+    weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_high"]
+    weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_low"]
     weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
     weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
     weather_data.whole_house_fan.houseTemp = sensor_data["attributes"]["current_temperature"]
