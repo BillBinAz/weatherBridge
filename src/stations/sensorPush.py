@@ -158,7 +158,7 @@ def get_weather(weather_data):
                     server_rack_key = sensor_key
             #
             # Humidor Sensor
-            apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
+            #  apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
 
             #
             # Freezer Sensor
