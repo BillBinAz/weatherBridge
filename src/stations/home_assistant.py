@@ -23,6 +23,8 @@ ENTITY_ID_HALLWAY_HUMIDITY = "sensor.shotgun_humidity"
 ENTITY_ID_HALLWAY_THERMOSTAT = "climate.shotgun"
 ENTITY_ID_GARAGE_SINGLE = "binary_sensor.garagesingledooropen"
 ENTITY_ID_GARAGE_DOUBLE = "binary_sensor.garagedoubledooropen"
+ENTITY_ID_HUMIDOR_HUMIDITY = "sensor.aeotec_sensor_humidity_6"
+ENTITY_ID_HUMIDOR_TEMPERATURE = "sensor.aeotec_sensor_temperature_6"
 
 ENTITY_ID_ALARM_GARAGE = "binary_sensor.garage_entry_door"
 ENTITY_ID_ALARM_GUEST_BEDROOMS = "binary_sensor.guest_bedrooms_and_bath"
@@ -186,6 +188,10 @@ def get_weather(weather_data):
         # Get Master Bedroom
         weather_data.master_bedroom.temp = get_temperature(bearer_token, ENTITY_ID_MASTER_BEDROOM_TEMPERATURE, s)
         weather_data.master_bedroom.occupied = get_occupancy(bearer_token, ENTITY_ID_MASTER_BEDROOM_OCCUPANCY, s)
+
+        # Humidor Humidity
+        weather_data.humidor.humidity = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_HUMIDITY, s)
+        weather_data.humidor.temp = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_TEMPERATURE, s)
 
         # Get Hallway
         weather_data.hallway_thermostat.sensor.temp = get_temperature(bearer_token, ENTITY_ID_HALLWAY_TEMPERATURE, s)

@@ -127,7 +127,7 @@ class WeatherData(object):
         self.alarm = Alarm()
 
         # Sensor Push
-        self.humidor = SensorSmallWithCalibration()
+        self.humidor = SensorSmall()
         self.safe = SensorSmallWithCalibration()
         self.garage = SensorSmallWithCalibration()
         self.rack = SensorSmallWithCalibration()
