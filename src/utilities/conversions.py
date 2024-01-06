@@ -52,6 +52,8 @@ def get_average_from_list(data_list):
     sum_temp = 0.0
     for sensor in data_list:
         value = convert_str_to_float(sensor)
+        if (value == 0.0) or (isnan(value)):
+            continue
         how_many += 1
         sum_temp += value
     if how_many == 0:
