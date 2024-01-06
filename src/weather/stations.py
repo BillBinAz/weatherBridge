@@ -20,7 +20,7 @@ def get_weather():
         sensorPush.get_weather(cur_weather)
 
         # calculate average house temp
-        cur_weather.whole_house_fan.average_house_temp \
+        cur_weather.whole_house_fan.houseTemp \
             = conv.get_average_from_list([cur_weather.bedroom_left.temp,
                                           cur_weather.bedroom_right.temp,
                                           cur_weather.hallway_thermostat.sensor.temp,
