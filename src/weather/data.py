@@ -43,7 +43,6 @@ class SensorSmall(object):
         self.temp = DEFAULT_TEMP
         self.temp_c = DEFAULT_TEMP
         self.humidity = 0.0
-        self.time = ""
 
 
 class SensorSmallWithCalibration(object):

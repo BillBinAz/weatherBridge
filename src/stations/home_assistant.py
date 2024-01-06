@@ -24,12 +24,12 @@ ENTITY_ID_HALLWAY_HUMIDITY = "sensor.shotgun_humidity"
 ENTITY_ID_HALLWAY_THERMOSTAT = "climate.shotgun"
 ENTITY_ID_GARAGE_SINGLE = "binary_sensor.garagesingledooropen"
 ENTITY_ID_GARAGE_DOUBLE = "binary_sensor.garagedoubledooropen"
-ENTITY_ID_HUMIDOR_HUMIDITY = "sensor.humidor_temperature"
-ENTITY_ID_HUMIDOR_TEMPERATURE = "sensor.humidor_humidity"
+ENTITY_ID_HUMIDOR_TEMPERATURE = "sensor.sensor_temperature_9"
+ENTITY_ID_HUMIDOR_HUMIDITY = "sensor.sensor_humidity_9"
 ENTITY_ID_SAFE_TEMPERATURE = "sensor.aeotec_sensor_temperature_6"
 ENTITY_ID_SAFE_HUMIDITY = "sensor.aeotec_sensor_humidity_6"
 ENTITY_ID_SAFE_MOTION = "binary_sensor.safe"
-ENTITY_ID_SAFE_LUX = "sensor.aeotec_sensor_luminance_6"
+ENTITY_ID_SAFE_LUX = "sensor.aeotec_sensor_luminiscence_6"
 
 
 ENTITY_ID_ALARM_GARAGE = "binary_sensor.garage_entry_door"
@@ -197,8 +197,7 @@ def get_weather(weather_data):
 
         # Humidor Humidity
         weather_data.humidor.humidity = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_HUMIDITY, s)
-        weather_data.humidor.temp_c = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_TEMPERATURE, s)
-        weather_data.humidor.temp = conversions.c_to_f(weather_data.humidor.temp_c)
+        weather_data.humidor.temp = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_TEMPERATURE, s)
 
         # Safe Humidity
         weather_data.safe.humidity = get_temperature(bearer_token, ENTITY_ID_SAFE_HUMIDITY, s)
