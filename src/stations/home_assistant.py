@@ -4,6 +4,7 @@ import requests
 import logging
 import json
 import utilities.connect as connect
+import utilities.conversions as conversions
 
 CONNECT_ITEM_ID = "r6menry2h3yxd7nrfjgop7oktu"
 HOME_ASSISTANT_URL = "https://home-assistant.evilminions.org:8123/api/states/"
@@ -23,8 +24,13 @@ ENTITY_ID_HALLWAY_HUMIDITY = "sensor.shotgun_humidity"
 ENTITY_ID_HALLWAY_THERMOSTAT = "climate.shotgun"
 ENTITY_ID_GARAGE_SINGLE = "binary_sensor.garagesingledooropen"
 ENTITY_ID_GARAGE_DOUBLE = "binary_sensor.garagedoubledooropen"
-ENTITY_ID_HUMIDOR_HUMIDITY = "sensor.aeotec_sensor_humidity_6"
-ENTITY_ID_HUMIDOR_TEMPERATURE = "sensor.aeotec_sensor_temperature_6"
+ENTITY_ID_HUMIDOR_TEMPERATURE = "sensor.sensor_temperature_9"
+ENTITY_ID_HUMIDOR_HUMIDITY = "sensor.sensor_humidity_9"
+ENTITY_ID_SAFE_TEMPERATURE = "sensor.aeotec_sensor_temperature_6"
+ENTITY_ID_SAFE_HUMIDITY = "sensor.aeotec_sensor_humidity_6"
+ENTITY_ID_SAFE_MOTION = "binary_sensor.safe"
+ENTITY_ID_SAFE_LUX = "sensor.aeotec_sensor_luminiscence_6"
+
 
 ENTITY_ID_ALARM_GARAGE = "binary_sensor.garage_entry_door"
 ENTITY_ID_ALARM_GUEST_BEDROOMS = "binary_sensor.guest_bedrooms_and_bath"
@@ -152,12 +158,12 @@ def get_thermostat_data(weather_data, bearer_token, s):
     weather_data.hallway_thermostat.humidity = sensor_data["attributes"]["current_humidity"]
     weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
     weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
-    weather_data.whole_house_fan.houseTemp = sensor_data["attributes"]["current_temperature"]
+    weather_data.hallway_thermostat.state = sensor_data["attributes"]["hvac_action"]
 
-    if sensor_data["state"] == "heat_cool":
-        weather_data.hallway_thermostat.mode = "Auto"
+    if sensor_data["state"] == "off":
+        weather_data.hallway_thermostat.mode = "Off"
     else:
-        weather_data.hallway_thermostat.mode = sensor_data["state"]
+        weather_data.hallway_thermostat.mode = sensor_data["attributes"]["preset_mode"]
 
 
 def get_weather(weather_data):
@@ -174,7 +180,7 @@ def get_weather(weather_data):
         weather_data.office.occupied = get_occupancy(bearer_token, ENTITY_ID_OFFICE_OCCUPANCY, s)
 
         # Get Left Bedroom
-        weather_data.bedroom_left.temp= get_temperature(bearer_token, ENTITY_ID_LEFT_BEDROOM_TEMPERATURE, s)
+        weather_data.bedroom_left.temp = get_temperature(bearer_token, ENTITY_ID_LEFT_BEDROOM_TEMPERATURE, s)
         weather_data.bedroom_left.occupied = get_occupancy(bearer_token, ENTITY_ID_LEFT_BEDROOM_OCCUPANCY, s)
 
         # Get Right Bedroom
@@ -192,6 +198,12 @@ def get_weather(weather_data):
         # Humidor Humidity
         weather_data.humidor.humidity = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_HUMIDITY, s)
         weather_data.humidor.temp = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_TEMPERATURE, s)
+
+        # Safe Humidity
+        weather_data.safe.humidity = get_temperature(bearer_token, ENTITY_ID_SAFE_HUMIDITY, s)
+        weather_data.safe.temp = get_temperature(bearer_token, ENTITY_ID_SAFE_TEMPERATURE, s)
+        weather_data.safe.occupied = get_occupancy(bearer_token, ENTITY_ID_SAFE_MOTION, s)
+        weather_data.safe.lux = get_temperature(bearer_token, ENTITY_ID_SAFE_LUX, s)
 
         # Get Hallway
         weather_data.hallway_thermostat.sensor.temp = get_temperature(bearer_token, ENTITY_ID_HALLWAY_TEMPERATURE, s)
