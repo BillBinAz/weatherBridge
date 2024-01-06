@@ -165,9 +165,6 @@ def get_thermostat_data(weather_data, bearer_token, s):
     else:
         weather_data.hallway_thermostat.mode = sensor_data["attributes"]["preset_mode"]
 
-    # replace with average house temp
-    weather_data.whole_house_fan.houseTemp = sensor_data["attributes"]["current_temperature"]
-
 
 def get_weather(weather_data):
 

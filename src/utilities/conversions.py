@@ -1,6 +1,7 @@
 import logging
 import datetime as dt
 import sys
+from math import isnan
 
 
 def c_to_f(c_temp):
@@ -34,6 +35,25 @@ def get_average(data, key):
     for sensor in data:
         how_many += 1
         sum_temp += sensor[key]
+    if how_many == 0:
+        return 0
+    return round(float(sum_temp / how_many), 1)
+
+
+def convert_str_to_float(value):
+    try:
+        return float(value)
+    except:
+        return 0.0
+
+
+def get_average_from_list(data_list):
+    how_many = 0
+    sum_temp = 0.0
+    for sensor in data_list:
+        value = convert_str_to_float(sensor)
+        how_many += 1
+        sum_temp += value
     if how_many == 0:
         return 0
     return round(float(sum_temp / how_many), 1)

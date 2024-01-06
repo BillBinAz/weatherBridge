@@ -4,10 +4,10 @@ from weather import data
 import datetime as dt
 import logging
 import sys
+import utilities.conversions as conv
 
 
 def get_weather():
-
     cur_weather = data.WeatherData()
 
     try:
@@ -18,6 +18,15 @@ def get_weather():
         home_assistant.get_weather(cur_weather)
         wifiLogger.get_weather(cur_weather)
         sensorPush.get_weather(cur_weather)
+
+        # calculate average house temp
+        cur_weather.whole_house_fan.average_house_temp \
+            = conv.get_average_from_list([cur_weather.bedroom_left.temp,
+                                          cur_weather.bedroom_right.temp,
+                                          cur_weather.hallway_thermostat.sensor.temp,
+                                          cur_weather.living_room.temp,
+                                          cur_weather.master_bedroom.temp,
+                                          cur_weather.office.temp])
 
     except Exception as e:
         logging.error("Unable to get station:get_weather " + str(e))
