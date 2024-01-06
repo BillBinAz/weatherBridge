@@ -64,7 +64,7 @@ class Sensor6In1(object):
         self.temp = DEFAULT_TEMP
         self.humidity = 0.0
         self.lux = 0
-        self.sensor = EcobeeSensor()
+        self.occupied = 0
 
 
 class SensorMajor(object):
@@ -128,7 +128,7 @@ class WeatherData(object):
 
         # Sensor Push
         self.humidor = SensorSmall()
-        self.safe = SensorSmallWithCalibration()
+        self.safe = Sensor6In1()
         self.garage = SensorSmallWithCalibration()
         self.rack = SensorSmallWithCalibration()
         self.main_garage_freezer = SensorSmallWithCalibration()

@@ -174,7 +174,7 @@ def get_weather(weather_data):
 
             #
             # Safe Sensor
-            apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
+            # apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:get_weather " + str(e))
