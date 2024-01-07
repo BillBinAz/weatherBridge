@@ -153,17 +153,20 @@ def get_thermostat_data(weather_data, bearer_token, s):
 
     sensor_data = get_sensor_data(bearer_token, ENTITY_ID_HALLWAY_THERMOSTAT, s)
 
-    weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_high"]
-    weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_low"]
+    weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_low"]
+    weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_high"]
     weather_data.hallway_thermostat.humidity = sensor_data["attributes"]["current_humidity"]
-    weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"]
+    weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"][:10].title().strip()
     weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
-    weather_data.hallway_thermostat.state = sensor_data["attributes"]["hvac_action"]
+    weather_data.hallway_thermostat.state = sensor_data["attributes"]["hvac_action"][:10].title().strip()
 
+    mode = sensor_data["attributes"]["preset_mode"]
     if sensor_data["state"] == "off":
         weather_data.hallway_thermostat.mode = "Off"
+    elif mode == "temp":
+        weather_data.hallway_thermostat.mode = "Override"
     else:
-        weather_data.hallway_thermostat.mode = sensor_data["attributes"]["preset_mode"]
+        weather_data.hallway_thermostat.mode = mode[:10].title().strip()
 
 
 def get_weather(weather_data):
