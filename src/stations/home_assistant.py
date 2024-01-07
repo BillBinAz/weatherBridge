@@ -160,10 +160,13 @@ def get_thermostat_data(weather_data, bearer_token, s):
     weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
     weather_data.hallway_thermostat.state = sensor_data["attributes"]["hvac_action"][:10].title().strip()
 
+    mode = sensor_data["attributes"]["preset_mode"]
     if sensor_data["state"] == "off":
         weather_data.hallway_thermostat.mode = "Off"
+    elif mode == "temp":
+        weather_data.hallway_thermostat.mode = "Override"
     else:
-        weather_data.hallway_thermostat.mode = sensor_data["attributes"]["preset_mode"][:10].title().strip()
+        weather_data.hallway_thermostat.mode = mode[:10].title().strip()
 
 
 def get_weather(weather_data):
