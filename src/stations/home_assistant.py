@@ -79,17 +79,21 @@ def get_sensor_data(bearer_token, key, s):
 
     except Exception as e:
         logging.error("Unable to get home-assistant:get_sensor_data " + str(e))
-        print(dt.datetime.now().time(), "Unable to get home-assistant:get_sensor_data " + str(e))
+        print(dt.datetime.now().time(), "Unable to get home-assistant:get_sensor_data " + url + str(e))
     return
 
 
 def get_temperature(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return 0
     return sensor_data["state"]
 
 
 def get_occupancy(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return 0
     if sensor_data["state"] == "on":
         return 1
     else:
@@ -98,6 +102,8 @@ def get_occupancy(bearer_token, key, s):
 
 def get_garage_door(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return 0
     if sensor_data["state"] == "off":
         return 1
     else:
@@ -106,6 +112,8 @@ def get_garage_door(bearer_token, key, s):
 
 def get_zone_status(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return 0
     if sensor_data["state"] == "off":
         return 1
     else:
@@ -114,6 +122,8 @@ def get_zone_status(bearer_token, key, s):
 
 def get_alarm_label(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return ""
     label = sensor_data["state"]
     label = label.replace("*", "")
     return label[:10].title().strip()
@@ -121,6 +131,8 @@ def get_alarm_label(bearer_token, key, s):
 
 def get_alarm_status(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return 0
     if sensor_data["state"] != "disarmed":
         return 1
     else:
@@ -161,6 +173,8 @@ def get_thermostat_data(weather_data, bearer_token, s):
     weather_data.hallway_thermostat.state = sensor_data["attributes"]["hvac_action"][:10].title().strip()
 
     mode = sensor_data["attributes"]["preset_mode"]
+    if sensor_data is None:
+        return
     if sensor_data["state"] == "off":
         weather_data.hallway_thermostat.mode = "Off"
     elif mode == "temp":
