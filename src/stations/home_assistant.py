@@ -4,6 +4,8 @@ import requests
 import logging
 import json
 import utilities.connect as connect
+import re
+
 import utilities.conversions as conversions
 
 CONNECT_ITEM_ID = "r6menry2h3yxd7nrfjgop7oktu"
@@ -125,6 +127,10 @@ def get_alarm_label(bearer_token, key, s):
     if sensor_data is None:
         return ""
     label = sensor_data["state"]
+
+    if re.search('fault', label, re.IGNORECASE):
+        return "Not Ready"
+
     label = label.replace("*", "")
     return label[:10].title().strip()
 
