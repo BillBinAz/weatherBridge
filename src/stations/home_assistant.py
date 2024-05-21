@@ -78,7 +78,7 @@ def get_sensor_data(bearer_token, key, s):
         return response
 
     except Exception as e:
-        logging.error("Unable to get home-assistant:get_sensor_data " + str(e))
+        logging.error("Unable to get home-assistant:get_sensor_data Key: " + key + " " + str(e))
         print(dt.datetime.now().time(), "Unable to get home-assistant:get_sensor_data " + url + str(e))
     return
 
