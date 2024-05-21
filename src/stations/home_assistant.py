@@ -4,6 +4,8 @@ import requests
 import logging
 import json
 import utilities.connect as connect
+import re
+
 import utilities.conversions as conversions
 
 CONNECT_ITEM_ID = "r6menry2h3yxd7nrfjgop7oktu"
@@ -78,7 +80,7 @@ def get_sensor_data(bearer_token, key, s):
         return response
 
     except Exception as e:
-        logging.error("Unable to get home-assistant:get_sensor_data " + str(e))
+        logging.error("Unable to get home-assistant:get_sensor_data Key: " + key + " " + str(e))
         print(dt.datetime.now().time(), "Unable to get home-assistant:get_sensor_data " + url + str(e))
     return
 
@@ -125,6 +127,10 @@ def get_alarm_label(bearer_token, key, s):
     if sensor_data is None:
         return ""
     label = sensor_data["state"]
+
+    if re.search('fault', label, re.IGNORECASE):
+        return "Not Ready"
+
     label = label.replace("*", "")
     return label[:10].title().strip()
 
