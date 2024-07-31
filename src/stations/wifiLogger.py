@@ -20,7 +20,7 @@ WIND_SPEED = 'windspd'
 WIND_CHILL = 'chill'
 PRESSURE = 'bar'
 SPA_TEMP_ARRAY = 'hlxlt0'
-SPA_TEMP_INDEX = 1
+SPA_TEMP_INDEX = 6
 
 
 def get_data():
