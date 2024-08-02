@@ -19,8 +19,8 @@ WIND_GUST = 'gust'
 WIND_SPEED = 'windspd'
 WIND_CHILL = 'chill'
 PRESSURE = 'bar'
-SPA_TEMP_ARRAY = 'hlxlt0'
-SPA_TEMP_INDEX = 0  #  tried: 1, 6
+SPA_TEMP_ARRAY = 'xlt'
+SPA_TEMP_INDEX = 0
 
 
 def get_data():
