@@ -1,4 +1,4 @@
 flask==3.0.3
-requests==2.32.0
+requests==2.32.3
 onepasswordconnectsdk~=1.5.1
 datetime==5.5
