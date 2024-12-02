@@ -19,6 +19,8 @@ WIND_GUST = 'gust'
 WIND_SPEED = 'windspd'
 WIND_CHILL = 'chill'
 PRESSURE = 'bar'
+SPA_TEMP_ARRAY = 'xlt'
+SPA_TEMP_INDEX = 0
 
 
 def get_data():
@@ -66,6 +68,9 @@ def get_weather(weather_data):
         weather_data.back_yard.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
         weather_data.back_yard.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
         weather_data.back_yard.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
+
+        # spa
+        weather_data.back_yard.spa_temp = convert_to_float(wifi_logger_data[SPA_TEMP_ARRAY][SPA_TEMP_INDEX], 2)
 
         # Pressure
         weather_data.back_yard.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
