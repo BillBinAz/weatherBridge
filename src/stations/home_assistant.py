@@ -150,46 +150,46 @@ def get_alarm_data(weather_data, bearer_token, s):
     is_closed = 1
 
     weather_data.alarm.back_patio_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_BACK_PATIO_DOOR, s)
-    if weather_data.alarm.back_patio_door is 0:
+    if weather_data.alarm.back_patio_door == 0:
         is_closed = 0
 
     weather_data.alarm.den_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DEN, s)
-    if weather_data.alarm.den_window is 0:
+    if weather_data.alarm.den_window == 0:
         is_closed = 0
 
     weather_data.alarm.dining_room_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DINING_ROOM, s)
-    if weather_data.alarm.dining_room_window is 0:
+    if weather_data.alarm.dining_room_window == 0:
         is_closed = 0
 
     weather_data.alarm.front_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_FRONT_ENTRY_DOOR, s)
-    if weather_data.alarm.front_entry_door is 0:
+    if weather_data.alarm.front_entry_door == 0:
         is_closed = 0
 
     weather_data.alarm.great_room_french_doors = get_zone_status(bearer_token,
                                                                  ENTITY_ID_ALARM_GREAT_ROOM_FRENCH_DOORS, s)
-    if weather_data.alarm.great_room_french_doors is 0:
+    if weather_data.alarm.great_room_french_doors == 0:
         is_closed = 0
 
     weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
-    if weather_data.alarm.great_room_motion is 0:
+    if weather_data.alarm.great_room_motion == 0:
         is_closed = 0
 
     weather_data.alarm.great_room_windows = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
-    if weather_data.alarm.great_room_windows is 0:
+    if weather_data.alarm.great_room_windows == 0:
         is_closed = 0
 
     weather_data.alarm.guest_bedrooms_bath = get_zone_status(bearer_token, ENTITY_ID_ALARM_GUEST_BEDROOMS, s)
-    if weather_data.alarm.guest_bedrooms_bath is 0:
+    if weather_data.alarm.guest_bedrooms_bath == 0:
         is_closed = 0
 
     weather_data.alarm.master_bathroom_windows = get_zone_status(bearer_token,
                                                                  ENTITY_ID_ALARM_MASTER_BATHROOM_WINDOWS, s)
-    if weather_data.alarm.master_bathroom_windows is 0:
+    if weather_data.alarm.master_bathroom_windows == 0:
         is_closed = 0
 
     weather_data.alarm.master_bedroom_window = get_zone_status(bearer_token,
                                                                ENTITY_ID_ALARM_MASTER_BEDROOM_WINDOWS, s)
-    if weather_data.alarm.den_window is 0:
+    if weather_data.alarm.den_window == 0:
         is_closed = 0
 
     weather_data.alarm.all_zones_closed = is_closed
