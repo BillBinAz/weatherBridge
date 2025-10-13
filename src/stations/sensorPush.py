@@ -162,11 +162,11 @@ def get_weather(weather_data):
 
             #
             # Freezer Sensor
-            apply_sensor(weather_data.main_garage_freezer, sensor_data, calibration_data, garage_freezer_key)
+            # apply_sensor(weather_data.main_garage_freezer, sensor_data, calibration_data, garage_freezer_key)
 
             #
             # Garage Sensor
-            apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
+            # apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
 
             #
             # Rack Sensor
