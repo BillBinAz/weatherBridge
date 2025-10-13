@@ -36,8 +36,8 @@ def main():
         print(weather_data)
 
     except Exception as e:
-        logging.error("Unable to update IoX " + str(e))
-        print(dt.datetime.now().time(), "Unable to update IoX " + str(e))
+        logging.error("Unable to update " + str(e))
+        print(dt.datetime.now().time(), "Unable to update " + str(e))
 
 
 main()
