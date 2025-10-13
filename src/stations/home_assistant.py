@@ -6,8 +6,6 @@ import json
 import utilities.connect as connect
 import re
 
-import utilities.conversions as conversions
-
 CONNECT_ITEM_ID = "r6menry2h3yxd7nrfjgop7oktu"
 HOME_ASSISTANT_URL = "https://home-assistant.evilminions.org:8123/api/states/"
 ENTITY_ID_OFFICE_TEMPERATURE = "sensor.bills_office_temperature"
@@ -64,8 +62,8 @@ def get_bearer_token():
 
 
 def get_sensor_data(bearer_token, key, s):
+    url = HOME_ASSISTANT_URL + key
     try:
-        url = HOME_ASSISTANT_URL + key
         ret = s.get(url, headers={"Accept": "application/json", "Authorization": "Bearer " + bearer_token})
 
         if ret.status_code != 200:
@@ -264,12 +262,6 @@ def get_weather(weather_data):
         # Humidor Humidity
         weather_data.humidor.humidity = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_HUMIDITY, s)
         weather_data.humidor.temp = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_TEMPERATURE, s)
-
-        # Safe Humidity
-        weather_data.safe.humidity = get_temperature(bearer_token, ENTITY_ID_SAFE_HUMIDITY, s)
-        weather_data.safe.temp = get_temperature(bearer_token, ENTITY_ID_SAFE_TEMPERATURE, s)
-        weather_data.safe.occupied = get_occupancy(bearer_token, ENTITY_ID_SAFE_MOTION, s)
-        weather_data.safe.lux = get_temperature(bearer_token, ENTITY_ID_SAFE_LUX, s)
 
         # Get Hallway
         weather_data.hallway_thermostat.sensor.temp = get_temperature(bearer_token, ENTITY_ID_HALLWAY_TEMPERATURE, s)

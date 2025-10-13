@@ -92,13 +92,22 @@ class SensorThermostat(object):
         self.cool_set = 0.0
         self.sensor = EcobeeSensor()
 
-
 class EcobeeSensor(object):
 
     def __init__(self):
         self.temp = DEFAULT_TEMP
         self.occupied = 0
 
+class NodeTemp(object):
+    def __init__(self):
+        self.temp = DEFAULT_TEMP
+        self.temp_c = DEFAULT_TEMP
+
+class NodeTempHumidity(object):
+    def __init__(self):
+        self.temp = DEFAULT_TEMP
+        self.temp_c = DEFAULT_TEMP
+        self.humidity = 0.0
 
 class Locks(object):
 
@@ -137,13 +146,13 @@ class WeatherData(object):
         self.office = EcobeeSensor()
 
         # Node
-        self.humidor = SensorSmall()
-        self.safe = SensorSmall()
-        self.garage = SensorSmall()
-        self.garage_freezer = SensorSmall()
-        self.kitchen = SensorSmall()
-        self.kitchen_refrigerator = SensorSmall()
-        self.kitchen_freezer = SensorSmall()
+        self.humidor = NodeTempHumidity()
+        self.safe = NodeTempHumidity()
+        self.garage = NodeTemp()
+        self.garage_freezer = NodeTemp()
+        self.kitchen = NodeTemp()
+        self.kitchen_refrigerator = NodeTemp()
+        self.kitchen_freezer = NodeTemp()
 
         # Airscape
         self.whole_house_fan = WholeHomeFan()
