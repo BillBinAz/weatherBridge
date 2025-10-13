@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from stations import wifiLogger, home_assistant, sensorPush
 from weather import data
+from stations.thermo_works import thermo_works
 import datetime as dt
 import logging
 import sys
@@ -18,6 +19,7 @@ def get_weather():
         home_assistant.get_weather(cur_weather)
         wifiLogger.get_weather(cur_weather)
         sensorPush.get_weather(cur_weather)
+        thermo_works.get_weather(cur_weather)
 
         # calculate average house temp
         cur_weather.whole_house_fan.houseTemp \

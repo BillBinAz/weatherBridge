@@ -126,11 +126,7 @@ class WeatherData(object):
         self.alarm = Alarm()
 
         # Sensor Push
-        self.humidor = SensorSmall()
-        self.safe = Sensor6In1()
-        self.garage = SensorSmallWithCalibration()
         self.rack = SensorSmallWithCalibration()
-        self.main_garage_freezer = SensorSmallWithCalibration()
 
         # Ecobee
         self.hallway_thermostat = SensorThermostat()
@@ -139,6 +135,15 @@ class WeatherData(object):
         self.living_room = EcobeeSensor()
         self.master_bedroom = EcobeeSensor()
         self.office = EcobeeSensor()
+
+        # Node
+        self.humidor = SensorSmall()
+        self.safe = SensorSmall()
+        self.garage = SensorSmall()
+        self.garage_freezer = SensorSmall()
+        self.kitchen = SensorSmall()
+        self.kitchen_refrigerator = SensorSmall()
+        self.kitchen_freezer = SensorSmall()
 
         # Airscape
         self.whole_house_fan = WholeHomeFan()

@@ -16,7 +16,7 @@ def f_to_c(f_temp):
     return round(float(f_temp - 32) * 5.0 / 9.0, 1)
 
 
-def format_f(value, source):
+def format_f(value):
     #
     # add decimal place
     formatted_value = 0
