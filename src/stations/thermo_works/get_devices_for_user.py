@@ -38,8 +38,7 @@ async def get_devices_for_user():
                     try:
                         device_channels.append(
                             await thermoworks.get_device_channel(
-                                device_serial=device.serial, channel=str(
-                                    channel)
+                                device_serial=device.serial, channel=str(channel)
                             )
                         )
                     except ResourceNotFoundError:

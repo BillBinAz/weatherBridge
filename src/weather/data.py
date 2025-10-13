@@ -1,7 +1,7 @@
 import datetime as dt
 import json
 
-DEFAULT_TEMP = 0
+DEFAULT_TEMP = 'None'
 
 
 class Alarm(object):
