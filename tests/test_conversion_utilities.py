@@ -17,17 +17,17 @@ class TestUtilities(unittest.TestCase):
 
     def test_number_format_f(self):
         # Test 0
-        assert utilities.format_f(0, "test") == 0
+        assert utilities.format_f(0) == 0
         # Test 0.0
-        assert utilities.format_f(0.0, "test") == 0.0
+        assert utilities.format_f(0.0) == 0.0
         # Test 0.00
-        assert utilities.format_f(0.00, "test") == 0.0
+        assert utilities.format_f(0.00) == 0.0
         # Test 0.000
-        assert utilities.format_f(0.000, "test") == 0.0
+        assert utilities.format_f(0.000) == 0.0
         # Test 0.0000
-        assert utilities.format_f(0.0000, "test") == 0.0
+        assert utilities.format_f(0.0000) == 0.0
         # Test 0.00000
-        assert utilities.format_f(0.00000, "test") == 0.0
+        assert utilities.format_f(0.00000) == 0.0
 
     def test_c_to_f_exception(self):
         # Test exception
