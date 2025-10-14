@@ -29,44 +29,37 @@ def get_weather(weather_data):
 
             # SAFE 0: Ambient, 1: Humidity
             if device.device_id == SAFE_NODE_ID:
-                if isinstance(device_channels[0].value, float):
+                if device_channels[0].value is not None:
                     weather_data.safe.temp  = conversions.format_f(device_channels[0].value)
-                    weather_data.safe.temp_c = conversions.f_to_c(device_channels[0].value)
 
-                if isinstance(device_channels[1].value, float):
+                if device_channels[1].value is not None:
                     weather_data.safe.humidity = conversions.format_f(device_channels[1].value)
 
             # KITCHEN 0: Ambient, 1: Refrigerator, 2: Freezer
             if device.device_id == KITCHEN_NODE_ID:
-                if isinstance(device_channels[0].value, float):
+                if device_channels[0].value is not None:
                     weather_data.kitchen.temp  = conversions.format_f(device_channels[0].value)
-                    weather_data.kitchen.temp_c = conversions.f_to_c(device_channels[0].value)
 
-                if isinstance(device_channels[1].value, float):
+                if device_channels[1].value is not None:
                     weather_data.kitchen_refrigerator.temp  = conversions.format_f(device_channels[1].value)
-                    weather_data.kitchen_refrigerator.temp_c = conversions.f_to_c(device_channels[1].value)
 
-                if isinstance(device_channels[2].value, float):
+                if device_channels[2].value is not None:
                     weather_data.kitchen_freezer.temp  = conversions.format_f(device_channels[2].value)
-                    weather_data.kitchen_freezer.temp_c = conversions.f_to_c(device_channels[2].value)
 
             # GARAGE 0: Ambient, 1: Freezer
             if device.device_id == GARAGE_NODE_ID:
-                if isinstance(device_channels[0].value, float):
+                if device_channels[0].value is not None:
                     weather_data.garage.temp  = conversions.format_f(device_channels[0].value)
-                    weather_data.garage.temp_c = conversions.f_to_c(device_channels[0].value)
 
-                if isinstance(device_channels[1].value, float):
+                if device_channels[1].value is not None:
                     weather_data.garage_freezer.temp  = conversions.format_f(device_channels[1].value)
-                    weather_data.garage_freezer.temp_c = conversions.f_to_c(device_channels[1].value)
 
             # HUMIDOR 0: Ambient, 1: Humidity
             if device.device_id == HUMIDOR_NODE_ID:
-                if isinstance(device_channels[0].value, float):
+                if device_channels[0].value is not None:
                     weather_data.humidor.temp  = conversions.format_f(device_channels[0].value)
-                    weather_data.humidor.temp_c = conversions.f_to_c(device_channels[0].value)
 
-                if isinstance(device_channels[1].value, float):
+                if device_channels[1].value is not None:
                     weather_data.humidor.humidity = conversions.format_f(device_channels[1].value)
 
     except Exception as e:
