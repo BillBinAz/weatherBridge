@@ -101,12 +101,10 @@ class EcobeeSensor(object):
 class NodeTemp(object):
     def __init__(self):
         self.temp = DEFAULT_TEMP
-        self.temp_c = DEFAULT_TEMP
 
 class NodeTempHumidity(object):
     def __init__(self):
         self.temp = DEFAULT_TEMP
-        self.temp_c = DEFAULT_TEMP
         self.humidity = 0.0
 
 class Locks(object):
