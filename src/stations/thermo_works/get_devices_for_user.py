@@ -1,8 +1,8 @@
 from typing import Dict
 from aiohttp import ClientSession
-from thermoworks_cloud import AuthFactory, ThermoworksCloud, ResourceNotFoundError
-from thermoworks_cloud.models.device import Device
-from thermoworks_cloud.models.device_channel import DeviceChannel
+from stations.thermoworks_cloud_local import AuthFactory, ThermoworksCloud, ResourceNotFoundError
+from stations.thermoworks_cloud_local.models.device import Device
+from stations.thermoworks_cloud_local.models.device_channel import DeviceChannel
 import utilities.connect as connect
 
 CONNECT_ITEM_ID = "ca5blc76voyvw3n347z6k3fj3y"
