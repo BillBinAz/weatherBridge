@@ -3,7 +3,7 @@ name: Test and Docker Build from Dockerfile on Tag
 on:
   push:
     tags:
-      - '**'
+      - 'v*'
 
 jobs:
 
@@ -16,16 +16,16 @@ jobs:
         python-version: ["3.14"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install flake8 pytest
-          pip install -r ./src/requirements.txt
+          pip install -r ./requirements.txt
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
@@ -40,36 +40,39 @@ jobs:
           pytest
 
   build_and_push_docker_image:
-    name: Push Docker image to Docker Hub
+    name: Push Docker image to ghcr.io
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: Docker meta
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: billbinaz/weatherbridge
-          tags: |
-            type=semver,pattern={{version}}
-          labels: |
-            org.opencontainers.image.title=WeatherBridge
-            org.opencontainers.image.description=Connection software for automation
+          images: ghcr.io/${{ github.repository }}
+
+      - name: Set lowercase repository
+        run: echo "REPOSITORY_LC=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}          
+          tags: | 
+            ghcr.io/${{ env.REPOSITORY_LC }}:${{ github.ref_name }}
+            ghcr.io/${{ env.REPOSITORY_LC }}:latest
+          labels: ${{ steps.meta.outputs.labels }}
