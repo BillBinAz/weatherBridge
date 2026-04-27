@@ -1,0 +1,14 @@
+name: weather-bridge
+services:
+  weather-bridge:
+    image: weatherbridge:testing
+    container_name: weatherbridge
+    ports:
+        - "8080:8080"
+    environment:
+    #  - OP_CONNECT_HOST=http://connect-api:8080
+    #  - OP_CONNECT_TOKEN=eyJhbGciOiJFUzI1NiIsImtpZCI6ImJ6azI3Y2dsZnF4ejNranRvZWt0ZXJlN2Y0IiwidHlwIjoiSldUIn0.eyIxcGFzc3dvcmQuY29tL2F1dWlkIjoiQUZRUEhIS1RBRkdQUkNMTVNURVRWSURURVkiLCIxcGFzc3dvcmQuY29tL3Rva2VuIjoiRjc2MmltTEtRV3RVelZpVnkzbFdKd21RbVFfMUhPeUQiLCIxcGFzc3dvcmQuY29tL2Z0cyI6WyJ2YXVsdGFjY2VzcyJdLCIxcGFzc3dvcmQuY29tL3Z0cyI6W3sidSI6InEzN3R3MjZ4M3BpNDd6czVmemF2bDRvMnZ1IiwiYSI6NDh9XSwiYXVkIjpbImNvbS4xcGFzc3dvcmQuY29ubmVjdCJdLCJzdWIiOiJBTzRZVEM3VklaRUpSSjVGWFdTT0NaMkJXTSIsImlhdCI6MTY5OTMwMTIwNCwiaXNzIjoiY29tLjFwYXNzd29yZC5iNSIsImp0aSI6IjYydWljc3hicGJrb251NjVpc25wdGczdHhpIn0.uh7u5qYhYtMZ49uytCPMzm1Jlbzk5mdFoHswLAN0Y2QrdUey04FxxtboIYf_VQTRYMr_DGzAcQveS1ZtmR0WnA
+      - TZ=America/Phoenix
+    labels:
+      - diun.enable=false
+    restart: unless-stopped
