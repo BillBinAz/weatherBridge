@@ -27,7 +27,7 @@ class Alarm(object):
 
 
 class WholeHomeFan(object):
-    def __int__(self):
+    def __init__(self):
         self.speed = ""
         self.timeRemaining = ""
         self.cubitFeetPerMinute = ""

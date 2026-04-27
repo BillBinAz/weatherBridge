@@ -1,18 +1,48 @@
 # WeatherBridge
-Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm and serve up via rest for display.
 
+Gather residential data from Ecobee, Davis Weather Station, Honeywell Alarm, and SensorPush, and serve it up via REST API for display.
 
-### crontab -e <br>
-*/5 * * * *  cd ~/weatherBridge && ./update_iox.py > /tmp/weatherBridge.log 2>&1 <br>
-*/10 * * * * cd ~/weatherBridge/rtl_433 && ./weather433.sh > /tmp/weather433.log 2>&1
+## Features
 
-### **Manual Docker build:**   <br>
-docker build -t weatherbridge:testing . <br>
-docker run -P weatherbridge:testing
+- Collects weather data from various sources
+- RESTful API to access the data
+- Dockerized for easy deployment
 
-### On a windows box add this to a syslog.py file on the path
+## Installation
 
-```syslog.py stub
+### Prerequisites
+
+- Docker
+- Python 3.13+
+
+### Docker Build and Run
+
+```bash
+docker build -t weatherbridge:latest .
+docker run -p 8080:8080 weatherbridge:latest
+```
+
+### Manual Installation
+
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run the application:
+   ```bash
+   python -m flask run --host=0.0.0.0 --port=8080
+   ```
+
+## API Endpoints
+
+- `GET /weather`: Returns weather data in JSON format
+
+## Windows Syslog Stub
+
+On Windows, create a `syslog.py` file with the following content to stub syslog functionality:
+
+```python
 import sys
 
 LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR, LOG_WARNING, \
