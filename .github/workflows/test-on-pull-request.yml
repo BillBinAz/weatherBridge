@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ "develop", "dev", "feature/*" ]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
 
   test:
