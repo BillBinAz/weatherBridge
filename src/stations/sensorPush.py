@@ -3,7 +3,6 @@ import datetime as dt
 import requests
 import logging
 import json
-import sys
 import utilities.connect as connect
 import utilities.conversions as conversions
 
@@ -131,57 +130,60 @@ def apply_sensor(weather_data_station, sensor_data, calibration_data, sensor_key
 def get_weather(weather_data):
     try:
         auth_token = get_authorization()
+        if not auth_token:
+            return
         access_token = get_access_token(auth_token)
+        if not access_token:
+            return
         calibration_data = get_sensor_data(access_token, CALIBRATION_URL)
+        if not calibration_data:
+            return
         sensor_data = get_sensor_data(access_token, DATA_URL)
+        if not sensor_data:
+            return
 
-        if sensor_data:
-            #
-            # Get full keys
-            humidor_key = 0
-            garage_key = 0
-            garage_freezer_key = 0
-            server_rack_key = 0
-            safe_key = 0
+        #
+        # Get full keys
+        humidor_key = 0
+        garage_key = 0
+        garage_freezer_key = 0
+        server_rack_key = 0
+        safe_key = 0
 
-            for sensor in sensor_data["sensors"]:
-                sensor_key = str(sensor)
-                if sensor_key.startswith(HUMIDOR_ID):
-                    humidor_key = sensor_key
-                elif sensor_key.startswith(GARAGE_ID):
-                    garage_key = sensor_key
-                elif sensor_key.startswith(FREEZER_ID):
-                    garage_freezer_key = sensor_key
-                elif sensor_key.startswith(SAFE_ID):
-                    safe_key = sensor_key
-                elif sensor_key.startswith(SERVER_RACK):
-                    server_rack_key = sensor_key
-            #
-            # Humidor Sensor
-            #  apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
+        for sensor in sensor_data["sensors"]:
+            sensor_key = str(sensor)
+            if sensor_key.startswith(HUMIDOR_ID):
+                humidor_key = sensor_key
+            elif sensor_key.startswith(GARAGE_ID):
+                garage_key = sensor_key
+            elif sensor_key.startswith(FREEZER_ID):
+                garage_freezer_key = sensor_key
+            elif sensor_key.startswith(SAFE_ID):
+                safe_key = sensor_key
+            elif sensor_key.startswith(SERVER_RACK):
+                server_rack_key = sensor_key
+        #
+        # Humidor Sensor
+        #  apply_sensor(weather_data.humidor, sensor_data, calibration_data, humidor_key)
 
-            #
-            # Freezer Sensor
-            # apply_sensor(weather_data.main_garage_freezer, sensor_data, calibration_data, garage_freezer_key)
+        #
+        # Freezer Sensor
+        # apply_sensor(weather_data.main_garage_freezer, sensor_data, calibration_data, garage_freezer_key)
 
-            #
-            # Garage Sensor
-            # apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
+        #
+        # Garage Sensor
+        # apply_sensor(weather_data.garage, sensor_data, calibration_data, garage_key)
 
-            #
-            # Rack Sensor
+        #
+        # Rack Sensor
+        if server_rack_key:
             apply_sensor(weather_data.rack, sensor_data, calibration_data, server_rack_key)
 
-            #
-            # Safe Sensor
-            # apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
+        #
+        # Safe Sensor
+        # apply_sensor(weather_data.safe, sensor_data, calibration_data, safe_key)
 
     except Exception as e:
         logging.error("Unable to get sensor_push:get_weather " + str(e))
         print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
-    finally:
-        e = sys.exc_info()[0]
-        if e:
-            logging.error("Unable to get sensor_push:get_weather " + str(e))
-            print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
     return

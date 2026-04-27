@@ -1,4 +1,3 @@
-# syntbillbinaz/weatherbridge:latestax=docker/dockerfile:1
 FROM python:3.13-slim-bookworm
 
 WORKDIR /weatherBridge
@@ -9,8 +8,8 @@ RUN chmod +x /weatherBridge/startup.sh
 
 RUN apt update && apt upgrade -y
 RUN pip3 install --upgrade pip
-RUN chmod 655 startup.sh
-RUN chmod 655 update_iox.sh
+RUN chmod 755 startup.sh
+RUN chmod 755 update_iox.sh
 RUN pip3 install -r requirements.txt
 
 ENV FLASK_APP=get_handler.py

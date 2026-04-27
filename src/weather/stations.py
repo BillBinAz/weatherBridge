@@ -4,7 +4,6 @@ from weather import data
 from stations.thermo_works import thermo_works
 import datetime as dt
 import logging
-import sys
 import utilities.conversions as conv
 
 
@@ -13,9 +12,8 @@ def get_weather():
 
     try:
         logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
-                            datefmt='%Y-%m-%d,%H:%M:%S:%f', level=logging.INFO)
+                            datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
-        cur_weather = data.WeatherData()
         home_assistant.get_weather(cur_weather)
         wifiLogger.get_weather(cur_weather)
         sensorPush.get_weather(cur_weather)
@@ -31,10 +29,6 @@ def get_weather():
                                           cur_weather.office.temp])
 
     except Exception as e:
-        logging.error("Unable to get station:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
-    except:
-        e = sys.exc_info()[0]
         logging.error("Unable to get station:get_weather " + str(e))
         print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
 
