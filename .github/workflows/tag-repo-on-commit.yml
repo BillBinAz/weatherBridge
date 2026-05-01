@@ -79,6 +79,7 @@ jobs:
     permissions:
       packages: write
       contents: write
+      actions: read
 
     steps:
       - name: Checkout code
@@ -86,12 +87,32 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Debug - Check git status
+        run: |
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Last commit: $(git log -1 --pretty=%B)"
+          echo "Tags count: $(git tag | wc -l)"
+          git log --oneline -10
+
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           create_annotated_tag: true
+          default_bump: patch
+          release_branches: master
+
+      - name: Debug - Tag creation result
+        run: |
+          echo "New tag: ${{ steps.tag_version.outputs.new_tag }}"
+          echo "Previous tag: ${{ steps.tag_version.outputs.previous_tag }}"
+          echo "Changed files: ${{ steps.tag_version.outputs.changed_files }}"
 
       - name: Create a GitHub release
         if: steps.tag_version.outputs.new_tag
@@ -102,3 +123,10 @@ jobs:
           body: ${{ steps.tag_version.outputs.changelog }}
           draft: false
           prerelease: false
+          generateReleaseNotes: true
+
+      - name: Debug - Release creation
+        if: steps.tag_version.outputs.new_tag
+        run: |
+          echo "Release created for tag: ${{ steps.tag_version.outputs.new_tag }}"
+          git tag -l | tail -5
