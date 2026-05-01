@@ -5,9 +5,9 @@ set -euo pipefail
 # Configuration
 TIMEZONE="${TZ:-America/Phoenix}"
 APP_PORT="${PORT:-8080}"
-APP_HOME="/weatherBridge"
+APP_HOME="/weather-bridge"
 FLASK_APP="${FLASK_APP:-get_handler.py}"
-LOG_DIR="/var/log/weatherbridge"
+LOG_DIR="/var/log/weather-bridge"
 
 # Colors for output
 RED='\033[0;31m'
@@ -98,7 +98,7 @@ health_check() {
 # Main execution
 main() {
     log_info "================================"
-    log_info "WeatherBridge Startup Script"
+    log_info "Weather-Bridge Startup Script"
     log_info "================================"
 
     check_prerequisites
