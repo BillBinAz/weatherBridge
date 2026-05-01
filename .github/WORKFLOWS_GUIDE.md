@@ -241,7 +241,7 @@ Template for PR descriptions and checklist
 
 ## 🔐 Security Notes
 
-- Workflows use `secrets.GITHUB_TOKEN` (minimum required permissions)
+- Workflows use `secrets.PATNAME` (minimum required permissions)
 - No credentials stored in workflow files
 - Security scans check for vulnerabilities
 - Dependabot updates include security patches

@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/stale@v10
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.PATNAME }}
           stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity.'
           stale-pr-message: 'This PR has been automatically marked as stale because it has not had recent activity.'
           stale-issue-label: 'stale'

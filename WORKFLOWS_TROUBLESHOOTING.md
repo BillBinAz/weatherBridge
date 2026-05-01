@@ -43,10 +43,10 @@
 ### Issue: "Container push fails with authentication error"
 **Solutions:**
 
-1. **Verify GITHUB_TOKEN is available**
+1. **Verify PATNAME is available**
    ```bash
    # In workflow logs, check if token was properly passed
-   docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
+   docker login -u ${{ github.actor }} -p ${{ secrets.PATNAME }} ghcr.io
    ```
 
 2. **Check repository visibility**
