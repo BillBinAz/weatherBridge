@@ -23,8 +23,14 @@ Aggregate residential weather and environmental data from multiple sources (Ecob
 ### Docker (Recommended)
 
 ```bash
-# Build the image
-docker build -t weatherbridge:latest .
+# Pull from GitHub Container Registry
+docker pull ghcr.io/YOUR_USERNAME/weatherbridge:latest
+
+# Or run directly
+docker run -d -p 8080:8080 \
+  -e OP_CONNECT_HOST=http://connect.example.com:8080 \
+  --name weatherbridge \
+  ghcr.io/YOUR_USERNAME/weatherbridge:latest
 
 # Run with Docker Compose
 docker-compose up -d
@@ -220,4 +226,3 @@ For issues and questions:
 2. Review application logs
 3. Check Docker container health: `docker ps -a`
 4. Verify all services are accessible
-
