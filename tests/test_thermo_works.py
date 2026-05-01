@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
 import unittest
 from unittest.mock import patch, MagicMock, AsyncMock
 from stations.thermo_works import thermo_works

@@ -1,4 +1,4 @@
-# WeatherBridge
+# Weather-Bridge
 
 Aggregate residential weather and environmental data from multiple sources (Ecobee, Davis Weather Station, Honeywell Alarm, SensorPush, ThermoWorks) and serve via a unified REST API.
 
@@ -24,13 +24,13 @@ Aggregate residential weather and environmental data from multiple sources (Ecob
 
 ```bash
 # Pull from GitHub Container Registry
-docker pull ghcr.io/YOUR_USERNAME/weatherbridge:latest
+docker pull ghcr.io/YOUR_USERNAME/weather-bridge:latest
 
 # Or run directly
 docker run -d -p 8080:8080 \
   -e OP_CONNECT_HOST=http://connect.example.com:8080 \
-  --name weatherbridge \
-  ghcr.io/YOUR_USERNAME/weatherbridge:latest
+  --name weather-bridge \
+  ghcr.io/YOUR_USERNAME/weather-bridge:latest
 
 # Run with Docker Compose
 docker-compose up -d
@@ -167,7 +167,7 @@ For security best practices and vulnerability reporting, see [SECURITY.md](./SEC
 ## 📝 Project Structure
 
 ```
-weatherBridge/
+weather-bridge/
 ├── src/                          # Application source code
 │   ├── get_handler.py           # Flask API handler
 │   ├── stations/                # Data source modules
@@ -211,7 +211,7 @@ See LICENSE file for details.
 
 ### Unhealthy container status
 - Check health endpoint: `curl http://localhost:8080/health`
-- Review Docker logs: `docker logs weatherbridge`
+- Review Docker logs: `docker logs weather-bridge`
 - Verify port 8080 is accessible
 
 ### Data retrieval failures

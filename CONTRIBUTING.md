@@ -21,7 +21,7 @@ Thank you for your interest in contributing to WeatherBridge! This document prov
 1. **Fork and Clone**
    ```bash
    git clone https://github.com/yourusername/weatherBridge.git
-   cd weatherBridge
+   cd weather-bridge
    ```
 
 2. **Create Virtual Environment**
