@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
 
   test:
@@ -16,40 +20,60 @@ jobs:
         python-version: ["3.13", "3.14"]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install flake8 pytest coverage
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install flake8 coverage
           pip install -r requirements.txt
-      - name: Lint with flake8
+
+      - name: Lint with flake8 - Critical errors
         run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,.github,.venv,__pycache__,.pytest_cache
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.git,.github,.venv,__pycache__,.pytest_cache
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics \
+            --exclude=.git,.github,.venv,__pycache__,.pytest_cache,docs
+
+      - name: Lint with flake8 - All errors (non-blocking)
+        continue-on-error: true
+        run: |
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 \
+            --statistics --exclude=.git,.github,.venv,__pycache__,.pytest_cache,docs
+
       - name: Set PYTHONPATH
-        run: |
-          echo "PYTHONPATH=./src" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=./src" >> $GITHUB_ENV
+
       - name: Run tests with coverage
         run: |
           coverage run -m unittest discover tests/ -v
           coverage report
           coverage xml
+
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
+          verbose: true
 
-  build_and_push_docker_image:
-    name: Push Docker image to ghcr.io
+  build_and_push_to_ghcr:
+    name: Build and Push to GitHub Container Registry
     needs: test
     runs-on: ubuntu-latest
     permissions:
@@ -57,8 +81,11 @@ jobs:
       packages: write
 
     steps:
-      - name: Check out the repo
+      - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -67,11 +94,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: Set lowercase repository
         run: echo "REPOSITORY_LC=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
@@ -81,7 +112,48 @@ jobs:
         with:
           context: .
           push: true
-          tags: | 
+          tags: |
             ghcr.io/${{ env.REPOSITORY_LC }}:${{ github.ref_name }}
             ghcr.io/${{ env.REPOSITORY_LC }}:latest
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build_and_push_to_dockerhub:
+    name: Build and Push to Docker Hub
+    needs: test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: billbinaz/weatherbridge
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

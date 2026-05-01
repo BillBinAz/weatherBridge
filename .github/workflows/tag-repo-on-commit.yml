@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "master" ]
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
 
   test:
@@ -15,37 +19,57 @@ jobs:
         python-version: ["3.13", "3.14"]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install flake8 pytest coverage
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install flake8 coverage
           pip install -r requirements.txt
-      - name: Lint with flake8
+
+      - name: Lint with flake8 - Critical errors
         run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,.github,.venv,__pycache__,.pytest_cache
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.git,.github,.venv,__pycache__,.pytest_cache
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics \
+            --exclude=.git,.github,.venv,__pycache__,.pytest_cache,docs
+
+      - name: Lint with flake8 - All errors (non-blocking)
+        continue-on-error: true
+        run: |
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 \
+            --statistics --exclude=.git,.github,.venv,__pycache__,.pytest_cache,docs
+
       - name: Set PYTHONPATH
-        run: |
-          echo "PYTHONPATH=./src" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=./src" >> $GITHUB_ENV
+
       - name: Run tests with coverage
         run: |
           coverage run -m unittest discover tests/ -v
           coverage report
           coverage xml
+
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
+          verbose: true
 
   tag_on_release:
     name: Tag on release
@@ -56,18 +80,24 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
         with:
-          github_token: ${{ secrets.PATNAME }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          create_annotated_tag: true
 
-      - name: Create a Release
-        uses: elgohr/Github-Release-Action@v5
-        env:
-          GH_TOKEN: ${{ secrets.PATNAME }}
+      - name: Create a GitHub release
+        if: steps.tag_version.outputs.new_tag
+        uses: ncipollo/release-action@v1.14.0
         with:
-          title:  Release ${{ steps.tag_version.outputs.new_tag }}
           tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          draft: false
+          prerelease: false
