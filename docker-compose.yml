@@ -14,7 +14,7 @@ services:
       # 1Password Connect API endpoint
       - OP_CONNECT_HOST=http://connect-api:8080
       # 1Password Connect API token
-      - OP_CONNECT_TOKEN=<TOKEN GOES HERE>
+      #- OP_CONNECT_TOKEN=<TOKEN GOES HERE>
       - TZ=America/Phoenix
       # Flask environment (production/development)
       - FLASK_ENV=production
