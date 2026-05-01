@@ -2,8 +2,8 @@ name: weather-bridge
 
 services:
   weather-bridge:
-    image: weatherbridge:latest
-    container_name: weatherbridge
+    image: weather-bridge:latest
+    container_name: weather-bridge
 
     # Port mapping: container port 8080 to host port 8080
     ports:
@@ -13,7 +13,8 @@ services:
     environment:
       # 1Password Connect API endpoint
       - OP_CONNECT_HOST=http://connect-api:8080
-      # Timezone for the application
+      # 1Password Connect API token
+      - OP_CONNECT_TOKEN=<TOKEN GOES HERE>
       - TZ=America/Phoenix
       # Flask environment (production/development)
       - FLASK_ENV=production
@@ -43,8 +44,8 @@ services:
 
     # Labels for container management
     labels:
-      - com.weatherbridge.description="Weather data aggregation service"
-      - com.weatherbridge.version="1.0"
+      - com.weather-bridge.description="Weather data aggregation service"
+      - com.weather-bridge.version="1.0"
       - diun.enable=false
 
     # Logging configuration
@@ -60,7 +61,7 @@ services:
 
     # Volume mounts (optional - for persistent logs)
     # volumes:
-    #   - ./logs:/var/log/weatherbridge
+    #   - ./logs:/var/log/weather-bridge
 
   # Optional: 1Password Connect service (if running locally)
   # connect-api:
