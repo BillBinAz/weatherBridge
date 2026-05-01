@@ -1,4 +1,4 @@
-name: Test and Tag on Commit to Master
+name: Tag on Commit to Master
 
 on:
   push:
