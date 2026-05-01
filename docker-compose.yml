@@ -1,0 +1,80 @@
+name: weather-bridge
+
+services:
+  weather-bridge:
+    image: weatherbridge:latest
+    container_name: weatherbridge
+
+    # Port mapping: container port 8080 to host port 8080
+    ports:
+      - "8080:8080"
+
+    # Environment configuration
+    environment:
+      # 1Password Connect API endpoint
+      - OP_CONNECT_HOST=http://connect-api:8080
+      # Timezone for the application
+      - TZ=America/Phoenix
+      # Flask environment (production/development)
+      - FLASK_ENV=production
+      # Application port
+      - PORT=8080
+
+    # Health check for container orchestration
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Container restart policy
+    restart: unless-stopped
+
+    # Resource limits to prevent resource exhaustion
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Labels for container management
+    labels:
+      - com.weatherbridge.description="Weather data aggregation service"
+      - com.weatherbridge.version="1.0"
+      - diun.enable=false
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Network configuration
+    networks:
+      - weather-network
+
+    # Volume mounts (optional - for persistent logs)
+    # volumes:
+    #   - ./logs:/var/log/weatherbridge
+
+  # Optional: 1Password Connect service (if running locally)
+  # connect-api:
+  #   image: 1password/connect-api:latest
+  #   container_name: op-connect-api
+  #   environment:
+  #     - DEBUG=false
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - weather-network
+  #   restart: unless-stopped
+
+networks:
+  weather-network:
+    driver: bridge
+
