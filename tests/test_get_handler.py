@@ -21,7 +21,7 @@ class TestGetHandler(unittest.TestCase):
         response = self.app.get('/weather')
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content_type, 'text/json; charset=utf-8')
+        self.assertEqual(response.content_type, 'application/json; charset=utf-8')
         self.assertEqual(response.get_data(as_text=True), '{"test": "data"}')
         mock_get_weather.assert_called_once()
 
