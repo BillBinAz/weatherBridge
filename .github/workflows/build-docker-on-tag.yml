@@ -3,7 +3,7 @@ name: Build Docker on Tag
 on:
   push:
     tags:
-      - 'v*'
+      - '**'
 
 permissions:
   contents: read
