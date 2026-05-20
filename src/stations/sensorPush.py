@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 import datetime as dt
+import os
+
 import requests
 import logging
 import json
 import utilities.connect as connect
 import utilities.conversions as conversions
 
-SECRET_FILE = "./secret/sensor_push"
 AUTHORIZE_URL = "https://api.sensorpush.com/api/v1/oauth/authorize"
 ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"
@@ -17,7 +18,7 @@ HUMIDOR_ID = "16869529"
 GARAGE_ID = "16803031"
 SAFE_ID = "16866908"
 SERVER_RACK = "16867526"
-CONNECT_ITEM_ID = "axpjey2v3x2szvumkjukz2w5m4"
+CONNECT_ITEM_ID = os.getenv("SENSOR_PUSH_CONNECT_ITEM_ID")
 
 
 def get_authorization():

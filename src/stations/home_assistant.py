@@ -1,52 +1,16 @@
 #!/usr/bin/python3
 import datetime as dt
+import os
+
 import requests
 import logging
 import json
 import utilities.connect as connect
 import re
+import functools
 
-CONNECT_ITEM_ID = "r6menry2h3yxd7nrfjgop7oktu"
-HOME_ASSISTANT_URL = "https://home-assistant.evilminions.org:8123/api/states/"
-ENTITY_ID_OFFICE_TEMPERATURE = "sensor.bills_office_temperature"
-ENTITY_ID_OFFICE_OCCUPANCY = "binary_sensor.bills_office_occupancy"
-ENTITY_ID_LEFT_BEDROOM_TEMPERATURE = "sensor.ambers_office_temperature"
-ENTITY_ID_LEFT_BEDROOM_OCCUPANCY = "binary_sensor.ambers_office_occupancy"
-ENTITY_ID_RIGHT_BEDROOM_TEMPERATURE = "sensor.cheese_room_temperature"
-ENTITY_ID_RIGHT_BEDROOM_OCCUPANCY = "binary_sensor.cheese_room_occupancy"
-ENTITY_ID_LIVING_ROOM_TEMPERATURE = "sensor.great_room_temperature"
-ENTITY_ID_LIVING_ROOM_OCCUPANCY = "binary_sensor.great_room_occupancy"
-ENTITY_ID_MASTER_BEDROOM_TEMPERATURE = "sensor.master_bedroom_temperature"
-ENTITY_ID_MASTER_BEDROOM_OCCUPANCY = "binary_sensor.master_bedroom_occupancy"
-ENTITY_ID_HALLWAY_TEMPERATURE = "sensor.shotgun_temperature"
-ENTITY_ID_HALLWAY_OCCUPANCY = "binary_sensor.shotgun_occupancy"
-ENTITY_ID_HALLWAY_HUMIDITY = "sensor.shotgun_humidity"
-ENTITY_ID_HALLWAY_THERMOSTAT = "climate.shotgun"
-ENTITY_ID_GARAGE_SINGLE = "binary_sensor.garagedoorsingle_sensor_state_any"
-ENTITY_ID_GARAGE_DOUBLE = "binary_sensor.garagedoordouble_sensor_state_any"
-ENTITY_ID_HUMIDOR_TEMPERATURE = "sensor.humidorsensor_air_temperature"
-ENTITY_ID_HUMIDOR_HUMIDITY = "sensor.humidorsensor_humidity"
-ENTITY_ID_SAFE_TEMPERATURE = "sensor.safesensor_air_temperature"
-ENTITY_ID_SAFE_HUMIDITY = "sensor.safesensor_humidity"
-ENTITY_ID_SAFE_MOTION = "binary_sensor.safesensor_sensor_state_any"
-ENTITY_ID_SAFE_LUX = "sensor.safesensor_illuminance"
-
-
-ENTITY_ID_ALARM_GARAGE = "binary_sensor.garage_entry_door"
-ENTITY_ID_ALARM_GUEST_BEDROOMS = "binary_sensor.guest_bedrooms_and_bath"
-ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS = "binary_sensor.great_room_windows"
-ENTITY_ID_ALARM_MASTER_BEDROOM_WINDOWS = "binary_sensor.master_bedroom_window"
-ENTITY_ID_ALARM_GREAT_ROOM_FRENCH_DOORS = "binary_sensor.great_room_french_doors"
-ENTITY_ID_ALARM_MASTER_BATHROOM_WINDOWS = "binary_sensor.master_bathroom_windows"
-ENTITY_ID_ALARM_FRONT_ENTRY_DOOR = "binary_sensor.front_entry_door"
-ENTITY_ID_ALARM_DEN = "binary_sensor.den"
-ENTITY_ID_ALARM_DINING_ROOM = "binary_sensor.dining_room_window"
-ENTITY_ID_ALARM_BACK_PATIO_DOOR = "binary_sensor.back_patio_door"
-ENTITY_ID_ALARM_GREAT_ROOM_MOTION = "binary_sensor.great_room_motion"
-ENTITY_ID_ALARM_MASTER_BEDROOM_MOTION = "binary_sensor.master_bedroom_motion"
-ENTITY_ID_ALARM_STATUS_LABEL = "sensor.home_alarm_keypad"
-ENTITY_ID_ALARM_STATUS = "alarm_control_panel.home_alarm"
-
+CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
+HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL")
 
 def get_bearer_token():
     try:
@@ -110,7 +74,7 @@ def get_garage_door(bearer_token, key, s):
         return 0
 
 
-def get_zone_status(bearer_token, key, s):
+def get_on_off_state(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     if sensor_data is None:
         return 0
@@ -143,91 +107,53 @@ def get_alarm_status(bearer_token, key, s):
         return 0
 
 
-def get_alarm_data(weather_data, bearer_token, s):
-
-    is_closed = 1
-
-    weather_data.alarm.back_patio_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_BACK_PATIO_DOOR, s)
-    if weather_data.alarm.back_patio_door == 0:
-        is_closed = 0
-
-    weather_data.alarm.den_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DEN, s)
-    if weather_data.alarm.den_window == 0:
-        is_closed = 0
-
-    weather_data.alarm.dining_room_window = get_zone_status(bearer_token, ENTITY_ID_ALARM_DINING_ROOM, s)
-    if weather_data.alarm.dining_room_window == 0:
-        is_closed = 0
-
-    weather_data.alarm.front_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_FRONT_ENTRY_DOOR, s)
-    if weather_data.alarm.front_entry_door == 0:
-        is_closed = 0
-
-    weather_data.alarm.great_room_french_doors = get_zone_status(bearer_token,
-                                                                 ENTITY_ID_ALARM_GREAT_ROOM_FRENCH_DOORS, s)
-    if weather_data.alarm.great_room_french_doors == 0:
-        is_closed = 0
-
-    weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
-    if weather_data.alarm.great_room_motion == 0:
-        is_closed = 0
-
-    weather_data.alarm.great_room_windows = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_WINDOWS, s)
-    if weather_data.alarm.great_room_windows == 0:
-        is_closed = 0
-
-    weather_data.alarm.guest_bedrooms_bath = get_zone_status(bearer_token, ENTITY_ID_ALARM_GUEST_BEDROOMS, s)
-    if weather_data.alarm.guest_bedrooms_bath == 0:
-        is_closed = 0
-
-    weather_data.alarm.master_bathroom_windows = get_zone_status(bearer_token,
-                                                                 ENTITY_ID_ALARM_MASTER_BATHROOM_WINDOWS, s)
-    if weather_data.alarm.master_bathroom_windows == 0:
-        is_closed = 0
-
-    weather_data.alarm.master_bedroom_window = get_zone_status(bearer_token,
-                                                               ENTITY_ID_ALARM_MASTER_BEDROOM_WINDOWS, s)
-    if weather_data.alarm.den_window == 0:
-        is_closed = 0
-
-    weather_data.alarm.all_zones_closed = is_closed
-
-    # motion
-    weather_data.alarm.great_room_motion = get_zone_status(bearer_token, ENTITY_ID_ALARM_GREAT_ROOM_MOTION, s)
-    weather_data.alarm.master_bedroom_motion = get_zone_status(bearer_token,
-                                                               ENTITY_ID_ALARM_MASTER_BEDROOM_MOTION, s)
-
-    # garage
-    weather_data.alarm.garage_entry_door = get_zone_status(bearer_token, ENTITY_ID_ALARM_GARAGE, s)
-
-    # alarm status
-    weather_data.alarm.status_label = get_alarm_label(bearer_token, ENTITY_ID_ALARM_STATUS_LABEL, s)
-    weather_data.alarm.status = get_alarm_status(bearer_token, ENTITY_ID_ALARM_STATUS, s)
-
-    # All Zones Closed
+def get_thermostat_data(weather_data, key, object_path, bearer_token, s):
 
 
+    sensor_data = get_sensor_data(bearer_token, key, s)
 
-def get_thermostat_data(weather_data, bearer_token, s):
+    path = object_path + ".heat_set"
+    set_nested_attr(weather_data, path, sensor_data["attributes"]["target_temp_high"])
 
-    sensor_data = get_sensor_data(bearer_token, ENTITY_ID_HALLWAY_THERMOSTAT, s)
+    path = object_path + ".cool_set"
+    set_nested_attr(weather_data, path, sensor_data["attributes"]["target_temp_low"])
 
-    weather_data.hallway_thermostat.heat_set = sensor_data["attributes"]["target_temp_low"]
-    weather_data.hallway_thermostat.cool_set = sensor_data["attributes"]["target_temp_high"]
-    weather_data.hallway_thermostat.humidity = sensor_data["attributes"]["current_humidity"]
-    weather_data.hallway_thermostat.fan = sensor_data["attributes"]["fan_mode"][:10].title().strip()
-    weather_data.hallway_thermostat.temp = sensor_data["attributes"]["current_temperature"]
-    weather_data.hallway_thermostat.state = sensor_data["attributes"]["hvac_action"][:10].title().strip()
+    path = object_path + ".humidity"
+    set_nested_attr(weather_data, path, sensor_data["attributes"]["current_humidity"])
+
+    path = object_path + ".fan"
+    set_nested_attr(weather_data, path, sensor_data["attributes"]["fan_mode"][:10].title().strip())
+
+    path = object_path + ".temp"
+    set_nested_attr(weather_data, path, sensor_data["attributes"]["current_temperature"])
+
+    path = object_path + ".state"
+    set_nested_attr(weather_data, path, sensor_data["attributes"]["hvac_action"][:10].title().strip())
 
     mode = sensor_data["attributes"]["preset_mode"]
+    path = object_path + ".mode"
     if sensor_data is None:
         return
     if sensor_data["state"] == "off":
-        weather_data.hallway_thermostat.mode = "Off"
+        set_nested_attr(weather_data, path, "Off")
     elif mode == "temp":
-        weather_data.hallway_thermostat.mode = "Override"
+        set_nested_attr(weather_data, path, "Override")
     else:
-        weather_data.hallway_thermostat.mode = mode[:10].title().strip()
+        set_nested_attr(weather_data, path, mode[:10].title().strip())
+
+
+def set_nested_attr(obj, delimited_str, value, delimiter='.'):
+    """
+    Traverses an object dynamically using a delimited string
+    and sets the value of the final attribute.
+    """
+    attributes = delimited_str.split(delimiter)
+
+    # Get the parent object of the target attribute
+    parent_obj = functools.reduce(getattr, attributes[:-1], obj)
+
+    # Set the new value on the target attribute
+    setattr(parent_obj, attributes[-1], value)
 
 
 def get_weather(weather_data):
@@ -239,43 +165,32 @@ def get_weather(weather_data):
         if not bearer_token:
             raise Exception("No Data from home-assistant:BearerToken.")
         #
-        # Get Office
-        weather_data.office.temp = get_temperature(bearer_token, ENTITY_ID_OFFICE_TEMPERATURE, s)
-        weather_data.office.occupied = get_occupancy(bearer_token, ENTITY_ID_OFFICE_OCCUPANCY, s)
 
-        # Get Left Bedroom
-        weather_data.bedroom_left.temp = get_temperature(bearer_token, ENTITY_ID_LEFT_BEDROOM_TEMPERATURE, s)
-        weather_data.bedroom_left.occupied = get_occupancy(bearer_token, ENTITY_ID_LEFT_BEDROOM_OCCUPANCY, s)
+        for key, value in os.environ.items():
+            if key.endswith("_SRC"):
+                dest_key = key.replace("_SRC", "_DEST")
+                id_from_key = os.getenv(key)
 
-        # Get Right Bedroom
-        weather_data.bedroom_right.temp = get_temperature(bearer_token, ENTITY_ID_RIGHT_BEDROOM_TEMPERATURE, s)
-        weather_data.bedroom_right.occupied = get_occupancy(bearer_token, ENTITY_ID_RIGHT_BEDROOM_OCCUPANCY, s)
+                if not id_from_key:
+                    raise Exception("ID not found from key: " + key + " from home-assistant:weather_data.")
 
-        # Get Living Room
-        weather_data.living_room.temp = get_temperature(bearer_token, ENTITY_ID_LIVING_ROOM_TEMPERATURE, s)
-        weather_data.living_room.occupied = get_occupancy(bearer_token, ENTITY_ID_LIVING_ROOM_OCCUPANCY, s)
+                object_path = os.getenv(dest_key)
+                if not object_path:
+                    raise Exception("object_path not found from key: " + dest_key + " from home-assistant:weather_data.")
 
-        # Get Master Bedroom
-        weather_data.master_bedroom.temp = get_temperature(bearer_token, ENTITY_ID_MASTER_BEDROOM_TEMPERATURE, s)
-        weather_data.master_bedroom.occupied = get_occupancy(bearer_token, ENTITY_ID_MASTER_BEDROOM_OCCUPANCY, s)
+                if  "THERMOSTAT" in key:
+                    get_thermostat_data(weather_data, id_from_key, object_path, bearer_token, s)
+                elif "OCCUPANCY_SRC" in key:
+                    set_nested_attr(weather_data, object_path, get_occupancy(bearer_token, id_from_key, s))
+                elif "TEMPERATURE_SRC" in key or "HUMIDITY_SRC" in key:
+                    set_nested_attr(weather_data, object_path, get_temperature(bearer_token, id_from_key, s))
+                elif "ALARM_STATUS_LABEL" in key:
+                    set_nested_attr(weather_data, object_path, get_alarm_label(bearer_token, id_from_key, s))
+                elif "ALARM_STATUS" in key:
+                    set_nested_attr(weather_data, object_path, get_alarm_status(bearer_token, id_from_key, s))
+                else:
+                    set_nested_attr(weather_data, object_path, get_on_off_state(bearer_token, id_from_key, s))
 
-        # Humidor Humidity
-        weather_data.humidor.humidity = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_HUMIDITY, s)
-        weather_data.humidor.temp = get_temperature(bearer_token, ENTITY_ID_HUMIDOR_TEMPERATURE, s)
-
-        # Get Hallway
-        weather_data.hallway_thermostat.sensor.temp = get_temperature(bearer_token, ENTITY_ID_HALLWAY_TEMPERATURE, s)
-        weather_data.hallway_thermostat.sensor.occupied = get_occupancy(bearer_token, ENTITY_ID_HALLWAY_OCCUPANCY, s)
-
-        # Get Garage
-        weather_data.alarm.single_garage = get_garage_door(bearer_token, ENTITY_ID_GARAGE_SINGLE, s)
-        weather_data.alarm.double_garage = get_garage_door(bearer_token, ENTITY_ID_GARAGE_DOUBLE, s)
-
-        # get Thermostat
-        get_thermostat_data(weather_data, bearer_token, s)
-
-        # Get Alarm
-        get_alarm_data(weather_data, bearer_token, s)
 
     except Exception as e:
         logging.error("Unable to get home-assistant:get_weather " + str(e))

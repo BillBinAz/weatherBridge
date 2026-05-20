@@ -11,16 +11,11 @@ services:
 
     # Environment configuration
     environment:
-      # 1Password Connect API endpoint
-      - OP_CONNECT_HOST=http://connect-api:8080
-      # 1Password Connect API token
       #- OP_CONNECT_TOKEN=<TOKEN GOES HERE>
-      - TZ=America/Phoenix
-      # Flask environment (production/development)
       - FLASK_ENV=production
-      # Application port
       - PORT=8080
-
+    env_file:
+      - /weather-bridge/az.env  # Loads variables from this specific file
     # Health check for container orchestration
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
