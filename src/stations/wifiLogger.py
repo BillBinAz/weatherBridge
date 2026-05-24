@@ -2,8 +2,10 @@
 import json
 import logging
 import os
+import traceback
 
 import requests
+import tb
 
 import utilities.conversions as conversion_utilities
 from weather.data import CLIMATE_TYPE_DAVIS
@@ -97,8 +99,14 @@ def get_weather(home):
         home.climate.sensors.append(climate_sensor)
 
     except json.JSONDecodeError as e:
-        logging.error(f"JSON decode error in wifiLogger: {e}")
+        traceback.print_exc()
+        logging.error(f"JSON decode error in wifiLogger: {e} Error occurred on line: {tb[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
     except KeyError as e:
-        logging.error(f"Missing expected key in wifiLogger data: {e}")
+        traceback.print_exc()
+        logging.error(f"Missing expected key in wifiLogger data: {e} Error occurred on line: {tb[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
     except Exception as e:
-        logging.error(f"Unable to get wifiLogger data: {e}")
+        traceback.print_exc()
+        logging.error(f"Unable to get wifiLogger data: {e} Error occurred on line: {tb[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")

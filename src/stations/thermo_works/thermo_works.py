@@ -5,6 +5,8 @@ import logging
 import os
 import sys
 
+import tb
+
 from stations.thermo_works.get_devices_for_user import get_devices_for_user
 import utilities.conversions as conversions
 from weather.data import CLIMATE_TYPE_THERMOWORKS_NODE, CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY, CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL
@@ -58,7 +60,7 @@ def get_weather(home):
             if sensor is not None:
                 if sensor.type == CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY:
 
-                    # SAFE 0: Ambient, 1: Humidity
+                    # 0: Ambient, 1: Humidity
                     if device_channels[0].value is not None:
                         sensor.temperature  = conversions.format_f(device_channels[0].value)
 
@@ -78,8 +80,7 @@ def get_weather(home):
                         sensor.temperature_probe_1  = conversions.format_f(device_channels[2].value)
                     home.climate.sensors.append(sensor)
                 elif sensor.type == CLIMATE_TYPE_THERMOWORKS_NODE:
-                    # GARAGE 0: Ambient, 1: Freezer
-
+                    #  0: Ambient, 1: Freezer
                     if device_channels[0].value is not None:
                         sensor.temperature = conversions.format_f(device_channels[0].value)
 
@@ -88,11 +89,11 @@ def get_weather(home):
                     home.climate.sensors.append(sensor)
 
     except Exception as e:
-        logging.error("Unable to get thermo_works:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to get thermo_works:get_weather " + str(e))
+        logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {tb[-1][1]}")
+        print(dt.datetime.now().time(), f"Unable to get thermo_works:get_weather {e}")
     finally:
         e = sys.exc_info()[0]
         if e:
-            logging.error("Unable to get thermo_works:get_weather " + str(e))
-            print(dt.datetime.now().time(), "Unable to get thermo_works:get_weather " + str(e))
+            logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {tb[-1][1]}")
+            print(dt.datetime.now().time(), f"Unable to get thermo_works:get_weather {e}")
     return

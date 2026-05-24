@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 import os
+import traceback
 from typing import Any
 
 import requests
 import logging
 import json
 
+import tb
 from requests import Session
 
 import utilities.connect as connect
@@ -219,6 +221,8 @@ def get_weather(home):
             home.alarm.label = get_alarm_label(bearer_token, "sensor.home_alarm_keypad", session)
 
     except Exception as e:
-        logging.error(f"Unable to get home-assistant:get_weather {e}")
+        traceback.print_exc()
+        logging.error(f"Unable to get home-assistant:get_weather {e} Error occurred on line: {tb[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get assistant:get_weather ")
     finally:
         session.close()

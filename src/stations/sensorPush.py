@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import datetime as dt
 import os
+import traceback
 
 import requests
 import logging
@@ -178,6 +179,7 @@ def get_weather(home):
                 home.climate.sensors.append(climate_sensor)
 
     except Exception as e:
-        logging.error("Unable to get sensor_push:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather " + str(e))
+        traceback.print_exc()
+        logging.error(f"Unable to get sensor_push:get_weather {e} Error occurred on line: {tb[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather ")
     return
