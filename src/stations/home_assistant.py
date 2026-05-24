@@ -2,7 +2,6 @@
 import os
 import traceback
 from typing import Any
-import datetime as dt
 import requests
 import logging
 logger = logging.getLogger(__name__)
@@ -14,7 +13,7 @@ import re
 
 from utilities import conversions
 from weather.data import AlarmZone, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
-    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door
+    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door, DEFAULT_TEMPERATURE
 
 CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
 HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL")
@@ -154,6 +153,7 @@ def add_climate_sensor(bearer_token: Any | None, config_data: str, home, tempera
     if climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
         populate_ecobee_sensor(bearer_token, climate_sensor, session)
         return climate_sensor
+    return None
 
 def add_alarm_zone(bearer_token: Any | None, config_data: str, home,  s: Session):
     alarm_zone = AlarmZone(config_data)
@@ -208,7 +208,7 @@ def get_weather(home, dt=None):
                 if climate_sensor:
                     home.climate.sensors.append(climate_sensor)
                     if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT or climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
-                        if climate_sensor.temperature is not None:
+                        if climate_sensor.temperature is not DEFAULT_TEMPERATURE:
                             temperature_sum += float(climate_sensor.temperature)
                             temperature_count += 1
 
@@ -222,6 +222,6 @@ def get_weather(home, dt=None):
     except Exception as e:
         traceback.print_exc()
         logging.error(f"Unable to get home-assistant:get_weather {e}")
-        print(dt.datetime.now().time(), "Unable to get assistant:get_weather ")
+        print("Unable to get assistant:get_weather ")
     finally:
         session.close()
