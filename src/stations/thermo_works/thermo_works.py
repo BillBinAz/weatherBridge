@@ -4,6 +4,8 @@ import datetime as dt
 import logging
 import os
 import sys
+import traceback
+
 import tb
 
 from stations.thermo_works.get_devices_for_user import get_devices_for_user
@@ -88,11 +90,13 @@ def get_weather(home):
                     home.climate.sensors.append(sensor)
 
     except Exception as e:
-        logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {tb[-1][1]}")
+        traceback.print_exc()
+        logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {traceback[-1][1]}")
         print(dt.datetime.now().time(), f"Unable to get thermo_works:get_weather {e}")
     finally:
         e = sys.exc_info()[0]
         if e:
-            logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {tb[-1][1]}")
+            traceback.print_exc()
+            logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {traceback[-1][1]}")
             print(dt.datetime.now().time(), f"Unable to get thermo_works:get_weather {e}")
     return

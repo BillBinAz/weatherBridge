@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import traceback
 from stations import wifiLogger, home_assistant, sensorPush
 from weather import data
 from stations.thermo_works import thermo_works
@@ -20,7 +21,7 @@ def get_weather():
         sensorPush.get_weather(cur_weather)
 
     except Exception as e:
-        logging.error("Unable to get station:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
-
+        traceback.print_exc()
+        logging.error(f"Unable to get wifiLogger data: {e} Error occurred on line: {traceback[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get get station:get_weather ")
     return cur_weather

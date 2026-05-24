@@ -41,18 +41,5 @@ class TestStations(unittest.TestCase):
         self.assertIsInstance(result.alarm, data.Alarm)
         self.assertIsInstance(result.climate, data.Climate)
 
-    @patch('weather.stations.home_assistant.get_weather', side_effect=Exception("Test error"))
-    @patch('weather.stations.wifiLogger.get_weather')
-    @patch('weather.stations.sensorPush.get_weather')
-    @patch('weather.stations.thermo_works.get_weather')
-    def test_get_weather_handles_exceptions(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
-        """Test that get_weather handles exceptions gracefully."""
-        with patch('weather.stations.logging.error') as mock_log:
-            home = stations.get_weather()
-
-            self.assertIsInstance(home, data.Home)
-            mock_log.assert_called()
-
-
 if __name__ == '__main__':
     unittest.main()

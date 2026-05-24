@@ -221,7 +221,7 @@ def get_weather(home, dt=None):
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(f"Unable to get home-assistant:get_weather {e} Error occurred on line: {tb[-1][1]}")
+        logging.error(f"Unable to get home-assistant:get_weather {e} Error occurred on line: {traceback[-1][1]}")
         print(dt.datetime.now().time(), "Unable to get assistant:get_weather ")
     finally:
         session.close()

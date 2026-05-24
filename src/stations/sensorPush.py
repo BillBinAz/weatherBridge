@@ -177,6 +177,6 @@ def get_weather(home):
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(f"Unable to get sensor_push:get_weather {e} Error occurred on line: {tb[-1][1]}")
+        logging.error(f"Unable to get sensor_push:get_weather {e} Error occurred on line: {traceback[-1][1]}")
         print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather ")
     return
