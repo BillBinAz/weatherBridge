@@ -169,6 +169,6 @@ class Home(object):
         self.doors = []
         self.date_generated = dt.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
-        def to_json(self):
-            return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 

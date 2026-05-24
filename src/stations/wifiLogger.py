@@ -1,14 +1,12 @@
 #!/usr/bin/python3
-
-import datetime as dt
 import json
+import logging
 import os
 
 import requests
-import logging
-import sys
+
 import utilities.conversions as conversion_utilities
-from weather.data import Climate, CLIMATE_TYPE_DAVIS
+from weather.data import CLIMATE_TYPE_DAVIS
 
 TYPES_PROCESSED = [CLIMATE_TYPE_DAVIS]
 S_OK = 200
@@ -28,21 +26,16 @@ SPA_TEMP_INDEX = 0
 
 
 def get_data(url):
-    #
-    # get the last 5 minutes worth of data
+    """Retrieve the last 5 minutes of data from wifiLogger."""
     try:
-        #
-        # Pull the data
-        ret = requests.get(url, verify=False)
-        ret.close()
-        if ret.status_code != 200:
-            logging.error("Bad response from wifilogger " + str(ret.status_code))
-            print(dt.datetime.now().time(), " -  Bad response from wifilogger. " + str(ret.status_code))
-        return json.loads(ret.content.decode())
+        response = requests.get(url, verify=False)
+        if response.status_code != 200:
+            logging.error(f"Bad response from wifilogger: {response.status_code}")
+            return None
+        return json.loads(response.content.decode())
     except Exception as e:
-        logging.error("Unable to parse wifilogger " + str(e))
-        print(dt.datetime.now().time(), "Unable to parse wifilogger " + str(e))
-    return
+        logging.error(f"Unable to parse wifilogger: {e}")
+        return None
 
 
 def convert_to_float(value, precision):
@@ -53,15 +46,16 @@ def convert_to_float(value, precision):
 
 
 def check_types(config_data):
-    for key, value in os.environ.items():
-        result = config_data.split("|")
-        if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
-            return True
-    return False
+    """Check if config_data type is in TYPES_PROCESSED."""
+    try:
+        type_id = int(config_data.split("|")[0])
+        return type_id in TYPES_PROCESSED
+    except (ValueError, IndexError):
+        return False
 
 
 def get_weather(home):
-
+    """Populate home climate sensor with wifiLogger data."""
     try:
         found = False
         for key, value in os.environ.items():
@@ -79,7 +73,7 @@ def get_weather(home):
         if not wifi_logger_data:
             return
 
-        # Temperature - Back yard
+        # Temperature and humidity
         climate_sensor.temperature = convert_to_float(wifi_logger_data[TEMPERATURE_OUTDOOR], 2)
         climate_sensor.humidity = convert_to_float(wifi_logger_data[HUMIDITY_OUTDOOR], 2)
         climate_sensor.dew_point = convert_to_float(wifi_logger_data[DEP_POINT], 2)
@@ -94,7 +88,7 @@ def get_weather(home):
         climate_sensor.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
         climate_sensor.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
 
-        # spa
+        # Spa temperature
         climate_sensor.spa_temp = convert_to_float(wifi_logger_data[SPA_TEMP_ARRAY][SPA_TEMP_INDEX], 2)
 
         # Pressure
@@ -103,13 +97,8 @@ def get_weather(home):
         home.climate.sensors.append(climate_sensor)
 
     except json.JSONDecodeError as e:
-        logging.error("Unable to parse wifi_logger_data:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to parse wifi_logger_data:get_weather " + str(e))
+        logging.error(f"JSON decode error in wifiLogger: {e}")
+    except KeyError as e:
+        logging.error(f"Missing expected key in wifiLogger data: {e}")
     except Exception as e:
-        logging.error("Unable to parse wifi_logger_data: get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to parse wifi_logger_data: get_weather " + str(e))
-    except:
-        e = sys.exc_info()[0]
-        logging.error("Unable to get wifi_logger_data:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to get wifi_logger_data:get_weather " + str(e))
-    return
+        logging.error(f"Unable to get wifiLogger data: {e}")

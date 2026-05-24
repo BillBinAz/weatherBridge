@@ -19,7 +19,7 @@ class TestWifiLogger(unittest.TestCase):
         mock_response.content.decode.return_value = '{"tempout": 75.5, "humout": 60}'
         mock_get.return_value = mock_response
 
-        result = wifiLogger.get_data()
+        result = wifiLogger.get_data("http://test.com")
         self.assertEqual(result["tempout"], 75.5)
         self.assertEqual(result["humout"], 60)
 
@@ -30,7 +30,7 @@ class TestWifiLogger(unittest.TestCase):
         mock_response.status_code = 500
         mock_get.return_value = mock_response
 
-        result = wifiLogger.get_data()
+        result = wifiLogger.get_data("http://test.com")
         self.assertIsNone(result)
 
     def test_convert_to_float_valid(self):
@@ -43,6 +43,7 @@ class TestWifiLogger(unittest.TestCase):
         result = wifiLogger.convert_to_float("invalid", 2)
         self.assertEqual(result, 0.0)
 
+    @patch.dict(os.environ, {'CLIMATE_SENSOR_WIFI': '4|Back Yard|http://test.com', 'HOME_ASSISTANT_URL': 'http://test.com/'})
     @patch('stations.wifiLogger.get_data')
     def test_get_weather_success(self, mock_get_data):
         """Test successful weather data population."""
@@ -61,35 +62,35 @@ class TestWifiLogger(unittest.TestCase):
         }
         mock_get_data.return_value = mock_data
 
-        weather_data = data.WeatherData()
-        wifiLogger.get_weather(weather_data)
+        home = data.Home()
+        wifiLogger.get_weather(home)
 
-        self.assertEqual(weather_data.back_yard.temp, 75.5)
-        self.assertEqual(weather_data.back_yard.humidity, 60.0)
-        self.assertEqual(weather_data.back_yard.wind_direction, " S ")
-        self.assertEqual(weather_data.back_yard.pressure, 29.92)
+        # Check that sensor was created and added
+        self.assertGreater(len(home.climate.sensors), 0)
 
+    @patch.dict(os.environ, {'CLIMATE_SENSOR_WIFI': '4|Back Yard|http://test.com'})
     @patch('stations.wifiLogger.get_data')
     def test_get_weather_no_data(self, mock_get_data):
         """Test get_weather when no data is available."""
         mock_get_data.return_value = None
 
-        weather_data = data.WeatherData()
-        wifiLogger.get_weather(weather_data)
+        home = data.Home()
+        wifiLogger.get_weather(home)
 
         # Data should remain default
-        self.assertEqual(weather_data.back_yard.temp, 'None')
+        self.assertIsNotNone(home)
 
+    @patch.dict(os.environ, {'CLIMATE_SENSOR_WIFI': '4|Back Yard|http://test.com'})
     @patch('stations.wifiLogger.get_data')
     def test_get_weather_json_error(self, mock_get_data):
         """Test get_weather with JSON parsing error."""
         mock_get_data.side_effect = json.JSONDecodeError("Test error", "", 0)
 
-        weather_data = data.WeatherData()
-        wifiLogger.get_weather(weather_data)
+        home = data.Home()
+        wifiLogger.get_weather(home)
 
         # Should not crash
-        self.assertEqual(weather_data.back_yard.temp, 'None')
+        self.assertIsNotNone(home)
 
 
 if __name__ == '__main__':

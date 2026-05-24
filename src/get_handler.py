@@ -36,7 +36,7 @@ def get_weather():
         return weather_data.to_json(), 200, {'Content-Type': 'application/json; charset=utf-8'}
     except Exception as e:
         logger.error(f"Error retrieving weather data: {str(e)}")
-        return jsonify({'error': 'Failed to retrieve weather data'}), 500
+        return jsonify({'error': f'Failed to retrieve weather data: {str(e)}'}), 500
 
 
 @app.route("/health", methods=['GET'])
