@@ -4,7 +4,7 @@ import logging
 import os
 import traceback
 
-import dt
+import datetime as dt
 import requests
 import tb
 
