@@ -208,8 +208,9 @@ def get_weather(home, dt=None):
                 if climate_sensor:
                     home.climate.sensors.append(climate_sensor)
                     if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT or climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
-                        temperature_sum += float(climate_sensor.temperature)
-                        temperature_count += 1
+                        if climate_sensor.temperature is not None:
+                            temperature_sum += float(climate_sensor.temperature)
+                            temperature_count += 1
 
         if temperature_count > 0:
             home.climate.home_average_temperature = conversions.format_f(temperature_sum / temperature_count)
