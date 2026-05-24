@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import json
 import logging
+logger = logging.getLogger(__name__)
 import os
 import traceback
 

@@ -2,6 +2,7 @@
 import asyncio
 import datetime as dt
 import logging
+logger = logging.getLogger(__name__)
 import os
 import sys
 import traceback

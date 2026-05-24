@@ -13,7 +13,7 @@ def main():
         #
         # Get weather data from data sources
         weather_data = stations.get_weather()
-        print(weather_data)
+        print(weather_data.to_json())
 
     except Exception as e:
         logging.error("Unable to update IoX " + str(e))

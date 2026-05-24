@@ -5,6 +5,7 @@ from typing import Any
 
 import requests
 import logging
+logger = logging.getLogger(__name__)
 import json
 
 import tb
