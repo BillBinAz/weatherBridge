@@ -187,7 +187,7 @@ def check_types(config_data):
         return False
 
 
-def get_weather(home):
+def get_weather(home, dt=None):
     session = requests.Session()
     alarm_present = False
     try:
