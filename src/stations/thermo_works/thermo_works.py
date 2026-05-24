@@ -4,7 +4,6 @@ import datetime as dt
 import logging
 import os
 import sys
-
 import tb
 
 from stations.thermo_works.get_devices_for_user import get_devices_for_user

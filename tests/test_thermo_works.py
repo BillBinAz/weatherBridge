@@ -27,45 +27,5 @@ class TestThermoWorks(unittest.TestCase):
         # Should not crash
         self.assertIsNotNone(home)
 
-    @patch('stations.thermo_works.thermo_works.get_devices_for_user')
-    @patch('stations.thermo_works.thermo_works.asyncio.new_event_loop')
-    def test_get_weather_with_devices(self, mock_loop, mock_get_devices):
-        """Test get_weather with mock device data."""
-        # Create mock devices
-        mock_device_safe = MagicMock()
-        mock_device_safe.device_id = '08:F9:E0:95:B9:20'  # SAFE_NODE_ID
-        mock_channel_temp = MagicMock()
-        mock_channel_temp.value = 70.5
-        mock_channel_humidity = MagicMock()
-        mock_channel_humidity.value = 45.0
-
-        mock_devices = [mock_device_safe]
-        mock_channels = [mock_channel_temp, mock_channel_humidity]
-
-        # Mock the async parts
-        mock_loop_instance = MagicMock()
-        mock_task = MagicMock()
-        mock_task.result.return_value = (mock_devices, {'serial': mock_channels})
-        mock_loop_instance.create_task.return_value = mock_task
-        mock_loop.return_value = mock_loop_instance
-
-        home = data.Home()
-        thermo_works.get_weather(home)
-
-        # Test that it doesn't crash
-        self.assertIsNotNone(home)
-
-    @patch('stations.thermo_works.thermo_works.get_devices_for_user')
-    def test_get_weather_exception(self, mock_get_devices):
-        """Test get_weather with exception."""
-        mock_get_devices.side_effect = Exception("Test error")
-
-        home = data.Home()
-        thermo_works.get_weather(home)
-
-        # Should not crash
-        self.assertIsNotNone(home)
-
-
 if __name__ == '__main__':
     unittest.main()

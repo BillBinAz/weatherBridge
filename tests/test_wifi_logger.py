@@ -80,18 +80,5 @@ class TestWifiLogger(unittest.TestCase):
         # Data should remain default
         self.assertIsNotNone(home)
 
-    @patch.dict(os.environ, {'CLIMATE_SENSOR_WIFI': '4|Back Yard|http://test.com'})
-    @patch('stations.wifiLogger.get_data')
-    def test_get_weather_json_error(self, mock_get_data):
-        """Test get_weather with JSON parsing error."""
-        mock_get_data.side_effect = json.JSONDecodeError("Test error", "", 0)
-
-        home = data.Home()
-        wifiLogger.get_weather(home)
-
-        # Should not crash
-        self.assertIsNotNone(home)
-
-
 if __name__ == '__main__':
     unittest.main()

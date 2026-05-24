@@ -15,7 +15,7 @@ import re
 
 from utilities import conversions
 from weather.data import AlarmZone, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
-    CLIMATE_TYPE_DAVIS, CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door
+    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door
 
 CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
 HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL")
@@ -193,7 +193,7 @@ def get_weather(home):
     try:
         bearer_token = get_bearer_token()
         if not bearer_token:
-            raise Exception("No Data from home-assistant:BearerToken.")
+            raise Exception("No BearerToken for home-assistant.")
 
         home.alarm.all_zones_closed = 1
         temperature_sum = 0

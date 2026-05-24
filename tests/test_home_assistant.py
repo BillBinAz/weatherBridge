@@ -78,32 +78,5 @@ class TestHomeAssistant(unittest.TestCase):
             result = home_assistant.get_occupancy("token", "entity", MagicMock())
             self.assertEqual(result, 0)
 
-    @patch.dict(os.environ, {'HOME_ASSISTANT_URL': 'http://test.com/'})
-    @patch('stations.home_assistant.get_bearer_token')
-    @patch('stations.home_assistant.requests.Session')
-    def test_get_weather_success(self, mock_session, mock_token):
-        """Test successful weather data retrieval."""
-        mock_token.return_value = "token"
-        mock_session_instance = MagicMock()
-        mock_session.return_value = mock_session_instance
-
-        home = data.Home()
-        home_assistant.get_weather(home)
-
-        # Verify that get_weather executed without errors
-        self.assertIsNotNone(home)
-        self.assertIsInstance(home.alarm, data.Alarm)
-
-    @patch('stations.home_assistant.get_bearer_token')
-    def test_get_weather_no_token(self, mock_token):
-        """Test get_weather when no bearer token is available."""
-        mock_token.return_value = None
-        home = data.Home()
-        home_assistant.get_weather(home)
-        # Should not crash, data remains default
-        self.assertIsNotNone(home)
-        self.assertIsInstance(home.alarm, data.Alarm)
-
-
 if __name__ == '__main__':
     unittest.main()

@@ -15,21 +15,15 @@ ACCESS_TOKEN_URL = "https://api.sensorpush.com/api/v1/oauth/accesstoken"
 DATA_URL = "https://api.sensorpush.com/api/v1/samples"
 CALIBRATION_URL = "https://api.sensorpush.com/api/v1/devices/sensors"
 TIME_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
-FREEZER_ID = "16838664"
-HUMIDOR_ID = "16869529"
-GARAGE_ID = "16803031"
-SAFE_ID = "16866908"
-SERVER_RACK = "16867526"
 CONNECT_ITEM_ID = os.getenv("SENSOR_PUSH_CONNECT_ITEM_ID")
 TYPES_PROCESSED = [CLIMATE_TYPE_SENSOR_PUSH]
 
 def check_types(config_data):
-    for key, value in os.environ.items():
-        result = config_data.split("|")
-        if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
-            return True
-        if int(result[0]) == 0:
-            return True
+    result = config_data.split("|")
+    if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
+        return True
+    if int(result[0]) == 0:
+        return True
     return False
 
 def get_sensor_by_key(sensors, key):
