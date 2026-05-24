@@ -36,7 +36,7 @@ services:
       # Climate Sensors
       # type|ID|Label|[optional by type]
       - CLIMATE_SENSOR_1='5|climate.shotgun|thermostat'
-      - CLIMATE_SENSOR_2='6|shotgun|thermostat'
+      - CLIMATE_SENSOR_2='6|shotgun|hallway'
       - CLIMATE_SENSOR_3='6|bills_office|den'
       - CLIMATE_SENSOR_4='6|ambers_office|bedroom_left'
       - CLIMATE_SENSOR_5='6|cheese_room|bedroom_right'
@@ -47,9 +47,9 @@ services:
       - CLIMATE_SENSOR_10='7|10:06:1C:A6:4A:90|garage_freezer'
       - CLIMATE_SENSOR_11='9|B0:A7:32:CA:4B:F4|kitchen_refrigerator'
       - CLIMATE_SENSOR_12='4|back_yard|http://wifilogger.evilminions.org/wflexp.json'
-      - CLIMATE_SENSOR_13='10|16838664|Main Garage Freezer'
+      - CLIMATE_SENSOR_13='10|16838664|main_garage_freezer'
       - CLIMATE_SENSOR_15='10|16803031|office'
-      - CLIMATE_SENSOR_16='10|16866908|safe'
+      - CLIMATE_SENSOR_16='10|16866908|safe_1'
       - CLIMATE_SENSOR_17='10|16867526|rack'
       # FLASK
       - FLASK_ENV=production

@@ -8,7 +8,7 @@ import datetime as dt
 import logging
 
 def get_weather():
-    cur_weather = data.Home()
+    home = data.Home()
 
     try:
         # Configure logging
@@ -19,13 +19,18 @@ def get_weather():
             datefmt='%Y-%m-%d %H:%M:%S',
             level=logging.INFO
         )
-        home_assistant.get_weather(cur_weather)
-        wifiLogger.get_weather(cur_weather)
-        thermo_works.get_weather(cur_weather)
-        sensorPush.get_weather(cur_weather)
+        home_assistant.get_weather(home)
+        wifiLogger.get_weather(home)
+        thermo_works.get_weather(home)
+        sensorPush.get_weather(home)
+
+        home.climate.sensors.sort(key=lambda x: x.label)
+        home.alarm.zones.sort(key=lambda x: x.label)
+        home.doors.sort(key=lambda x: x.label)
 
     except Exception as e:
         traceback.print_exc()
         logging.error(f"Unable to get station data: {e} Error occurred on line: {traceback[-1][1]}")
         print(dt.datetime.now().time(), "Unable to get get station:get_weather ")
-    return cur_weather
+    return home
+
