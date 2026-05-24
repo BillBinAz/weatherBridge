@@ -102,13 +102,13 @@ def get_weather(home):
 
     except json.JSONDecodeError as e:
         traceback.print_exc()
-        logging.error(f"JSON decode error in wifiLogger: {e} Error occurred on line: {traceback[-1][1]}")
+        logging.error(f"JSON decode error in wifiLogger: {e}")
         print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
     except KeyError as e:
         traceback.print_exc()
-        logging.error(f"Missing expected key in wifiLogger data: {e} Error occurred on line: {traceback[-1][1]}")
+        logging.error(f"Missing expected key in wifiLogger data: {e}")
         print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
     except Exception as e:
         traceback.print_exc()
-        logging.error(f"Unable to get wifiLogger data: {e} Error occurred on line: {traceback[-1][1]}")
+        logging.error(f"Unable to get wifiLogger data: {e}")
         print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")

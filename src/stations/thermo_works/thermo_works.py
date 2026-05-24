@@ -16,12 +16,12 @@ from weather.data import CLIMATE_TYPE_THERMOWORKS_NODE, CLIMATE_TYPE_THERMOWORKS
 TYPES_PROCESSED = [CLIMATE_TYPE_THERMOWORKS_NODE, CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY, CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL]
 
 def check_types(config_data):
-    for key, value in os.environ.items():
-        result = config_data.split("|")
-        if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
-            return True
-        if int(result[0]) == 0:
-            return True
+    result = config_data.split("|")
+    if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
+        return True
+    if int(result[0]) == 0:
+        return True
+
     return False
 
 def get_sensor_by_key(sensors, key):
@@ -92,12 +92,12 @@ def get_weather(home):
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {traceback[-1][1]}")
+        logging.error(f"Unable to get thermo_works:get_weather {e}")
         print(dt.datetime.now().time(), f"Unable to get thermo_works:get_weather {e}")
     finally:
         e = sys.exc_info()[0]
         if e:
             traceback.print_exc()
-            logging.error(f"Unable to get thermo_works:get_weather {e} Error occurred on line: {traceback[-1][1]}")
+            logging.error(f"Unable to get thermo_works:get_weather {e}")
             print(dt.datetime.now().time(), f"Unable to get thermo_works:get_weather {e}")
     return
