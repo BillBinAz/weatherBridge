@@ -33,7 +33,7 @@ class TestStations(unittest.TestCase):
         def set_temps(weather_data):
             weather_data.bedroom_left.temp = "70"
             weather_data.bedroom_right.temp = "72"
-            weather_data.hallway_thermostat.sensor.temp = "71"
+            weather_data.hallway_thermostat.sensors.temp = "71"
             weather_data.living_room.temp = "73"
             weather_data.master_bedroom.temp = "74"
             weather_data.office.temp = "69"

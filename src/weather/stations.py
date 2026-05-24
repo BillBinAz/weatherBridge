@@ -8,7 +8,7 @@ import utilities.conversions as conv
 
 
 def get_weather():
-    cur_weather = data.WeatherData()
+    cur_weather = data.Home()
 
     try:
         logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
@@ -16,17 +16,8 @@ def get_weather():
 
         home_assistant.get_weather(cur_weather)
         wifiLogger.get_weather(cur_weather)
-        sensorPush.get_weather(cur_weather)
         thermo_works.get_weather(cur_weather)
-
-        # calculate average house temp
-        cur_weather.whole_house_fan.houseTemp \
-            = conv.get_average_from_list([cur_weather.bedroom_left.temp,
-                                          cur_weather.bedroom_right.temp,
-                                          cur_weather.hallway_thermostat.sensor.temp,
-                                          cur_weather.living_room.temp,
-                                          cur_weather.master_bedroom.temp,
-                                          cur_weather.office.temp])
+        sensorPush.get_weather(cur_weather)
 
     except Exception as e:
         logging.error("Unable to get station:get_weather " + str(e))

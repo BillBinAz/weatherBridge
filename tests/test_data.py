@@ -14,7 +14,7 @@ class TestData(unittest.TestCase):
         weather = data.WeatherData()
 
         # Check main weather station
-        self.assertIsInstance(weather.back_yard, data.SensorMajor)
+        self.assertIsInstance(weather.back_yard, data.SensorDavisWeatherStation)
         self.assertEqual(weather.back_yard.temp, 'None')
 
         # Check alarm
@@ -26,12 +26,12 @@ class TestData(unittest.TestCase):
         self.assertEqual(weather.rack.temp, 'None')
 
         # Check ecobee sensors
-        self.assertIsInstance(weather.hallway_thermostat, data.SensorThermostat)
-        self.assertIsInstance(weather.bedroom_left, data.EcobeeSensor)
+        self.assertIsInstance(weather.hallway_thermostat, data.SensorEcobeeThermostat)
+        self.assertIsInstance(weather.bedroom_left, data.SensorEcobee)
 
         # Check node sensors
-        self.assertIsInstance(weather.humidor, data.NodeTempHumidity)
-        self.assertIsInstance(weather.garage, data.NodeTemp)
+        self.assertIsInstance(weather.humidor, data.SensorNodeWithHumidity)
+        self.assertIsInstance(weather.garage, data.SensorNode)
 
         # Check whole house fan
         self.assertIsInstance(weather.whole_house_fan, data.WholeHomeFan)
@@ -75,14 +75,14 @@ class TestData(unittest.TestCase):
         self.assertEqual(sensor_cal.temp_calibration, 0.0)
         self.assertEqual(sensor_cal.humidity_calibration, 0.0)
 
-        sensor_major = data.SensorMajor()
+        sensor_major = data.SensorDavisWeatherStation()
         self.assertEqual(sensor_major.wind_direction, "")
         self.assertEqual(sensor_major.pressure, 0)
 
-        thermostat = data.SensorThermostat()
-        self.assertIsInstance(thermostat.sensor, data.EcobeeSensor)
+        thermostat = data.SensorEcobeeThermostat()
+        self.assertIsInstance(thermostat.sensor, data.SensorEcobee)
 
-        ecobee = data.EcobeeSensor()
+        ecobee = data.SensorEcobee()
         self.assertEqual(ecobee.temp, 'None')
         self.assertEqual(ecobee.occupied, 0)
 
@@ -95,10 +95,10 @@ class TestData(unittest.TestCase):
 
     def test_thermostat_initialization(self):
         """Test SensorThermostat initialization."""
-        thermo = data.SensorThermostat()
+        thermo = data.SensorEcobeeThermostat()
         self.assertEqual(thermo.temp, 'None')
         self.assertEqual(thermo.mode, "")
-        self.assertIsInstance(thermo.sensor, data.EcobeeSensor)
+        self.assertIsInstance(thermo.sensor, data.SensorEcobee)
 
     def test_whole_home_fan_initialization(self):
         """Test WholeHomeFan initialization."""

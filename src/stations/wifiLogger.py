@@ -2,11 +2,15 @@
 
 import datetime as dt
 import json
+import os
+
 import requests
 import logging
 import sys
 import utilities.conversions as conversion_utilities
+from weather.data import Climate, CLIMATE_TYPE_DAVIS
 
+TYPES_PROCESSED = [CLIMATE_TYPE_DAVIS]
 S_OK = 200
 TEMPERATURE_OUTDOOR = 'tempout'
 LEAF_TEMP = 'xlt'
@@ -23,10 +27,9 @@ SPA_TEMP_ARRAY = 'xlt'
 SPA_TEMP_INDEX = 0
 
 
-def get_data():
+def get_data(url):
     #
     # get the last 5 minutes worth of data
-    url = "http://wifilogger.evilminions.org/wflexp.json"
     try:
         #
         # Pull the data
@@ -49,31 +52,55 @@ def convert_to_float(value, precision):
         return 0.0
 
 
-def get_weather(weather_data):
+def check_types(config_data):
+    for key, value in os.environ.items():
+        result = config_data.split("|")
+        if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
+            return True
+    return False
+
+
+def get_weather(home):
 
     try:
-        wifi_logger_data = get_data()
+        found = False
+        for key, value in os.environ.items():
+            config_data = os.getenv(key)
+            if key.startswith("CLIMATE_SENSOR") and check_types(config_data):
+                found = True
+                break
+
+        if not found:
+            return
+
+        climate_sensor = home.climate.create_sensor(config_data)
+        wifi_logger_data = get_data(climate_sensor.url)
+
+        if not wifi_logger_data:
+            return
 
         # Temperature - Back yard
-        weather_data.back_yard.temp = convert_to_float(wifi_logger_data[TEMPERATURE_OUTDOOR], 2)
-        weather_data.back_yard.humidity = convert_to_float(wifi_logger_data[HUMIDITY_OUTDOOR], 2)
-        weather_data.back_yard.dew_point = convert_to_float(wifi_logger_data[DEP_POINT], 2)
+        climate_sensor.temperature = convert_to_float(wifi_logger_data[TEMPERATURE_OUTDOOR], 2)
+        climate_sensor.humidity = convert_to_float(wifi_logger_data[HUMIDITY_OUTDOOR], 2)
+        climate_sensor.dew_point = convert_to_float(wifi_logger_data[DEP_POINT], 2)
 
         # Rain
-        weather_data.back_yard.rain_rate = convert_to_float(wifi_logger_data[RAIN_RATE], 2)
-        weather_data.back_yard.rain_total = convert_to_float(wifi_logger_data[RAIN_24_HOURS], 2)
+        climate_sensor.rain_rate = convert_to_float(wifi_logger_data[RAIN_RATE], 2)
+        climate_sensor.rain_total = convert_to_float(wifi_logger_data[RAIN_24_HOURS], 2)
 
         # Wind
-        weather_data.back_yard.wind_speed = convert_to_float(wifi_logger_data[WIND_SPEED], 2)
-        weather_data.back_yard.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
-        weather_data.back_yard.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
-        weather_data.back_yard.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
+        climate_sensor.wind_speed = convert_to_float(wifi_logger_data[WIND_SPEED], 2)
+        climate_sensor.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
+        climate_sensor.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
+        climate_sensor.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
 
         # spa
-        weather_data.back_yard.spa_temp = convert_to_float(wifi_logger_data[SPA_TEMP_ARRAY][SPA_TEMP_INDEX], 2)
+        climate_sensor.spa_temp = convert_to_float(wifi_logger_data[SPA_TEMP_ARRAY][SPA_TEMP_INDEX], 2)
 
         # Pressure
-        weather_data.back_yard.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
+        climate_sensor.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
+
+        home.climate.sensors.append(climate_sensor)
 
     except json.JSONDecodeError as e:
         logging.error("Unable to parse wifi_logger_data:get_weather " + str(e))

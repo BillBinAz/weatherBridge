@@ -1,17 +1,24 @@
 #!/usr/bin/python3
 import datetime as dt
 import os
+from typing import Any
 
 import requests
 import logging
 import json
+
+from requests import Session
+
 import utilities.connect as connect
 import re
-import functools
+
+from utilities import conversions
+from weather.data import AlarmZone, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
+    CLIMATE_TYPE_DAVIS, CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door
 
 CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
 HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL")
-
+TYPES_PROCESSED = [CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT]
 def get_bearer_token():
     try:
         #
@@ -51,7 +58,7 @@ def get_temperature(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     if sensor_data is None:
         return 0
-    return sensor_data["state"]
+    return float(sensor_data["state"])
 
 
 def get_occupancy(bearer_token, key, s):
@@ -83,6 +90,14 @@ def get_on_off_state(bearer_token, key, s):
     else:
         return 0
 
+def get_locked_state(bearer_token, key, s):
+    sensor_data = get_sensor_data(bearer_token, key, s)
+    if sensor_data is None:
+        return 0
+    if sensor_data["state"] == "locked":
+        return 1
+    else:
+        return 0
 
 def get_alarm_label(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
@@ -106,95 +121,115 @@ def get_alarm_status(bearer_token, key, s):
     else:
         return 0
 
+def populate_ecobee_sensor(bearer_token, climate_sensor, session):
+    climate_sensor.temperature = get_temperature(bearer_token, "sensor." + climate_sensor.key + "_temperature", session)
+    climate_sensor.occupied = get_occupancy(bearer_token, "binary_sensor." + climate_sensor.key + "_occupancy", session)
 
-def get_thermostat_data(weather_data, key, object_path, bearer_token, s):
+def populate_ecobee_thermostat(bearer_token, climate_sensor,  session):
+    sensor_data = get_sensor_data(bearer_token, climate_sensor.key, session)
 
-
-    sensor_data = get_sensor_data(bearer_token, key, s)
-
-    path = object_path + ".heat_set"
-    set_nested_attr(weather_data, path, sensor_data["attributes"]["target_temp_high"])
-
-    path = object_path + ".cool_set"
-    set_nested_attr(weather_data, path, sensor_data["attributes"]["target_temp_low"])
-
-    path = object_path + ".humidity"
-    set_nested_attr(weather_data, path, sensor_data["attributes"]["current_humidity"])
-
-    path = object_path + ".fan"
-    set_nested_attr(weather_data, path, sensor_data["attributes"]["fan_mode"][:10].title().strip())
-
-    path = object_path + ".temp"
-    set_nested_attr(weather_data, path, sensor_data["attributes"]["current_temperature"])
-
-    path = object_path + ".state"
-    set_nested_attr(weather_data, path, sensor_data["attributes"]["hvac_action"][:10].title().strip())
+    climate_sensor.heat_set = sensor_data["attributes"]["target_temp_high"]
+    climate_sensor.cool_set = sensor_data["attributes"]["target_temp_low"]
+    climate_sensor.humidity = sensor_data["attributes"]["current_humidity"]
+    climate_sensor.fan = sensor_data["attributes"]["fan_mode"][:10].title().strip()
+    climate_sensor.temperature = float(sensor_data["attributes"]["current_temperature"])
+    climate_sensor.state = sensor_data["attributes"]["hvac_action"][:10].title().strip()
+    climate_sensor.mode = sensor_data["attributes"]["preset_mode"]
 
     mode = sensor_data["attributes"]["preset_mode"]
-    path = object_path + ".mode"
+    climate_sensor.mode = sensor_data["attributes"]["preset_mode"]
     if sensor_data is None:
         return
     if sensor_data["state"] == "off":
-        set_nested_attr(weather_data, path, "Off")
+        climate_sensor.mode = "Off"
     elif mode == "temp":
-        set_nested_attr(weather_data, path, "Override")
+        climate_sensor.mode = "Override"
     else:
-        set_nested_attr(weather_data, path, mode[:10].title().strip())
+        climate_sensor.mode = mode[:10].title().strip()
+
+    key_result = climate_sensor.key.split('.')
+    climate_sensor.occupied = get_occupancy(bearer_token, "binary_sensor." + key_result[1] + "_occupancy", session)
 
 
-def set_nested_attr(obj, delimited_str, value, delimiter='.'):
-    """
-    Traverses an object dynamically using a delimited string
-    and sets the value of the final attribute.
-    """
-    attributes = delimited_str.split(delimiter)
+def add_climate_sensor(bearer_token: Any | None, config_data: str, home, temerature_sum, temperature_count, session: Session):
 
-    # Get the parent object of the target attribute
-    parent_obj = functools.reduce(getattr, attributes[:-1], obj)
+    climate_sensor = home.climate.create_sensor(config_data)
 
-    # Set the new value on the target attribute
-    setattr(parent_obj, attributes[-1], value)
+    if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT:
+        populate_ecobee_thermostat(bearer_token, climate_sensor, session)
+        return climate_sensor;
+    if climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
+        populate_ecobee_sensor(bearer_token, climate_sensor, session)
+        return climate_sensor;
+    return
+
+def add_alarm_zone(bearer_token: Any | None, config_data: str, home,  s: Session):
+    alarm_zone = AlarmZone(config_data)
+
+    if alarm_zone.type == ZONE_TYPE_CONTACT or alarm_zone.type == ZONE_TYPE_MOTION:
+        alarm_zone.closed = get_alarm_status(bearer_token, "binary_sensor." + alarm_zone.key, s)
+        home.alarm.zones.append(alarm_zone)
+
+    elif alarm_zone.type == ZONE_TYPE_GARAGE_DOOR:
+        alarm_zone.closed = get_on_off_state(bearer_token, "binary_sensor." + alarm_zone.key, s)
+        home.alarm.zones.append(alarm_zone)
+
+    elif alarm_zone.type == ZONE_TYPE_DOOR:
+        alarm_zone.closed = get_alarm_status(bearer_token, "binary_sensor." + alarm_zone.key, s)
+        door = Door()
+        door.locked = get_locked_state(bearer_token, "lock." + alarm_zone.door_key, s)
+        door.label = alarm_zone.label
+        home.doors.append(door)
+        home.alarm.zones.append(alarm_zone)
+
+    if alarm_zone.type == ZONE_TYPE_CONTACT and alarm_zone.closed == 0:
+        home.alarm.all_zones_closed = 0
+
+def check_types(config_data):
+    for key, value in os.environ.items():
+        result = config_data.split("|")
+        if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
+            return True
+        if int(result[0]) == 0:
+            return True
+    return False
 
 
-def get_weather(weather_data):
+def get_weather(home):
 
-    s = requests.Session()
-
+    session = requests.Session()
+    alarm_present = False
     try:
         bearer_token = get_bearer_token()
         if not bearer_token:
             raise Exception("No Data from home-assistant:BearerToken.")
-        #
+
+        home.alarm.all_zones_closed = 1
+        temperature_sum = 0
+        temperature_count = 0
 
         for key, value in os.environ.items():
-            if key.endswith("_SRC"):
-                dest_key = key.replace("_SRC", "_DEST")
-                id_from_key = os.getenv(key)
+            config_data = os.getenv(key)
+            if key.startswith("ALARM_ZONE") and check_types(config_data):
+                alarm_present = True
+                add_alarm_zone(bearer_token, config_data, home, session)
+            if key.startswith("CLIMATE_SENSOR") and check_types(config_data):
+                climate_sensor = add_climate_sensor(bearer_token, config_data, home, temperature_sum, temperature_count, session)
+                home.climate.sensors.append(climate_sensor)
+                if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT or climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
+                    temperature_sum= temperature_sum + climate_sensor.temperature
+                    temperature_count = temperature_count + 1
 
-                if not id_from_key:
-                    raise Exception("ID not found from key: " + key + " from home-assistant:weather_data.")
+        if temperature_count > 0:
+            home.climate.home_average_temperature = conversions.format_f(temperature_sum / temperature_count)
 
-                object_path = os.getenv(dest_key)
-                if not object_path:
-                    raise Exception("object_path not found from key: " + dest_key + " from home-assistant:weather_data.")
-
-                if  "THERMOSTAT" in key:
-                    get_thermostat_data(weather_data, id_from_key, object_path, bearer_token, s)
-                elif "OCCUPANCY_SRC" in key:
-                    set_nested_attr(weather_data, object_path, get_occupancy(bearer_token, id_from_key, s))
-                elif "TEMPERATURE_SRC" in key or "HUMIDITY_SRC" in key:
-                    set_nested_attr(weather_data, object_path, get_temperature(bearer_token, id_from_key, s))
-                elif "ALARM_STATUS_LABEL" in key:
-                    set_nested_attr(weather_data, object_path, get_alarm_label(bearer_token, id_from_key, s))
-                elif "ALARM_STATUS" in key:
-                    set_nested_attr(weather_data, object_path, get_alarm_status(bearer_token, id_from_key, s))
-                else:
-                    set_nested_attr(weather_data, object_path, get_on_off_state(bearer_token, id_from_key, s))
-
+        if alarm_present:
+            home.alarm.status = get_alarm_status(bearer_token, "alarm_control_panel.home_alarm", session)
+            home.alarm.label =  get_alarm_label(bearer_token, "sensor.home_alarm_keypad", session)
 
     except Exception as e:
         logging.error("Unable to get home-assistant:get_weather " + str(e))
         print(dt.datetime.now().time(), "Unable to get home-assistant:get_weather " + str(e))
     finally:
-        s.close()
+        session.close()
     return
