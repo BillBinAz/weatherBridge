@@ -15,6 +15,9 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    permissions:
+       pull-requests: write
+       contents: write
     strategy:
       fail-fast: false
       matrix:
