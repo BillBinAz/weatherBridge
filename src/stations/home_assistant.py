@@ -2,13 +2,11 @@
 import os
 import traceback
 from typing import Any
-
+import datetime as dt
 import requests
 import logging
 logger = logging.getLogger(__name__)
 import json
-
-import tb
 from requests import Session
 
 import utilities.connect as connect

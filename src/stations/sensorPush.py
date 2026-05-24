@@ -7,9 +7,7 @@ import requests
 import logging
 logger = logging.getLogger(__name__)
 import json
-
-import tb
-
+import datetime as dt
 import utilities.connect as connect
 import utilities.conversions as conversions
 from weather.data import CLIMATE_TYPE_SENSOR_PUSH, Climate

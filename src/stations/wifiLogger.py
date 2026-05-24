@@ -4,10 +4,8 @@ import logging
 logger = logging.getLogger(__name__)
 import os
 import traceback
-
 import datetime as dt
 import requests
-import tb
 
 import utilities.conversions as conversion_utilities
 from weather.data import CLIMATE_TYPE_DAVIS
