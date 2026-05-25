@@ -16,12 +16,12 @@ def f_to_c(f_temp):
     return round(float(f_temp - 32) * 5.0 / 9.0, 1)
 
 
-def format_f(value):
+def format_f(value, places=2):
     #
     # add decimal place
     formatted_value = 0
     try:
-        formatted_value = round(float(value), 2)
+        formatted_value = round(float(value), places)
     except:
         e = sys.exc_info()[0]
         logging.error("Unable to get station:get_weather " + str(e))

@@ -213,7 +213,7 @@ def get_weather(home, dt=None):
                             temperature_count += 1
 
         if temperature_count > 0:
-            home.climate.home_average_temperature = conversions.format_f(temperature_sum / temperature_count)
+            home.climate.home_average_temperature = conversions.format_f(temperature_sum / temperature_count, 1)
 
         if alarm_present:
             home.alarm.status = get_alarm_status(bearer_token, "alarm_control_panel.home_alarm", session)
