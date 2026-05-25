@@ -1,3 +1,4 @@
+import copy
 import datetime as dt
 import json
 
@@ -33,11 +34,14 @@ class Alarm(object):
         self.status_value = 0
         self.status_label = "None"
 
-
 class Climate(object):
     def __init__(self):
         self.home_average_temperature = 0.0
         self.sensors = []
+
+    def to_json(self):
+        # convert dictionary to named list based on label remove
+        return json.dumps({sensor.label: sensor.__dict__ for sensor in self.sensors})
 
     def create_sensor(self, config):
         result = config.split('|')
@@ -161,7 +165,6 @@ class Door(object):
         self.label = "None"
         self.locked = 0
 
-
 class Home(object):
     def __init__(self):
         self.alarm = Alarm()
@@ -170,5 +173,21 @@ class Home(object):
         self.date_generated = dt.datetime.now().strftime("%m-%d-%y %I:%M %p")
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        self.climate.sensors.sort(key=lambda x: x.label)
+        self.alarm.zones.sort(key=lambda x: x.label)
+        self.doors.sort(key=lambda x: x.label)
 
+        return json.dumps({
+            "alarm": {
+                "all_zones_closed": self.alarm.all_zones_closed,
+                "status_value": self.alarm.status_value,
+                "status_label": self.alarm.status_label,
+                "zones": [{zone.label: zone.__dict__} for zone in self.alarm.zones]
+            },
+            "climate": {
+                "home_average_temperature": self.climate.home_average_temperature,
+                "sensors": [{sensor.label: sensor.__dict__} for sensor in self.climate.sensors]
+            },
+            "doors": [{door.label: door.__dict__} for door in self.doors],
+            "date_generated": self.date_generated
+        })

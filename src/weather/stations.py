@@ -24,10 +24,6 @@ def get_weather():
         thermo_works.get_weather(home)
         sensorPush.get_weather(home)
 
-        home.climate.sensors.sort(key=lambda x: x.label)
-        home.alarm.zones.sort(key=lambda x: x.label)
-        home.doors.sort(key=lambda x: x.label)
-
     except Exception as e:
         traceback.print_exc()
         logging.error(f"Unable to get station data: {e} Error occurred on line: {traceback[-1][1]}")
