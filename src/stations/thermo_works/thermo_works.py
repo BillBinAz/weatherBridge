@@ -6,9 +6,6 @@ logger = logging.getLogger(__name__)
 import os
 import sys
 import traceback
-
-import tb
-
 from stations.thermo_works.get_devices_for_user import get_devices_for_user
 import utilities.conversions as conversions
 from weather.data import CLIMATE_TYPE_THERMOWORKS_NODE, CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY, CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL

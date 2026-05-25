@@ -17,6 +17,7 @@ services:
       - HOME_ASSISTANT_CONNECT_ITEM_ID=nfvez2nz4mnadmdvjpl53p4ls4
       - HOME_ASSISTANT_URL=https://home-assistant.evilminions.org:8123/api/states/
       - SENSOR_PUSH_CONNECT_ITEM_ID=axpjey2v3x2szvumkjukz2w5m4
+      - THERMOWORKS_CONNECT_ITEM_ID="ca5blc76voyvw3n347z6k3fj3y"
       # alarm
       # type|zone_id|HA_ID|Label|(optional)
       - ALARM_ZONE_2='1|2|great_room_motion_2|master_bedroom_motion'
