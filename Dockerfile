@@ -9,17 +9,18 @@ LABEL version="1.0"
 WORKDIR /weather-bridge
 
 # Install system dependencies
-RUN apk update && apk upgrade && apk add --no-cache bash curl
+RUN apk update && apk upgrade && apk add --no-cache bash curl dos2unix
 
 # Copy application files
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY ./src .
 COPY ./config/startup.sh /weather-bridge/startup.sh
 
 # Set permissions and install Python dependencies
-RUN chmod 755 /weather-bridge/startup.sh && \
-    pip3 install --upgrade pip && \
-    pip3 install -r requirements.txt
+RUN chmod +x /weather-bridge/startup.sh
+RUN dos2unix /weather-bridge/startup.sh
 
 # Set Flask environment
 ENV FLASK_APP=get_handler.py

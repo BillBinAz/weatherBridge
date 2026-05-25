@@ -9,6 +9,7 @@ from utilities import connect
 
 class TestConnect(unittest.TestCase):
 
+    @patch.dict(os.environ, {'OP_CONNECT_HOST': 'http://test.com', 'OP_CONNECT_TOKEN': 'test_token'})
     @patch('utilities.connect.new_client_from_environment')
     def test_get_credentials_success(self, mock_client_func):
         """Test successful credential retrieval."""

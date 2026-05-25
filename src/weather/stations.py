@@ -1,35 +1,32 @@
 #!/usr/bin/python3
+import os
+import traceback
 from stations import wifiLogger, home_assistant, sensorPush
 from weather import data
 from stations.thermo_works import thermo_works
 import datetime as dt
 import logging
-import utilities.conversions as conv
-
 
 def get_weather():
-    cur_weather = data.WeatherData()
+    home = data.Home()
 
     try:
-        logging.basicConfig(format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
-                            datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
-
-        home_assistant.get_weather(cur_weather)
-        wifiLogger.get_weather(cur_weather)
-        sensorPush.get_weather(cur_weather)
-        thermo_works.get_weather(cur_weather)
-
-        # calculate average house temp
-        cur_weather.whole_house_fan.houseTemp \
-            = conv.get_average_from_list([cur_weather.bedroom_left.temp,
-                                          cur_weather.bedroom_right.temp,
-                                          cur_weather.hallway_thermostat.sensor.temp,
-                                          cur_weather.living_room.temp,
-                                          cur_weather.master_bedroom.temp,
-                                          cur_weather.office.temp])
+        # Configure logging
+        log_file = os.environ.get('LOG_FILE', 'weather_bridge_rest.log')
+        logging.basicConfig(
+            filename=log_file,
+            format='%(asctime)s %(levelname)s {%(module)s} [%(funcName)s] %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S',
+            level=logging.INFO
+        )
+        home_assistant.get_weather(home)
+        wifiLogger.get_weather(home)
+        thermo_works.get_weather(home)
+        sensorPush.get_weather(home)
 
     except Exception as e:
-        logging.error("Unable to get station:get_weather " + str(e))
-        print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
+        traceback.print_exc()
+        logging.error(f"Unable to get station data: {e} Error occurred on line: {traceback[-1][1]}")
+        print(dt.datetime.now().time(), "Unable to get get station:get_weather ")
+    return home
 
-    return cur_weather

@@ -34,8 +34,8 @@ def get_weather():
         weather_data = stations.get_weather()
         logger.info("Weather data retrieved successfully")
         return weather_data.to_json(), 200, {'Content-Type': 'application/json; charset=utf-8'}
-    except Exception as e:
-        logger.error(f"Error retrieving weather data: {str(e)}")
+    except Exception:
+        logger.exception("Error retrieving weather data")
         return jsonify({'error': 'Failed to retrieve weather data'}), 500
 
 
