@@ -63,4 +63,5 @@ async def get_devices_for_user():
                 devices_by_type[device_type] = []
             devices_by_type[device_type].append(device)
 
+        await session.close()
         return devices, device_channels_by_device

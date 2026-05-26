@@ -158,18 +158,20 @@ def add_climate_sensor(bearer_token: Any | None, config_data: str, home, tempera
 def add_alarm_zone(bearer_token: Any | None, config_data: str, home,  s: Session):
     alarm_zone = AlarmZone(config_data)
 
-    if alarm_zone.type == ZONE_TYPE_CONTACT or alarm_zone.type == ZONE_TYPE_MOTION:
-        alarm_zone.closed = get_alarm_status(bearer_token, "binary_sensor." + alarm_zone.key, s)
+    if alarm_zone.type == ZONE_TYPE_CONTACT:
+        alarm_zone.closed = get_on_off_state(bearer_token, "binary_sensor." + alarm_zone.key, s)
         home.alarm.zones.append(alarm_zone)
-
+    elif alarm_zone.type == ZONE_TYPE_MOTION:
+        alarm_zone.closed = get_on_off_state(bearer_token, "binary_sensor." + alarm_zone.key, s)
+        home.alarm.zones.append(alarm_zone)
     elif alarm_zone.type == ZONE_TYPE_GARAGE_DOOR:
         alarm_zone.closed = get_on_off_state(bearer_token, "binary_sensor." + alarm_zone.key, s)
         home.alarm.zones.append(alarm_zone)
-
     elif alarm_zone.type == ZONE_TYPE_DOOR:
-        alarm_zone.closed = get_alarm_status(bearer_token, "binary_sensor." + alarm_zone.key, s)
+        alarm_zone.closed = get_on_off_state(bearer_token, "binary_sensor." + alarm_zone.key, s)
         door = Door()
         door.locked = get_locked_state(bearer_token, "lock." + alarm_zone.door_key, s)
+        alarm_zone.locked = door.locked
         door.label = alarm_zone.label
         home.doors.append(door)
         home.alarm.zones.append(alarm_zone)
