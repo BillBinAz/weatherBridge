@@ -25,6 +25,7 @@ class AlarmZone(object):
         self.label = str(result[3])
         if result.__len__() > 4:
             self.door_key = str(result[4])
+            self.locked = 0
         self.closed = 0
 
 class Alarm(object):
