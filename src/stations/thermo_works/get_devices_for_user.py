@@ -1,3 +1,4 @@
+import os
 from typing import Dict
 from aiohttp import ClientSession
 from thermoworks_cloud import AuthFactory, ThermoworksCloud, ResourceNotFoundError
@@ -5,7 +6,7 @@ from thermoworks_cloud.models.device import Device
 from thermoworks_cloud.models.device_channel import DeviceChannel
 import utilities.connect as connect
 
-CONNECT_ITEM_ID = "ca5blc76voyvw3n347z6k3fj3y"
+CONNECT_ITEM_ID = os.getenv("THERMOWORKS_CONNECT_ITEM_ID")
 
 async def get_devices_for_user():
     # Use a context manager when providing the session to the auth factory
