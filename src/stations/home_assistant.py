@@ -43,6 +43,8 @@ def get_sensor_data(bearer_token, key, s):
         if not response:
             raise Exception("No Data from home-assistant:SensorData.")
 
+        logging.error(ret.content)
+
         return response
 
     except Exception as e:
