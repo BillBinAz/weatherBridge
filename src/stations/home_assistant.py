@@ -4,6 +4,9 @@ import traceback
 from typing import Any
 import requests
 import logging
+
+from thermoworks_cloud.utils import get_field_value
+
 logger = logging.getLogger(__name__)
 import json
 from requests import Session
@@ -13,12 +16,12 @@ import re
 
 from utilities import conversions
 from weather.data import AlarmZone, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
-    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door, DEFAULT_TEMPERATURE
+    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door, DEFAULT_TEMPERATURE,ZONE_TYPE_BASIC,CLIMATE_TYPE_HUMIDITY
 
 CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
 HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL")
 TYPES_PROCESSED = [CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, ZONE_TYPE_DOOR,
-                   ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT]
+                   ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, ZONE_TYPE_BASIC, CLIMATE_TYPE_HUMIDITY]
 
 def get_bearer_token():
     try:
@@ -49,7 +52,7 @@ def get_sensor_data(bearer_token, key, s):
         logging.error(f"Unable to get home-assistant:get_sensor_data Key: {key} {e}")
 
 
-def get_temperature(bearer_token, key, s):
+def get_value(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     if sensor_data is None:
         return 0
@@ -80,7 +83,7 @@ def get_on_off_state(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     if sensor_data is None:
         return 0
-    if sensor_data["state"] == "off":
+    if sensor_data["state"] == "off" or sensor_data["state"] == "Safe":
         return 1
     else:
         return 0
@@ -117,7 +120,7 @@ def get_alarm_status(bearer_token, key, s):
         return 0
 
 def populate_ecobee_sensor(bearer_token, climate_sensor, session):
-    climate_sensor.temperature = get_temperature(bearer_token, "sensor." + climate_sensor.key + "_temperature", session)
+    climate_sensor.temperature = get_value(bearer_token, "sensor." + climate_sensor.key + "_temperature", session)
     climate_sensor.occupied = get_occupancy(bearer_token, "binary_sensor." + climate_sensor.key + "_occupancy", session)
 
 def populate_ecobee_thermostat(bearer_token, climate_sensor, session):
@@ -147,6 +150,12 @@ def populate_ecobee_thermostat(bearer_token, climate_sensor, session):
 def add_climate_sensor(bearer_token: Any | None, config_data: str, home, temperature_sum, temperature_count, session: Session):
     climate_sensor = home.climate.create_sensor(config_data)
 
+    if climate_sensor.type == CLIMATE_TYPE_HUMIDITY:
+        sensor_data = get_sensor_data(bearer_token, "humidifier." + climate_sensor.key, session)
+        climate_sensor.humidity = sensor_data["attributes"]["current_humidity"]
+        climate_sensor.humidity_set = sensor_data["attributes"]["humidity"]
+        climate_sensor.mode = sensor_data["state"]
+        return climate_sensor
     if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT:
         populate_ecobee_thermostat(bearer_token, climate_sensor, session)
         return climate_sensor

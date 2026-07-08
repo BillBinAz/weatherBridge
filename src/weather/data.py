@@ -7,6 +7,7 @@ ZONE_TYPE_CONTACT = 0
 ZONE_TYPE_MOTION = 1
 ZONE_TYPE_DOOR = 2
 ZONE_TYPE_GARAGE_DOOR = 3
+ZONE_TYPE_BASIC = 12
 CLIMATE_TYPE_DAVIS = 4
 CLIMATE_TYPE_ECOBEE_THERMOSTAT= 5
 CLIMATE_TYPE_ECOBEE_SENSOR = 6               # _occupancy _temperature
@@ -14,6 +15,8 @@ CLIMATE_TYPE_THERMOWORKS_NODE = 7               # _air_temperature
 CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY = 8 # _humidity _air_temperature
 CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL = 9
 CLIMATE_TYPE_SENSOR_PUSH = 10
+CLIMATE_TYPE_HUMIDITY = 11
+
 
 class AlarmZone(object):
     def __init__(self, config):
@@ -61,6 +64,8 @@ class Climate(object):
             return SensorThermoworksNodeTwoProbes(config)
         elif sensor_type == CLIMATE_TYPE_SENSOR_PUSH:
             return SensorPush(config)
+        elif sensor_type == CLIMATE_TYPE_HUMIDITY:
+            return SensorHumidifier(config)
         else:
             raise ValueError("Unknown sensor type")
 
@@ -74,6 +79,15 @@ class SensorSmall(object):
         self.temperature_c = DEFAULT_TEMPERATURE
         self.humidity = 0.0
 
+class SensorHumidifier(object):
+    def __init__(self,config):
+        result = config.split('|')
+        self.type = int(result[0])
+        self.key = str(result[1])
+        self.label = str(result[2])
+        self.mode = "off"
+        self.humidity_set = 0.0
+        self.humidity = 0.0
 
 class SensorPush(object):
     def __init__(self, config):
