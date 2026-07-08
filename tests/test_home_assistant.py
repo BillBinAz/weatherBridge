@@ -61,7 +61,7 @@ class TestHomeAssistant(unittest.TestCase):
         sensor_data = {"state": "72.5"}
         with patch('stations.home_assistant.get_sensor_data') as mock_get:
             mock_get.return_value = sensor_data
-            result = home_assistant.get_temperature("token", "entity", MagicMock())
+            result = home_assistant.get_value("token", "entity", MagicMock())
             self.assertEqual(result, 72.5)
 
     def test_get_occupancy_on(self):
