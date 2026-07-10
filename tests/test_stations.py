@@ -41,5 +41,54 @@ class TestStations(unittest.TestCase):
         self.assertIsInstance(result.alarm, data.Alarm)
         self.assertIsInstance(result.climate, data.Climate)
 
+    @patch('weather.stations.home_assistant.get_weather')
+    @patch('weather.stations.wifiLogger.get_weather')
+    @patch('weather.stations.sensorPush.get_weather')
+    @patch('weather.stations.thermo_works.get_weather')
+    def test_get_weather_handles_exception(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
+        """Test that get_weather handles exceptions from station modules."""
+        # Make home_assistant raise an exception
+        mock_home.side_effect = Exception("Connection error")
+        mock_wifi.return_value = None
+        mock_sensor.return_value = None
+        mock_thermo.return_value = None
+
+        result = stations.get_weather()
+
+        # Should still return a Home object even if exception occurred
+        self.assertIsInstance(result, data.Home)
+
+    @patch('weather.stations.home_assistant.get_weather')
+    @patch('weather.stations.wifiLogger.get_weather')
+    @patch('weather.stations.sensorPush.get_weather')
+    @patch('weather.stations.thermo_works.get_weather')
+    def test_get_weather_exception_in_wifi_logger(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
+        """Test exception handling when wifiLogger fails."""
+        mock_home.return_value = None
+        mock_wifi.side_effect = RuntimeError("WiFi error")
+        mock_sensor.return_value = None
+        mock_thermo.return_value = None
+
+        result = stations.get_weather()
+
+        # Should still return a Home object
+        self.assertIsInstance(result, data.Home)
+
+    @patch('weather.stations.home_assistant.get_weather')
+    @patch('weather.stations.wifiLogger.get_weather')
+    @patch('weather.stations.sensorPush.get_weather')
+    @patch('weather.stations.thermo_works.get_weather')
+    def test_get_weather_exception_in_thermo_works(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
+        """Test exception handling when thermo_works fails."""
+        mock_home.return_value = None
+        mock_wifi.return_value = None
+        mock_sensor.return_value = None
+        mock_thermo.side_effect = ValueError("Device not found")
+
+        result = stations.get_weather()
+
+        # Should still return a Home object
+        self.assertIsInstance(result, data.Home)
+
 if __name__ == '__main__':
     unittest.main()

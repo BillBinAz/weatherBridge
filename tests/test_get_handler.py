@@ -47,6 +47,63 @@ class TestGetHandler(unittest.TestCase):
         response = self.app.get('/invalid')
         self.assertEqual(response.status_code, 404)
 
+    @patch('get_handler.stations.get_weather')
+    def test_get_weather_exception(self, mock_get_weather):
+        """Test /weather endpoint when get_weather raises an exception."""
+        mock_get_weather.side_effect = Exception("Database error")
+
+        response = self.app.get('/weather')
+
+        self.assertEqual(response.status_code, 500)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertIn('error', data)
+        self.assertEqual(data['error'], 'Failed to retrieve weather data')
+
+    def test_health_check_endpoint(self):
+        """Test the /health GET route."""
+        response = self.app.get('/health')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(data['status'], 'healthy')
+
+    def test_health_check_json_response(self):
+        """Test that /health returns valid JSON."""
+        response = self.app.get('/health')
+
+        self.assertEqual(response.content_type, 'application/json')
+        data = json.loads(response.get_data(as_text=True))
+        self.assertIsInstance(data, dict)
+        self.assertIn('status', data)
+
+    def test_404_error_handler(self):
+        """Test 404 error handler."""
+        response = self.app.get('/nonexistent/path')
+
+        self.assertEqual(response.status_code, 404)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(data['error'], 'Endpoint not found')
+
+    @patch('get_handler.logger')
+    def test_500_error_handler_logging(self, mock_logger):
+        """Test that 500 error handler logs the error."""
+        with patch('get_handler.stations.get_weather', side_effect=Exception("Test error")):
+            response = self.app.get('/weather')
+
+        self.assertEqual(response.status_code, 500)
+        # Verify logging was called
+        self.assertTrue(mock_logger.exception.called)
+
+    def test_weather_endpoint_post_not_allowed(self):
+        """Test that POST requests to /weather are not allowed."""
+        response = self.app.post('/weather')
+        self.assertEqual(response.status_code, 405)
+
+    def test_health_endpoint_post_not_allowed(self):
+        """Test that POST requests to /health are not allowed."""
+        response = self.app.post('/health')
+        self.assertEqual(response.status_code, 405)
+
 
 if __name__ == '__main__':
     unittest.main()

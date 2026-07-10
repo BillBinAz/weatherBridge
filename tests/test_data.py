@@ -91,6 +91,94 @@ class TestData(unittest.TestCase):
         self.assertEqual(climate.home_average_temperature, 0.0)
         self.assertIsInstance(climate.sensors, list)
 
+    def test_create_sensor_davis(self):
+        """Test Climate.create_sensor with Davis type."""
+        climate = data.Climate()
+        config = "4|Davis|Test Station|http://test.com"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorDavisWeatherStation)
+
+    def test_create_sensor_ecobee_thermostat(self):
+        """Test Climate.create_sensor with Ecobee Thermostat type."""
+        climate = data.Climate()
+        config = "5|ecobee|Main Thermostat"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorEcobeeThermostat)
+
+    def test_create_sensor_ecobee_sensor(self):
+        """Test Climate.create_sensor with Ecobee Sensor type."""
+        climate = data.Climate()
+        config = "6|ecobee_sensor|Master Bedroom"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorEcobee)
+
+    def test_create_sensor_thermoworks_node(self):
+        """Test Climate.create_sensor with ThermoWorks Node type."""
+        climate = data.Climate()
+        config = "7|thermoworks|Freezer"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorThermoworksNode)
+
+    def test_create_sensor_thermoworks_humidity(self):
+        """Test Climate.create_sensor with ThermoWorks Humidity type."""
+        climate = data.Climate()
+        config = "8|thermoworks_humid|Office"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorThermoworksNodeWithHumidity)
+
+    def test_create_sensor_thermoworks_two_channel(self):
+        """Test Climate.create_sensor with ThermoWorks Two Channel type."""
+        climate = data.Climate()
+        config = "9|thermoworks_2ch|Fridge"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorThermoworksNodeTwoProbes)
+
+    def test_create_sensor_sensor_push(self):
+        """Test Climate.create_sensor with SensorPush type."""
+        climate = data.Climate()
+        config = "10|sensor_push|Outside"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorPush)
+
+    def test_create_sensor_humidity(self):
+        """Test Climate.create_sensor with Humidity type."""
+        climate = data.Climate()
+        config = "11|humidifier|Living Room"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorHumidifier)
+
+    def test_create_sensor_invalid_type(self):
+        """Test Climate.create_sensor with invalid type."""
+        climate = data.Climate()
+        config = "999|invalid|Invalid"
+        with self.assertRaises(ValueError) as context:
+            climate.create_sensor(config)
+        self.assertIn("Unknown sensor type", str(context.exception))
+
+    def test_climate_to_json(self):
+        """Test Climate.to_json with sensors."""
+        climate = data.Climate()
+        sensor = data.SensorSmall("10|test_key|Test Sensor")
+        sensor.temperature = 75.0
+        climate.sensors.append(sensor)
+        
+        json_str = climate.to_json()
+        parsed = json.loads(json_str)
+        self.assertIn('Test Sensor', parsed)
+
+    def test_door_initialization(self):
+        """Test Door class initialization."""
+        door = data.Door()
+        self.assertEqual(door.label, "None")
+        self.assertEqual(door.locked, 0)
+
+    def test_alarm_zone_initialization(self):
+        """Test AlarmZone class initialization."""
+        config = "1|1|zone1|Front Door"
+        zone = data.AlarmZone(config)
+        self.assertEqual(zone.type, 1)
+        self.assertEqual(zone.id, 1)
+
 
 if __name__ == '__main__':
     unittest.main()

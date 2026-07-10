@@ -162,6 +162,7 @@ class TestThermoWorks(unittest.TestCase):
         self.assertIsNotNone(home)
 
     @patch.dict('stations.thermo_works.thermo_works.os.environ', {'CLIMATE_SENSOR_1': '8|1|device_humidity|label'})
+    @patch.dict('stations.thermo_works.thermo_works.os.environ', {'CLIMATE_SENSOR_1': '8|device_humidity|label'})
     @patch('stations.thermo_works.thermo_works.get_devices_for_user')
     @patch('stations.thermo_works.thermo_works.asyncio.new_event_loop')
     @patch('stations.thermo_works.thermo_works.conversions.format_f')
@@ -188,7 +189,7 @@ class TestThermoWorks(unittest.TestCase):
         # Verify format_f was called for temperature and humidity
         self.assertGreater(mock_format.call_count, 0)
 
-    @patch.dict('stations.thermo_works.thermo_works.os.environ', {'CLIMATE_SENSOR_1': '9|1|device_two_ch|label'})
+    @patch.dict('stations.thermo_works.thermo_works.os.environ', {'CLIMATE_SENSOR_1': '9|device_two_ch|label'})
     @patch('stations.thermo_works.thermo_works.get_devices_for_user')
     @patch('stations.thermo_works.thermo_works.asyncio.new_event_loop')
     @patch('stations.thermo_works.thermo_works.conversions.format_f')
@@ -216,7 +217,7 @@ class TestThermoWorks(unittest.TestCase):
         # Verify format_f was called for all three channels
         self.assertGreater(mock_format.call_count, 0)
 
-    @patch.dict('stations.thermo_works.thermo_works.os.environ', {'CLIMATE_SENSOR_1': '7|1|device_node|label'})
+    @patch.dict('stations.thermo_works.thermo_works.os.environ', {'CLIMATE_SENSOR_1': '7|device_node|label'})
     @patch('stations.thermo_works.thermo_works.get_devices_for_user')
     @patch('stations.thermo_works.thermo_works.asyncio.new_event_loop')
     @patch('stations.thermo_works.thermo_works.conversions.format_f')
