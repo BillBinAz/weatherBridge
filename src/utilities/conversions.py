@@ -5,31 +5,58 @@ from math import isnan
 
 
 def c_to_f(c_temp):
-    #
-    # Convert from Celsius to Fahrenheit
+    """Convert Celsius to Fahrenheit.
+    
+    Args:
+        c_temp: Temperature in Celsius
+        
+    Returns:
+        Temperature in Fahrenheit (rounded to 1 decimal place)
+    """
     return round(9.0 / 5.0 * float(c_temp) + 32, 1)
 
 
 def f_to_c(f_temp):
-    #
-    # Convert from Fahrenheit to Celsius
+    """Convert Fahrenheit to Celsius.
+    
+    Args:
+        f_temp: Temperature in Fahrenheit
+        
+    Returns:
+        Temperature in Celsius (rounded to 1 decimal place)
+    """
     return round(float(f_temp - 32) * 5.0 / 9.0, 1)
 
 
 def format_f(value, places=2):
-    #
-    # add decimal place
+    """Format a value to specified decimal places.
+    
+    Args:
+        value: The value to format
+        places: Number of decimal places (default: 2)
+        
+    Returns:
+        Formatted float value, or 0 if formatting fails
+    """
     formatted_value = 0
     try:
         formatted_value = round(float(value), places)
-    except:
-        e = sys.exc_info()[0]
+    except (ValueError, TypeError) as e:
         logging.error("Unable to get station:get_weather " + str(e))
         print(dt.datetime.now().time(), "Unable to get station:get_weather " + str(e))
     return formatted_value
 
 
 def get_average(data, key):
+    """Calculate average value from a list of dictionaries.
+    
+    Args:
+        data: List of dictionaries containing sensor data
+        key: Dictionary key to average
+        
+    Returns:
+        Average value rounded to 1 decimal place, or 0 if list is empty
+    """
     how_many = 0
     sum_temp = 0.0
     for sensor in data:
@@ -41,13 +68,29 @@ def get_average(data, key):
 
 
 def convert_str_to_float(value):
+    """Convert string to float.
+    
+    Args:
+        value: String value to convert
+        
+    Returns:
+        Converted float value, or 0.0 if conversion fails
+    """
     try:
         return float(value)
-    except:
+    except (ValueError, TypeError):
         return 0.0
 
 
 def get_average_from_list(data_list):
+    """Calculate average from list of string values, skipping invalid entries.
+    
+    Args:
+        data_list: List of string values to average
+        
+    Returns:
+        Average value rounded to 1 decimal place, or 0 if no valid values
+    """
     how_many = 0
     sum_temp = 0.0
     for sensor in data_list:
@@ -62,14 +105,26 @@ def get_average_from_list(data_list):
 
 
 def mps_to_mph(mps):
-    #
-    # Convert from meters per second to miles per hour
+    """Convert meters per second to miles per hour.
+    
+    Args:
+        mps: Speed in meters per second
+        
+    Returns:
+        Speed in miles per hour (rounded to 1 decimal place)
+    """
     return round(2.2369 * float(mps), 1)
 
 
 def mm_to_inches(mm):
-    #
-    # convert from mm to inches
+    """Convert millimeters to inches.
+    
+    Args:
+        mm: Length in millimeters
+        
+    Returns:
+        Length in inches (rounded to 2 decimal places)
+    """
     return round(float(mm) * 0.0393700787, 2)
 
 

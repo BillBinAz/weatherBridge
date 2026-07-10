@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import sys
 import traceback
 from stations import wifiLogger, home_assistant, sensorPush
 from weather import data
@@ -26,7 +27,9 @@ def get_weather():
 
     except Exception as e:
         traceback.print_exc()
-        logging.error(f"Unable to get station data: {e} Error occurred on line: {traceback[-1][1]}")
+        exc_info = sys.exc_info()
+        line_number = exc_info[2].tb_lineno if exc_info[2] else "unknown"
+        logging.error(f"Unable to get station data: {e} Error occurred on line: {line_number}")
         print(dt.datetime.now().time(), "Unable to get get station:get_weather ")
     return home
 

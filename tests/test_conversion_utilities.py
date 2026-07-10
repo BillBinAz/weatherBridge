@@ -126,6 +126,48 @@ class TestUtilities(unittest.TestCase):
         # "invalid" and "0.0" are skipped, so average of 10 and 30 = 20.0
         self.assertEqual(result, 20.0)
 
+    def test_format_f_exception(self):
+        """Test format_f with value that raises exception."""
+        result = utilities.format_f("invalid_string")
+        self.assertEqual(result, 0)
+
+    def test_format_f_with_places(self):
+        """Test format_f with custom decimal places."""
+        result = utilities.format_f("75.12345", 3)
+        self.assertEqual(result, 75.123)
+
+    def test_get_average_from_list_all_invalid(self):
+        """Test get_average_from_list with all invalid values."""
+        data_list = ["invalid", "0.0", "NaN"]
+        result = utilities.get_average_from_list(data_list)
+        self.assertEqual(result, 0)
+
+    def test_mps_to_mph(self):
+        """Test meters per second to miles per hour conversion."""
+        # 1 mps = 2.2369 mph
+        result = utilities.mps_to_mph(1)
+        self.assertEqual(result, 2.2)
+        result = utilities.mps_to_mph(10)
+        self.assertEqual(result, 22.4)
+
+    def test_mm_to_inches(self):
+        """Test millimeters to inches conversion."""
+        # 25.4 mm = 1 inch
+        result = utilities.mm_to_inches(25.4)
+        self.assertAlmostEqual(result, 1.0, places=1)
+        result = utilities.mm_to_inches(10)
+        self.assertAlmostEqual(result, 0.39, places=2)
+
+    def test_convert_str_to_float_valid(self):
+        """Test convert_str_to_float with valid string."""
+        result = utilities.convert_str_to_float("75.5")
+        self.assertEqual(result, 75.5)
+
+    def test_convert_str_to_float_invalid(self):
+        """Test convert_str_to_float with invalid string."""
+        result = utilities.convert_str_to_float("invalid")
+        self.assertEqual(result, 0.0)
+
 
 if __name__ == '__main__':
     unittest.main()
