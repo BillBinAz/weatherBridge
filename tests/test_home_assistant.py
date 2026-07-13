@@ -355,6 +355,68 @@ class TestHomeAssistant(unittest.TestCase):
             self.assertEqual(result, mock_sensor)
             self.assertEqual(mock_sensor.humidity, 55.0)
 
+    def test_add_climate_sensor_humidity_mode(self):
+        """Test adding humidity sensor uses mode when present."""
+        mock_home = MagicMock()
+        mock_sensor = MagicMock(type=11, key="humidity_sensor")
+        mock_home.climate.create_sensor.return_value = mock_sensor
+
+        sensor_data = {
+            "attributes": {
+                "current_humidity": 55.0,
+                "humidity": 60.0,
+                "mode": "auto"
+            },
+            "state": "on"
+        }
+
+        with patch('stations.home_assistant.get_sensor_data') as mock_get:
+            mock_get.return_value = sensor_data
+            result = home_assistant.add_climate_sensor("token", "11|1|humidity_sensor|label", mock_home, 0, 0, MagicMock())
+            self.assertEqual(result, mock_sensor)
+            self.assertEqual(mock_sensor.mode, "auto")
+
+    def test_add_climate_sensor_humidity_equipment_status(self):
+        """Test adding humidity sensor uses equipment_status when mode is absent."""
+        mock_home = MagicMock()
+        mock_sensor = MagicMock(type=11, key="humidity_sensor")
+        mock_home.climate.create_sensor.return_value = mock_sensor
+
+        sensor_data = {
+            "attributes": {
+                "current_humidity": 55.0,
+                "humidity": 60.0,
+                "equipment_status": "heating"
+            },
+            "state": "on"
+        }
+
+        with patch('stations.home_assistant.get_sensor_data') as mock_get:
+            mock_get.return_value = sensor_data
+            result = home_assistant.add_climate_sensor("token", "11|1|humidity_sensor|label", mock_home, 0, 0, MagicMock())
+            self.assertEqual(result, mock_sensor)
+            self.assertEqual(mock_sensor.mode, "heating")
+
+    def test_add_climate_sensor_humidity_state_fallback(self):
+        """Test adding humidity sensor falls back to state when no mode fields exist."""
+        mock_home = MagicMock()
+        mock_sensor = MagicMock(type=11, key="humidity_sensor")
+        mock_home.climate.create_sensor.return_value = mock_sensor
+
+        sensor_data = {
+            "attributes": {
+                "current_humidity": 55.0,
+                "humidity": 60.0
+            },
+            "state": "on"
+        }
+
+        with patch('stations.home_assistant.get_sensor_data') as mock_get:
+            mock_get.return_value = sensor_data
+            result = home_assistant.add_climate_sensor("token", "11|1|humidity_sensor|label", mock_home, 0, 0, MagicMock())
+            self.assertEqual(result, mock_sensor)
+            self.assertEqual(mock_sensor.mode, "on")
+
     def test_add_climate_sensor_ecobee_thermostat(self):
         """Test adding ecobee thermostat climate sensor."""
         mock_home = MagicMock()
@@ -513,6 +575,28 @@ class TestHomeAssistant(unittest.TestCase):
         self.assertEqual(mock_add_sensor.call_count, 2)
         self.assertEqual(len(home.climate.sensors), 1)
 
+    @patch.dict('stations.home_assistant.os.environ', {'ALARM_ZONE_1': '0|1|contact|Living Room', 'CLIMATE_SENSOR_1': '5|1|thermostat|Main'})
+    @patch('stations.home_assistant.requests.Session')
+    @patch('stations.home_assistant.get_bearer_token')
+    @patch('stations.home_assistant.add_alarm_zone')
+    @patch('stations.home_assistant.add_climate_sensor')
+    def test_get_weather_continues_after_alarm_zone_failure(self, mock_climate, mock_alarm, mock_token, mock_session):
+        """Test get_weather keeps processing climate sensors after an alarm zone fails."""
+        mock_token.return_value = "token"
+        mock_session_instance = MagicMock()
+        mock_session.return_value = mock_session_instance
+
+        mock_sensor = MagicMock(type=5, temperature="72.5")
+        mock_alarm.side_effect = [Exception("bad zone")]
+        mock_climate.return_value = mock_sensor
+
+        home = data.Home()
+        home_assistant.get_weather(home)
+
+        self.assertIsNotNone(home)
+        self.assertEqual(mock_alarm.call_count, 1)
+        self.assertEqual(mock_climate.call_count, 1)
+        self.assertEqual(len(home.climate.sensors), 1)
     @patch.dict('stations.home_assistant.os.environ', {'CLIMATE_SENSOR_1': '5|1|thermostat|Main'})
     @patch('stations.home_assistant.requests.Session')
     @patch('stations.home_assistant.get_bearer_token')
