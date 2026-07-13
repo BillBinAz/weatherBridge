@@ -211,17 +211,29 @@ def get_weather(home, dt=None):
 
         for key, value in os.environ.items():
             config_data = os.getenv(key)
-            if key.startswith("ALARM_ZONE") and check_types(config_data):
-                alarm_present = True
-                add_alarm_zone(bearer_token, config_data, home, session)
-            if key.startswith("CLIMATE_SENSOR") and check_types(config_data):
-                climate_sensor = add_climate_sensor(bearer_token, config_data, home, temperature_sum, temperature_count, session)
-                if climate_sensor:
-                    home.climate.sensors.append(climate_sensor)
-                    if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT or climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
-                        if climate_sensor.temperature is not DEFAULT_TEMPERATURE:
-                            temperature_sum += float(climate_sensor.temperature)
-                            temperature_count += 1
+            try:
+                if key.startswith("ALARM_ZONE") and check_types(config_data):
+                    alarm_present = True
+                    add_alarm_zone(bearer_token, config_data, home, session)
+                if key.startswith("CLIMATE_SENSOR") and check_types(config_data):
+                    climate_sensor = add_climate_sensor(
+                        bearer_token,
+                        config_data,
+                        home,
+                        temperature_sum,
+                        temperature_count,
+                        session,
+                    )
+                    if climate_sensor:
+                        home.climate.sensors.append(climate_sensor)
+                        if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT or climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
+                            if climate_sensor.temperature is not DEFAULT_TEMPERATURE:
+                                temperature_sum += float(climate_sensor.temperature)
+                                temperature_count += 1
+            except Exception as e:
+                traceback.print_exc()
+                logging.error(f"Unable to get home-assistant:get_weather item {key} {e}")
+                print("Unable to get assistant:get_weather ")
 
         if temperature_count > 0:
             home.climate.home_average_temperature = conversions.format_f(temperature_sum / temperature_count, 1)

@@ -59,53 +59,58 @@ def check_types(config_data):
 def get_weather(home):
     """Populate home climate sensor with wifiLogger data."""
     try:
-        found = False
+        configs = []
         for key, value in os.environ.items():
             config_data = os.getenv(key)
             if key.startswith("CLIMATE_SENSOR") and check_types(config_data):
-                found = True
-                break
+                configs.append(config_data)
 
-        if not found:
+        if not configs:
             return
 
-        climate_sensor = home.climate.create_sensor(config_data)
-        wifi_logger_data = get_data(climate_sensor.url)
+        for config_data in configs:
+            try:
+                climate_sensor = home.climate.create_sensor(config_data)
+                wifi_logger_data = get_data(climate_sensor.url)
 
-        if not wifi_logger_data:
-            return
+                if not wifi_logger_data:
+                    continue
 
-        # Temperature and humidity
-        climate_sensor.temperature = convert_to_float(wifi_logger_data[TEMPERATURE_OUTDOOR], 2)
-        climate_sensor.humidity = convert_to_float(wifi_logger_data[HUMIDITY_OUTDOOR], 2)
-        climate_sensor.dew_point = convert_to_float(wifi_logger_data[DEP_POINT], 2)
+                # Temperature and humidity
+                climate_sensor.temperature = convert_to_float(wifi_logger_data[TEMPERATURE_OUTDOOR], 2)
+                climate_sensor.humidity = convert_to_float(wifi_logger_data[HUMIDITY_OUTDOOR], 2)
+                climate_sensor.dew_point = convert_to_float(wifi_logger_data[DEP_POINT], 2)
 
-        # Rain
-        climate_sensor.rain_rate = convert_to_float(wifi_logger_data[RAIN_RATE], 2)
-        climate_sensor.rain_total = convert_to_float(wifi_logger_data[RAIN_24_HOURS], 2)
+                # Rain
+                climate_sensor.rain_rate = convert_to_float(wifi_logger_data[RAIN_RATE], 2)
+                climate_sensor.rain_total = convert_to_float(wifi_logger_data[RAIN_24_HOURS], 2)
 
-        # Wind
-        climate_sensor.wind_speed = convert_to_float(wifi_logger_data[WIND_SPEED], 2)
-        climate_sensor.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
-        climate_sensor.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
-        climate_sensor.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
+                # Wind
+                climate_sensor.wind_speed = convert_to_float(wifi_logger_data[WIND_SPEED], 2)
+                climate_sensor.wind_gust = convert_to_float(wifi_logger_data[WIND_GUST], 2)
+                climate_sensor.wind_direction = conversion_utilities.deg_to_compass(wifi_logger_data[WIND_DIRECTION])
+                climate_sensor.wind_chill = convert_to_float(wifi_logger_data[WIND_CHILL], 2)
 
-        # Spa temperature
-        climate_sensor.spa_temp = convert_to_float(wifi_logger_data[SPA_TEMP_ARRAY][SPA_TEMP_INDEX], 2)
+                # Spa temperature
+                climate_sensor.spa_temp = convert_to_float(wifi_logger_data[SPA_TEMP_ARRAY][SPA_TEMP_INDEX], 2)
 
-        # Pressure
-        climate_sensor.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
+                # Pressure
+                climate_sensor.pressure = convert_to_float(wifi_logger_data[PRESSURE], 4)
 
-        home.climate.sensors.append(climate_sensor)
+                home.climate.sensors.append(climate_sensor)
+            except json.JSONDecodeError as e:
+                traceback.print_exc()
+                logging.error(f"JSON decode error in wifiLogger: {e}")
+                print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
+            except KeyError as e:
+                traceback.print_exc()
+                logging.error(f"Missing expected key in wifiLogger data: {e}")
+                print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
+            except Exception as e:
+                traceback.print_exc()
+                logging.error(f"Unable to get wifiLogger data: {e}")
+                print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
 
-    except json.JSONDecodeError as e:
-        traceback.print_exc()
-        logging.error(f"JSON decode error in wifiLogger: {e}")
-        print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
-    except KeyError as e:
-        traceback.print_exc()
-        logging.error(f"Missing expected key in wifiLogger data: {e}")
-        print(dt.datetime.now().time(), "Unable to get wifiLogger:get_weather ")
     except Exception as e:
         traceback.print_exc()
         logging.error(f"Unable to get wifiLogger data: {e}")

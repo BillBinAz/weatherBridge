@@ -493,6 +493,26 @@ class TestHomeAssistant(unittest.TestCase):
 
         self.assertIsNotNone(home)
 
+    @patch.dict('stations.home_assistant.os.environ', {'CLIMATE_SENSOR_1': '5|1|thermostat|Main', 'CLIMATE_SENSOR_2': '6|1|sensor|Bedroom'})
+    @patch('stations.home_assistant.requests.Session')
+    @patch('stations.home_assistant.get_bearer_token')
+    @patch('stations.home_assistant.add_climate_sensor')
+    def test_get_weather_continues_after_sensor_failure(self, mock_add_sensor, mock_token, mock_session):
+        """Test get_weather keeps processing later climate sensors after one fails."""
+        mock_token.return_value = "token"
+        mock_session_instance = MagicMock()
+        mock_session.return_value = mock_session_instance
+
+        mock_sensor = MagicMock(type=6, temperature="70.0")
+        mock_add_sensor.side_effect = [Exception("bad sensor"), mock_sensor]
+
+        home = data.Home()
+        home_assistant.get_weather(home)
+
+        self.assertIsNotNone(home)
+        self.assertEqual(mock_add_sensor.call_count, 2)
+        self.assertEqual(len(home.climate.sensors), 1)
+
     @patch.dict('stations.home_assistant.os.environ', {'CLIMATE_SENSOR_1': '5|1|thermostat|Main'})
     @patch('stations.home_assistant.requests.Session')
     @patch('stations.home_assistant.get_bearer_token')

@@ -21,12 +21,16 @@ CONNECT_ITEM_ID = os.getenv("SENSOR_PUSH_CONNECT_ITEM_ID")
 TYPES_PROCESSED = [CLIMATE_TYPE_SENSOR_PUSH]
 
 def check_types(config_data):
-    result = config_data.split("|")
-    if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
-        return True
-    if int(result[0]) == 0:
-        return True
-    return False
+    try:
+        result = config_data.split("|")
+        type_id = int(result[0])
+        if type_id and type_id in TYPES_PROCESSED:
+            return True
+        if type_id == 0:
+            return True
+        return False
+    except (ValueError, IndexError, AttributeError):
+        return False
 
 def get_sensor_by_key(sensors, key):
     for sensor in sensors:
@@ -169,10 +173,15 @@ def get_weather(home):
 
         for sensor in sensor_data["sensors"]:
             sensor_key = str(sensor)
-            climate_sensor = get_sensor_by_key(climate_sensors, sensor_key)
-            if climate_sensor:
-                apply_sensor(climate_sensor, sensor_data, calibration_data, sensor_key)
-                home.climate.sensors.append(climate_sensor)
+            try:
+                climate_sensor = get_sensor_by_key(climate_sensors, sensor_key)
+                if climate_sensor:
+                    apply_sensor(climate_sensor, sensor_data, calibration_data, sensor_key)
+                    home.climate.sensors.append(climate_sensor)
+            except Exception as e:
+                traceback.print_exc()
+                logging.error(f"Unable to get sensor_push:sensor {sensor_key} {e}")
+                print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather ")
 
     except Exception as e:
         traceback.print_exc()

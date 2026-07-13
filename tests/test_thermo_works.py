@@ -42,6 +42,11 @@ class TestThermoWorks(unittest.TestCase):
         result = thermo_works.check_types("99|1|key|label")
         self.assertFalse(result)
 
+    def test_check_types_invalid_format(self):
+        """Test check_types with malformed config."""
+        result = thermo_works.check_types("invalid")
+        self.assertFalse(result)
+
     def test_check_types_humidity_type(self):
         """Test check_types with humidity thermoworks type."""
         result = thermo_works.check_types("8|1|key|label")
@@ -261,6 +266,36 @@ class TestThermoWorks(unittest.TestCase):
         thermo_works.get_weather(home)
 
         self.assertIsNotNone(home)
+
+    @patch.dict('stations.thermo_works.thermo_works.os.environ', {
+        'CLIMATE_SENSOR_1': '7|device_bad|label',
+        'CLIMATE_SENSOR_2': '7|device_good|label'
+    })
+    @patch('stations.thermo_works.thermo_works.asyncio.new_event_loop')
+    @patch('stations.thermo_works.thermo_works.conversions.format_f')
+    def test_get_weather_continues_after_device_failure(self, mock_format, mock_loop):
+        """Test get_weather keeps processing later ThermoWorks devices after one fails."""
+        mock_loop_instance = MagicMock()
+        mock_task = MagicMock()
+
+        bad_device = MagicMock(serial="bad_serial", device_id="device_bad")
+        good_device = MagicMock(serial="good_serial", device_id="device_good")
+        device_channels_by_device = {
+            "bad_serial": [],
+            "good_serial": [MagicMock(value=72.5), MagicMock(value=0.0)]
+        }
+
+        mock_task.result.return_value = ([bad_device, good_device], device_channels_by_device)
+        mock_loop_instance.create_task.return_value = mock_task
+        mock_loop_instance.run_until_complete.return_value = None
+        mock_loop.return_value = mock_loop_instance
+        mock_format.side_effect = lambda x, *args: x
+
+        home = data.Home()
+        thermo_works.get_weather(home)
+
+        self.assertEqual(len(home.climate.sensors), 1)
+        self.assertEqual(home.climate.sensors[0].label, 'label')
 
 if __name__ == '__main__':
     unittest.main()
