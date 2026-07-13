@@ -155,11 +155,9 @@ def add_climate_sensor(bearer_token: Any | None, config_data: str, home, tempera
         climate_sensor.humidity = sensor_data["attributes"]["current_humidity"]
         climate_sensor.humidity_set = sensor_data["attributes"]["humidity"]
         if "mode" in sensor_data["attributes"]:
-            climate_sensor.mode = sensor_data["attributes"]["mode"]
+            climate_sensor.mode = sensor_data["attributes"]["mode"].title()
         elif "equipment_status" in sensor_data["attributes"]:
-            climate_sensor.mode = sensor_data["attributes"]["equipment_status"]
-        else:
-            climate_sensor.mode = sensor_data["state"]
+            climate_sensor.mode = sensor_data["attributes"]["equipment_status"].title()
         return climate_sensor
     if climate_sensor.type == CLIMATE_TYPE_ECOBEE_THERMOSTAT:
         populate_ecobee_thermostat(bearer_token, climate_sensor, session)
