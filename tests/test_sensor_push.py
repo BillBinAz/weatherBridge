@@ -252,6 +252,41 @@ class TestSensorPush(unittest.TestCase):
         self.assertIsNotNone(home)
         self.assertEqual(len(home.climate.sensors), 0)
 
+    @patch.dict('stations.sensorPush.os.environ', {
+        'CLIMATE_SENSOR_1': '10|sensor1|label1',
+        'CLIMATE_SENSOR_2': '10|sensor2|label2'
+    })
+    @patch('stations.sensorPush.get_authorization')
+    @patch('stations.sensorPush.get_access_token')
+    @patch('stations.sensorPush.get_sensor_data')
+    @patch('stations.sensorPush.apply_sensor')
+    def test_get_weather_continues_after_sensor_failure(self, mock_apply, mock_sensor_data, mock_access_token, mock_auth):
+        """Test get_weather keeps processing later SensorPush sensors after one fails."""
+        mock_auth.return_value = "auth_token"
+        mock_access_token.return_value = "access_token"
+        mock_sensor_data.side_effect = [
+            {
+                "sensors": {
+                    "sensor1": {"calibration": {"temperature": 0.0, "humidity": 0.0}},
+                    "sensor2": {"calibration": {"temperature": 0.0, "humidity": 0.0}}
+                }
+            },
+            {
+                "sensors": {
+                    "sensor1": [{"temperature": 70.0, "humidity": 50.0, "observed": "2023-01-01T12:00:00Z"}],
+                    "sensor2": [{"temperature": 71.0, "humidity": 51.0, "observed": "2023-01-01T12:00:00Z"}]
+                }
+            }
+        ]
+        mock_apply.side_effect = [Exception("bad sensor"), None]
+
+        home = data.Home()
+        sensorPush.get_weather(home)
+
+        self.assertEqual(mock_apply.call_count, 2)
+        self.assertEqual(len(home.climate.sensors), 1)
+        self.assertEqual(home.climate.sensors[0].label, 'label2')
+
 
 if __name__ == '__main__':
     unittest.main()

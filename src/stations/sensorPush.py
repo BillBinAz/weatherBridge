@@ -169,10 +169,15 @@ def get_weather(home):
 
         for sensor in sensor_data["sensors"]:
             sensor_key = str(sensor)
-            climate_sensor = get_sensor_by_key(climate_sensors, sensor_key)
-            if climate_sensor:
-                apply_sensor(climate_sensor, sensor_data, calibration_data, sensor_key)
-                home.climate.sensors.append(climate_sensor)
+            try:
+                climate_sensor = get_sensor_by_key(climate_sensors, sensor_key)
+                if climate_sensor:
+                    apply_sensor(climate_sensor, sensor_data, calibration_data, sensor_key)
+                    home.climate.sensors.append(climate_sensor)
+            except Exception as e:
+                traceback.print_exc()
+                logging.error(f"Unable to get sensor_push:sensor {sensor_key} {e}")
+                print(dt.datetime.now().time(), "Unable to get sensor_push:get_weather ")
 
     except Exception as e:
         traceback.print_exc()

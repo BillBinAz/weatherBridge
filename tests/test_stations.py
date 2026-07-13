@@ -46,8 +46,7 @@ class TestStations(unittest.TestCase):
     @patch('weather.stations.sensorPush.get_weather')
     @patch('weather.stations.thermo_works.get_weather')
     def test_get_weather_handles_exception(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
-        """Test that get_weather handles exceptions from station modules."""
-        # Make home_assistant raise an exception
+        """Test that get_weather keeps collecting after home_assistant fails."""
         mock_home.side_effect = Exception("Connection error")
         mock_wifi.return_value = None
         mock_sensor.return_value = None
@@ -55,15 +54,18 @@ class TestStations(unittest.TestCase):
 
         result = stations.get_weather()
 
-        # Should still return a Home object even if exception occurred
         self.assertIsInstance(result, data.Home)
+        mock_home.assert_called_once()
+        mock_wifi.assert_called_once()
+        mock_sensor.assert_called_once()
+        mock_thermo.assert_called_once()
 
     @patch('weather.stations.home_assistant.get_weather')
     @patch('weather.stations.wifiLogger.get_weather')
     @patch('weather.stations.sensorPush.get_weather')
     @patch('weather.stations.thermo_works.get_weather')
     def test_get_weather_exception_in_wifi_logger(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
-        """Test exception handling when wifiLogger fails."""
+        """Test that get_weather keeps collecting after wifiLogger fails."""
         mock_home.return_value = None
         mock_wifi.side_effect = RuntimeError("WiFi error")
         mock_sensor.return_value = None
@@ -71,15 +73,18 @@ class TestStations(unittest.TestCase):
 
         result = stations.get_weather()
 
-        # Should still return a Home object
         self.assertIsInstance(result, data.Home)
+        mock_home.assert_called_once()
+        mock_wifi.assert_called_once()
+        mock_sensor.assert_called_once()
+        mock_thermo.assert_called_once()
 
     @patch('weather.stations.home_assistant.get_weather')
     @patch('weather.stations.wifiLogger.get_weather')
     @patch('weather.stations.sensorPush.get_weather')
     @patch('weather.stations.thermo_works.get_weather')
     def test_get_weather_exception_in_thermo_works(self, mock_thermo, mock_sensor, mock_wifi, mock_home):
-        """Test exception handling when thermo_works fails."""
+        """Test that get_weather keeps collecting after thermo_works fails."""
         mock_home.return_value = None
         mock_wifi.return_value = None
         mock_sensor.return_value = None
@@ -87,8 +92,11 @@ class TestStations(unittest.TestCase):
 
         result = stations.get_weather()
 
-        # Should still return a Home object
         self.assertIsInstance(result, data.Home)
+        mock_home.assert_called_once()
+        mock_wifi.assert_called_once()
+        mock_sensor.assert_called_once()
+        mock_thermo.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()

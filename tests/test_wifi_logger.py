@@ -168,6 +168,36 @@ class TestWifiLogger(unittest.TestCase):
         # Should handle exception gracefully
         self.assertIsNotNone(home)
 
+    @patch.dict(os.environ, {
+        'CLIMATE_SENSOR_WIFI_1': '4|Back Yard|http://test-one.com',
+        'CLIMATE_SENSOR_WIFI_2': '4|Front Yard|http://test-two.com'
+    })
+    @patch('stations.wifiLogger.get_data')
+    def test_get_weather_continues_after_sensor_failure(self, mock_get_data):
+        """Test get_weather keeps processing later wifiLogger sensors after one fails."""
+        mock_get_data.side_effect = [
+            {'tempout': 75.5},
+            {
+                "tempout": 75.5,
+                "humout": 60.0,
+                "dew": 65.0,
+                "rainr": 0.0,
+                "rain24": 0.5,
+                "windspd": 5.0,
+                "gust": 10.0,
+                "winddir": 180,
+                "chill": 70.0,
+                "xlt": [80.0],
+                "bar": 29.92
+            }
+        ]
+
+        home = data.Home()
+        wifiLogger.get_weather(home)
+
+        self.assertEqual(len(home.climate.sensors), 1)
+        self.assertEqual(home.climate.sensors[0].label, 'Front Yard')
+
     def test_convert_to_float_zero_precision(self):
         """Test convert_to_float with zero precision."""
         result = wifiLogger.convert_to_float("75.999", 0)
