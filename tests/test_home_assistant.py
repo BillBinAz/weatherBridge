@@ -597,7 +597,6 @@ class TestHomeAssistant(unittest.TestCase):
         self.assertEqual(mock_alarm.call_count, 1)
         self.assertEqual(mock_climate.call_count, 1)
         self.assertEqual(len(home.climate.sensors), 1)
-
     @patch.dict('stations.home_assistant.os.environ', {'CLIMATE_SENSOR_1': '5|1|thermostat|Main'})
     @patch('stations.home_assistant.requests.Session')
     @patch('stations.home_assistant.get_bearer_token')

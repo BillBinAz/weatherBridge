@@ -51,7 +51,6 @@ class TestThermoWorks(unittest.TestCase):
         """Test check_types with None input."""
         result = thermo_works.check_types(None)
         self.assertFalse(result)
-
     def test_check_types_humidity_type(self):
         """Test check_types with humidity thermoworks type."""
         result = thermo_works.check_types("8|1|key|label")

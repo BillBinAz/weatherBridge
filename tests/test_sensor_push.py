@@ -94,7 +94,6 @@ class TestSensorPush(unittest.TestCase):
         """Test check_types with None input."""
         result = sensorPush.check_types(None)
         self.assertFalse(result)
-
     def test_get_sensor_by_key_found(self):
         """Test get_sensor_by_key when sensor is found."""
         sensors = [MagicMock(key="sensor1"), MagicMock(key="sensor2")]
