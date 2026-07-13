@@ -42,6 +42,11 @@ class TestThermoWorks(unittest.TestCase):
         result = thermo_works.check_types("99|1|key|label")
         self.assertFalse(result)
 
+    def test_check_types_invalid_format(self):
+        """Test check_types with malformed config."""
+        result = thermo_works.check_types("invalid")
+        self.assertFalse(result)
+
     def test_check_types_humidity_type(self):
         """Test check_types with humidity thermoworks type."""
         result = thermo_works.check_types("8|1|key|label")

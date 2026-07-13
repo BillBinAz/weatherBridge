@@ -12,13 +12,17 @@ from weather.data import CLIMATE_TYPE_THERMOWORKS_NODE, CLIMATE_TYPE_THERMOWORKS
 TYPES_PROCESSED = [CLIMATE_TYPE_THERMOWORKS_NODE, CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY, CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL]
 
 def check_types(config_data):
-    result = config_data.split("|")
-    if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
-        return True
-    if int(result[0]) == 0:
-        return True
+    try:
+        result = config_data.split("|")
+        type_id = int(result[0])
+        if type_id and type_id in TYPES_PROCESSED:
+            return True
+        if type_id == 0:
+            return True
 
-    return False
+        return False
+    except (ValueError, IndexError, AttributeError):
+        return False
 
 def get_sensor_by_key(sensors, key):
     for sensor in sensors:

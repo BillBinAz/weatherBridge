@@ -21,12 +21,16 @@ CONNECT_ITEM_ID = os.getenv("SENSOR_PUSH_CONNECT_ITEM_ID")
 TYPES_PROCESSED = [CLIMATE_TYPE_SENSOR_PUSH]
 
 def check_types(config_data):
-    result = config_data.split("|")
-    if int(result[0]) and int(result[0]) in TYPES_PROCESSED:
-        return True
-    if int(result[0]) == 0:
-        return True
-    return False
+    try:
+        result = config_data.split("|")
+        type_id = int(result[0])
+        if type_id and type_id in TYPES_PROCESSED:
+            return True
+        if type_id == 0:
+            return True
+        return False
+    except (ValueError, IndexError, AttributeError):
+        return False
 
 def get_sensor_by_key(sensors, key):
     for sensor in sensors:
