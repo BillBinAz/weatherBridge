@@ -374,7 +374,7 @@ class TestHomeAssistant(unittest.TestCase):
             mock_get.return_value = sensor_data
             result = home_assistant.add_climate_sensor("token", "11|1|humidity_sensor|label", mock_home, 0, 0, MagicMock())
             self.assertEqual(result, mock_sensor)
-            self.assertEqual(mock_sensor.mode, "auto")
+            self.assertEqual(mock_sensor.mode, "Auto")
 
     def test_add_climate_sensor_humidity_equipment_status(self):
         """Test adding humidity sensor uses equipment_status when mode is absent."""
@@ -395,7 +395,7 @@ class TestHomeAssistant(unittest.TestCase):
             mock_get.return_value = sensor_data
             result = home_assistant.add_climate_sensor("token", "11|1|humidity_sensor|label", mock_home, 0, 0, MagicMock())
             self.assertEqual(result, mock_sensor)
-            self.assertEqual(mock_sensor.mode, "heating")
+            self.assertEqual(mock_sensor.mode, "Heating")
 
     def test_add_climate_sensor_humidity_state_fallback(self):
         """Test adding humidity sensor falls back to state when no mode fields exist."""

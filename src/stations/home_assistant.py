@@ -155,9 +155,9 @@ def add_climate_sensor(bearer_token: Any | None, config_data: str, home, tempera
         climate_sensor.humidity = sensor_data["attributes"]["current_humidity"]
         climate_sensor.humidity_set = sensor_data["attributes"]["humidity"]
         if "mode" in sensor_data["attributes"]:
-            climate_sensor.mode = sensor_data["attributes"]["mode"]
+            climate_sensor.mode = sensor_data["attributes"]["mode"].title()
         elif "equipment_status" in sensor_data["attributes"]:
-            climate_sensor.mode = sensor_data["attributes"]["equipment_status"]
+            climate_sensor.mode = sensor_data["attributes"]["equipment_status"].title()
         else:
             climate_sensor.mode = sensor_data["state"]
         return climate_sensor
