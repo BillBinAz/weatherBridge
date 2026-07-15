@@ -8,6 +8,28 @@ from stations.thermo_works import thermo_works
 import datetime as dt
 import logging
 
+
+def calculate_humidity_average(home):
+    try:
+        # find and average labels named in AVERAGE_HUMIDITY_KEYS environment variable
+        config_data = os.getenv("AVERAGE_HUMIDITY_KEYS")
+        if not config_data:
+            return None
+        keys = [key.strip() for key in config_data.split("|") if key.strip()]
+        # values are in home.climate.sensors[*].humidity
+        values = []
+        for key in keys:
+            sensor = next((s for s in home.climate.sensors if s.label == key), None)
+            if sensor and sensor.humidity is not None:
+                values.append(sensor.humidity)
+
+        if values:
+            home.climate.home_average_humidity = round(sum(values) / len(values), 0)
+    except (AttributeError, TypeError, ValueError) as e:
+        logging.error(f"Unable to calculate average humidity: {e}")
+    return None
+
+
 def _collect_station(home, collector, name):
     try:
         collector(home)
@@ -32,4 +54,5 @@ def get_weather():
     _collect_station(home, wifiLogger.get_weather, "wifiLogger")
     _collect_station(home, thermo_works.get_weather, "thermo_works")
     _collect_station(home, sensorPush.get_weather, "sensorPush")
+    calculate_humidity_average(home)
     return home

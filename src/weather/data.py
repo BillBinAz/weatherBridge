@@ -41,6 +41,7 @@ class Alarm(object):
 class Climate(object):
     def __init__(self):
         self.home_average_temperature = 0.0
+        self.home_average_humidity = 0.0
         self.sensors = []
 
     def to_json(self):
@@ -201,6 +202,7 @@ class Home(object):
             },
             "climate": {
                 "home_average_temperature": self.climate.home_average_temperature,
+                "home_average_humidity": self.climate.home_average_humidity,
                 "sensors": [{sensor.label: sensor.__dict__} for sensor in self.climate.sensors]
             },
             "doors": [{door.label: door.__dict__} for door in self.doors],

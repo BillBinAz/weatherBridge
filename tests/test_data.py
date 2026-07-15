@@ -21,6 +21,7 @@ class TestData(unittest.TestCase):
         # Check climate
         self.assertIsInstance(home.climate, data.Climate)
         self.assertEqual(home.climate.home_average_temperature, 0.0)
+        self.assertEqual(home.climate.home_average_humidity, 0.0)
 
         # Check doors
         self.assertIsInstance(home.doors, list)
@@ -43,12 +44,14 @@ class TestData(unittest.TestCase):
         home = data.Home()
         home.alarm.status_value = 1
         home.climate.home_average_temperature = 72.5
+        home.climate.home_average_humidity = 51.0
 
         json_str = home.to_json()
         parsed = json.loads(json_str)
 
         self.assertEqual(parsed['alarm']['status_value'], 1)
         self.assertEqual(parsed['climate']['home_average_temperature'], 72.5)
+        self.assertEqual(parsed['climate']['home_average_humidity'], 51.0)
 
     def test_sensor_classes(self):
         """Test individual sensor class initializations."""
@@ -89,6 +92,7 @@ class TestData(unittest.TestCase):
         """Test Climate initialization (home average temperature)."""
         climate = data.Climate()
         self.assertEqual(climate.home_average_temperature, 0.0)
+        self.assertEqual(climate.home_average_humidity, 0.0)
         self.assertIsInstance(climate.sensors, list)
 
     def test_create_sensor_davis(self):
