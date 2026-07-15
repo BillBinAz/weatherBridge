@@ -8,6 +8,45 @@ from weather import stations, data
 
 
 class TestStations(unittest.TestCase):
+    def test_calculate_humidity_average_uses_configured_labels(self):
+        home = data.Home()
+        sensor_a = data.SensorSmall("10|a|Kitchen")
+        sensor_b = data.SensorSmall("10|b|Office")
+        sensor_a.humidity = 41
+        sensor_b.humidity = 55
+        home.climate.sensors.extend([sensor_a, sensor_b])
+
+        with patch.dict(os.environ, {"AVERAGE_HUMIDITY_KEYS": " Kitchen |Office|Missing "}):
+            result = stations.calculate_humidity_average(home)
+
+        self.assertIsNone(result)
+        self.assertEqual(home.climate.home_average_humidity, 48.0)
+
+    def test_calculate_humidity_average_skips_missing_and_none_values(self):
+        home = data.Home()
+        sensor = data.SensorSmall("10|a|Kitchen")
+        sensor.humidity = None
+        home.climate.sensors.append(sensor)
+
+        with patch.dict(os.environ, {"AVERAGE_HUMIDITY_KEYS": "Kitchen|Missing"}):
+            result = stations.calculate_humidity_average(home)
+
+        self.assertIsNone(result)
+        self.assertEqual(home.climate.home_average_humidity, 0.0)
+
+    @patch('weather.stations.logging.error')
+    def test_calculate_humidity_average_handles_invalid_humidity_type(self, mock_log_error):
+        home = data.Home()
+        sensor = data.SensorSmall("10|a|Kitchen")
+        sensor.humidity = "bad-value"
+        home.climate.sensors.append(sensor)
+
+        with patch.dict(os.environ, {"AVERAGE_HUMIDITY_KEYS": "Kitchen"}):
+            result = stations.calculate_humidity_average(home)
+
+        self.assertIsNone(result)
+        self.assertEqual(home.climate.home_average_humidity, 0.0)
+        mock_log_error.assert_called_once()
 
     @patch('weather.stations.home_assistant.get_weather')
     @patch('weather.stations.wifiLogger.get_weather')
