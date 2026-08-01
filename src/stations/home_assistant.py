@@ -171,7 +171,6 @@ def add_climate_sensor(bearer_token: Any | None, config_data: str, home, tempera
 
 def add_alarm_zone(bearer_token: Any | None, config_data: str, home,  s: Session):
     alarm_zone = AlarmZone(config_data)
-
     if alarm_zone.type == ZONE_TYPE_CONTACT:
         alarm_zone.closed = get_on_off_state(bearer_token, "binary_sensor." + alarm_zone.key, s)
         home.alarm.zones.append(alarm_zone)

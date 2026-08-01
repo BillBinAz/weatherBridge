@@ -15,7 +15,7 @@ class TestData(unittest.TestCase):
 
         # Check alarm
         self.assertIsInstance(home.alarm, data.Alarm)
-        self.assertEqual(home.alarm.all_zones_closed, 0)
+        self.assertEqual(home.alarm.all_zones_closed, 1)
         self.assertEqual(home.alarm.status_value, 0)
 
         # Check climate
@@ -77,7 +77,7 @@ class TestData(unittest.TestCase):
         alarm = data.Alarm()
         self.assertEqual(alarm.status_value, 0)
         self.assertEqual(alarm.status_label, "None")
-        self.assertEqual(alarm.all_zones_closed, 0)
+        self.assertEqual(alarm.all_zones_closed, 1)
         self.assertIsInstance(alarm.zones, list)
 
     def test_thermostat_initialization(self):

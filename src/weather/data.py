@@ -34,7 +34,7 @@ class AlarmZone(object):
 class Alarm(object):
     def __init__(self):
         self.zones = []
-        self.all_zones_closed = 0
+        self.all_zones_closed = 1
         self.status_value = 0
         self.status_label = "None"
 
