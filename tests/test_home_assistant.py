@@ -451,11 +451,13 @@ class TestHomeAssistant(unittest.TestCase):
     def test_add_alarm_zone_contact(self):
         """Test adding contact alarm zone."""
         mock_home = MagicMock()
+        mock_home.alarm.all_zones_closed = 1
         
         with patch('stations.home_assistant.get_on_off_state') as mock_state:
             mock_state.return_value = 1
             home_assistant.add_alarm_zone("token", "0|1|contact_sensor|Living Room", mock_home, MagicMock())
             mock_home.alarm.zones.append.assert_called_once()
+            self.assertEqual(mock_home.alarm.all_zones_closed, 1)
 
     def test_add_alarm_zone_motion(self):
         """Test adding motion alarm zone."""
@@ -490,11 +492,24 @@ class TestHomeAssistant(unittest.TestCase):
     def test_add_alarm_zone_contact_open(self):
         """Test adding contact alarm zone that is open."""
         mock_home = MagicMock()
+        mock_home.alarm.all_zones_closed = 1
         
         with patch('stations.home_assistant.get_on_off_state') as mock_state:
             mock_state.return_value = 0  # Open/not safe
             home_assistant.add_alarm_zone("token", "0|1|contact_sensor|Living Room", mock_home, MagicMock())
             self.assertEqual(mock_home.alarm.all_zones_closed, 0)
+
+    def test_add_alarm_zone_does_not_reset_open_contact_state(self):
+        """Test later zones do not reset an open contact state."""
+        mock_home = MagicMock()
+        mock_home.alarm.all_zones_closed = 1
+
+        with patch('stations.home_assistant.get_on_off_state') as mock_state:
+            mock_state.side_effect = [0, 1]
+            home_assistant.add_alarm_zone("token", "0|1|contact_sensor|Living Room", mock_home, MagicMock())
+            home_assistant.add_alarm_zone("token", "1|2|motion_sensor|Hallway", mock_home, MagicMock())
+
+        self.assertEqual(mock_home.alarm.all_zones_closed, 0)
 
     @patch.dict('stations.home_assistant.os.environ', {})
     @patch('stations.home_assistant.requests.Session')
