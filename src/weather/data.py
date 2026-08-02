@@ -119,12 +119,12 @@ class SensorAprilaire(object):
         self.state = ""
         self.humidity_set = 0.0
         self.humidity = 0.0
-        self.isCompOn = False
-        self.isDehumFanOn = False
-        self.isHvacFanOn = False
+        self.is_comp_on = False
+        self.is_dehum_fan_on = False
+        self.is_hvac_fan_on = False
         self.alerts = {}
-        self.fanTimeHours = 0
-        self.filterService = {}
+        self.fan_time_hours = 0
+        self.filter_service = {}
 
 class SensorDavisWeatherStation(object):
 

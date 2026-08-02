@@ -3,6 +3,7 @@ import datetime as dt
 import json
 import logging
 import os
+import re
 import traceback
 
 import requests
@@ -161,6 +162,18 @@ def get_current_humidity(status_payload, fallback_status=None):
     return 0.0
 
 
+def _to_snake_case(value):
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", value).lower()
+
+
+def normalize_keys(value):
+    if isinstance(value, dict):
+        return {_to_snake_case(str(key)): normalize_keys(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [normalize_keys(item) for item in value]
+    return value
+
+
 def apply_dehumidifier(sensor, settings_payload, status_payload):
     settings = settings_payload.get("dehumidifier", {})
     if not isinstance(settings, dict):
@@ -177,12 +190,12 @@ def apply_dehumidifier(sensor, settings_payload, status_payload):
     sensor.state = str(status_payload.get("equipmentStatus", ""))
     sensor.humidity_set = float(settings.get("humiditySetpoint", 0.0) or 0.0)
     sensor.humidity = get_current_humidity(status_payload)
-    sensor.isCompOn = bool(status_payload.get("isCompOn", False))
-    sensor.isDehumFanOn = bool(status_payload.get("isDehumFanOn", False))
-    sensor.isHvacFanOn = bool(status_payload.get("isHvacFanOn", False))
-    sensor.alerts = alerts
-    sensor.fanTimeHours = int(status_payload.get("fanTimeHours", 0) or 0)
-    sensor.filterService = filter_service
+    sensor.is_comp_on = bool(status_payload.get("isCompOn", False))
+    sensor.is_dehum_fan_on = bool(status_payload.get("isDehumFanOn", False))
+    sensor.is_hvac_fan_on = bool(status_payload.get("isHvacFanOn", False))
+    sensor.alerts = normalize_keys(alerts)
+    sensor.fan_time_hours = int(status_payload.get("fanTimeHours", 0) or 0)
+    sensor.filter_service = normalize_keys(filter_service)
 
 
 def apply_humidifier(sensor, settings_payload, status_payload, thermostat_status=None):
