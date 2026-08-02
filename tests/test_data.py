@@ -164,7 +164,7 @@ class TestData(unittest.TestCase):
     def test_create_sensor_aprilaire(self):
         """Test Climate.create_sensor with AprilAire type."""
         climate = data.Climate()
-        config = "12|device_id|Basement AprilAire"
+        config = "13|device_id|Basement AprilAire"
         sensor = climate.create_sensor(config)
         self.assertIsInstance(sensor, data.SensorAprilaire)
 

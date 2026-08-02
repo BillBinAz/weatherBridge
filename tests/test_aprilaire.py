@@ -12,7 +12,7 @@ from weather import data
 class TestAprilAire(unittest.TestCase):
 
     def test_check_types_valid(self):
-        self.assertTrue(aprilaire.check_types("12|device|label"))
+        self.assertTrue(aprilaire.check_types("13|device|label"))
 
     def test_check_types_zero(self):
         self.assertTrue(aprilaire.check_types("0|device|label"))
@@ -53,7 +53,7 @@ class TestAprilAire(unittest.TestCase):
     @patch('stations.aprilaire.get_id_token')
     @patch('stations.aprilaire.connect.get_credentials')
     @patch.dict('stations.aprilaire.os.environ', {
-        'CLIMATE_SENSOR_1': '12|device-001|basement_aprilaire',
+        'CLIMATE_SENSOR_1': '13|device-001|basement_aprilaire',
         'APRILAIRE_CONNECT_ITEM_ID': 'item-id'
     }, clear=True)
     def test_get_weather_dehumidifier(self, mock_credentials, mock_id_token, mock_get_json,
@@ -100,7 +100,7 @@ class TestAprilAire(unittest.TestCase):
     @patch('stations.aprilaire.get_id_token')
     @patch('stations.aprilaire.connect.get_credentials')
     @patch.dict('stations.aprilaire.os.environ', {
-        'CLIMATE_SENSOR_1': '12|device-thermostat-001|whole_house_humidifier',
+        'CLIMATE_SENSOR_1': '13|device-thermostat-001|whole_house_humidifier',
         'APRILAIRE_CONNECT_ITEM_ID': 'item-id'
     }, clear=True)
     def test_get_weather_attached_humidifier_uses_zone_fallback(
