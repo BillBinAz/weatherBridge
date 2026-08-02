@@ -1,10 +1,10 @@
 # Weather-Bridge
 
-Aggregate residential weather and environmental data from multiple sources (Ecobee, Davis Weather Station, Honeywell Alarm, SensorPush, ThermoWorks) and serve via a unified REST API.
+Aggregate residential weather and environmental data from multiple sources (Ecobee, Davis Weather Station, Honeywell Alarm, SensorPush, ThermoWorks, AprilAire) and serve via a unified REST API.
 
 ## 🌟 Features
 
-- **Multi-Source Data Aggregation**: Collect data from Ecobee, Davis Weather Stations, Honeywell systems, SensorPush, and ThermoWorks
+- **Multi-Source Data Aggregation**: Collect data from Ecobee, Davis Weather Stations, Honeywell systems, SensorPush, ThermoWorks, and AprilAire
 - **RESTful API**: Simple JSON endpoints for weather data retrieval
 - **Containerized**: Production-ready Docker setup with health checks
 - **Comprehensive Testing**: 49+ unit tests with full coverage
@@ -101,6 +101,7 @@ Each data source requires specific setup in 1Password:
 - **Honeywell Alarm**: Authentication credentials
 - **SensorPush**: API credentials and gateway ID
 - **ThermoWorks**: API access credentials
+- **AprilAire**: Cloud account credentials
 
 ## 🧪 Testing
 
@@ -134,6 +135,7 @@ Current coverage includes:
 - **requests** (2.33.0): HTTP client library
 - **onepasswordconnectsdk** (2.0.0): 1Password credential management
 - **thermoworks-cloud** (0.1.11): ThermoWorks cloud API
+- **pycognito** (2024.5.1): Amazon Cognito client for AprilAire authentication
 
 ## 🐳 Docker Configuration
 
@@ -171,6 +173,7 @@ weather-bridge/
 ├── src/                          # Application source code
 │   ├── get_handler.py           # Flask API handler
 │   ├── stations/                # Data source modules
+│   │   ├── aprilaire.py
 │   │   ├── home_assistant.py
 │   │   ├── sensorPush.py
 │   │   ├── wifiLogger.py

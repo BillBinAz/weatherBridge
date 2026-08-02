@@ -2,7 +2,7 @@
 import os
 import sys
 import traceback
-from stations import wifiLogger, home_assistant, sensorPush
+from stations import wifiLogger, home_assistant, sensorPush, aprilaire
 from weather import data
 from stations.thermo_works import thermo_works
 import datetime as dt
@@ -54,5 +54,6 @@ def get_weather():
     _collect_station(home, wifiLogger.get_weather, "wifiLogger")
     _collect_station(home, thermo_works.get_weather, "thermo_works")
     _collect_station(home, sensorPush.get_weather, "sensorPush")
+    _collect_station(home, aprilaire.get_weather, "aprilaire")
     calculate_humidity_average(home)
     return home

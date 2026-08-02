@@ -64,6 +64,16 @@ class TestData(unittest.TestCase):
         self.assertEqual(sensor_push.temperature_calibration, 0.0)
         self.assertEqual(sensor_push.humidity_calibration, 0.0)
 
+        sensor_aprilaire = data.SensorAprilaire("12|device_id|AprilAire")
+        self.assertEqual(sensor_aprilaire.profile, "")
+        self.assertEqual(sensor_aprilaire.mode, "off")
+        self.assertFalse(sensor_aprilaire.isCompOn)
+        self.assertFalse(sensor_aprilaire.isDehumFanOn)
+        self.assertFalse(sensor_aprilaire.isHvacFanOn)
+        self.assertEqual(sensor_aprilaire.alerts, {})
+        self.assertEqual(sensor_aprilaire.fanTimeHours, 0)
+        self.assertEqual(sensor_aprilaire.filterService, {})
+
         sensor_davis = data.SensorDavisWeatherStation("4|Test Station|http://test.com")
         self.assertEqual(sensor_davis.wind_direction, "")
         self.assertEqual(sensor_davis.pressure, 0)
@@ -150,6 +160,13 @@ class TestData(unittest.TestCase):
         config = "11|humidifier|Living Room"
         sensor = climate.create_sensor(config)
         self.assertIsInstance(sensor, data.SensorHumidifier)
+
+    def test_create_sensor_aprilaire(self):
+        """Test Climate.create_sensor with AprilAire type."""
+        climate = data.Climate()
+        config = "12|device_id|Basement AprilAire"
+        sensor = climate.create_sensor(config)
+        self.assertIsInstance(sensor, data.SensorAprilaire)
 
     def test_create_sensor_invalid_type(self):
         """Test Climate.create_sensor with invalid type."""
