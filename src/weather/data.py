@@ -16,6 +16,7 @@ CLIMATE_TYPE_THERMOWORKS_NODE_WITH_HUMIDITY = 8 # _humidity _air_temperature
 CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL = 9
 CLIMATE_TYPE_SENSOR_PUSH = 10
 CLIMATE_TYPE_HUMIDITY = 11
+CLIMATE_TYPE_APRILAIRE = 13
 
 
 class AlarmZone(object):
@@ -67,6 +68,8 @@ class Climate(object):
             return SensorPush(config)
         elif sensor_type == CLIMATE_TYPE_HUMIDITY:
             return SensorHumidifier(config)
+        elif sensor_type == CLIMATE_TYPE_APRILAIRE:
+            return SensorAprilaire(config)
         else:
             raise ValueError("Unknown sensor type")
 
@@ -104,6 +107,24 @@ class SensorPush(object):
         self.humidity_raw = 0.0
         self.humidity_calibration = 0.0
         self.time = ""
+
+class SensorAprilaire(object):
+    def __init__(self,config):
+        result = config.split('|')
+        self.type = int(result[0])
+        self.key = str(result[1])
+        self.label = str(result[2])
+        self.profile = ""
+        self.mode = "off"
+        self.state = ""
+        self.humidity_set = 0.0
+        self.humidity = 0.0
+        self.is_comp_on = False
+        self.is_dehum_fan_on = False
+        self.is_hvac_fan_on = False
+        self.alerts = {}
+        self.fan_time_hours = 0
+        self.filter_service = {}
 
 class SensorDavisWeatherStation(object):
 
