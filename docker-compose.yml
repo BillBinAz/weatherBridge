@@ -53,7 +53,7 @@ services:
       - CLIMATE_SENSOR_15=10|16803031|office
       - CLIMATE_SENSOR_16=10|16866908|safe_1
       - CLIMATE_SENSOR_17=10|16867526|rack
-      - CLIMATE_SENSOR_18=12|device-001|aprilaire
+      - CLIMATE_SENSOR_18=13|device-001|aprilaire
       # FLASK
       - FLASK_ENV=production
       - PORT=8080
