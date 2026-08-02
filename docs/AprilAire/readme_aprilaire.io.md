@@ -1,6 +1,6 @@
 # AprilAire Cloud REST interface (`aprilaire.io`)
 
-This document is a reverse-engineered reference derived from `custom_components/aprilaire_cloud`. It describes the REST interface that the integration actively uses today. It is **not** an official AprilAire API specification.
+This document is a reverse-engineered reference derived from `custom_components/aprilaire_cloud` (Home Assistant). It documents the REST interface and behaviors observed in that reference integration; this repository's implementation may only cover a subset. It is **not** an official AprilAire API specification.
 
 ## Scope
 
