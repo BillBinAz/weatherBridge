@@ -100,21 +100,14 @@ def get_locked_state(bearer_token, key, s):
 def get_alarm_label(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     if sensor_data is None:
-        return ""
-    label = sensor_data["state"]
-
-    if re.search('fault', label, re.IGNORECASE):
-        return "Not Ready"
-
-    label = label.replace("*", "")
-    return label[:10].title().strip()
+        return "Disarmed"
+    return sensor_data["state"].replace("_", " ").title()
 
 
-def get_alarm_status(bearer_token, key, s):
-    sensor_data = get_sensor_data(bearer_token, key, s)
-    if sensor_data is None:
+def get_alarm_status(alarm_label):
+    if alarm_label is None:
         return 0
-    if sensor_data["state"] != "disarmed":
+    if alarm_label.lower() != "disarmed":
         return 1
     else:
         return 0
@@ -243,8 +236,9 @@ def get_weather(home, dt=None):
             home.climate.home_average_temperature = conversions.format_f(temperature_sum / temperature_count, 1)
 
         if alarm_present:
-            home.alarm.status = get_alarm_status(bearer_token, "alarm_control_panel.home_alarm", session)
-            home.alarm.label = get_alarm_label(bearer_token, "sensor.home_alarm_keypad", session)
+            home.alarm.status_label = get_alarm_label(bearer_token, "alarm_control_panel.home_alarm", session)
+            home.alarm.status_value = get_alarm_status(home.alarm.status_label)
+
 
     except Exception as e:
         traceback.print_exc()
