@@ -162,61 +162,50 @@ class TestHomeAssistant(unittest.TestCase):
             result = home_assistant.get_locked_state("token", "entity", MagicMock())
             self.assertEqual(result, 0)
 
-    def test_get_alarm_label_with_fault(self):
-        """Test alarm label extraction with 'fault' in state."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = {"state": "System Fault"}
-            result = home_assistant.get_alarm_label("token", "entity", MagicMock())
-            self.assertEqual(result, "Not Ready")
+    def test_get_alarm_label_passthrough_states(self):
+        """Test alarm label display formatting for Home Assistant alarm states."""
+        test_cases = [
+            ("disarmed", "Disarmed"),
+            ("arming", "Arming"),
+            ("triggered", "Triggered"),
+            ("armed_home", "Armed Home"),
+            ("armed_night", "Armed Night"),
+            ("armed_away", "Armed Away"),
+        ]
 
-    def test_get_alarm_label_normal(self):
-        """Test alarm label extraction with normal state."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = {"state": "Ready"}
-            result = home_assistant.get_alarm_label("token", "entity", MagicMock())
-            self.assertEqual(result, "Ready")
-
-    def test_get_alarm_label_with_asterisk(self):
-        """Test alarm label extraction with asterisks."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = {"state": "*Ready*"}
-            result = home_assistant.get_alarm_label("token", "entity", MagicMock())
-            self.assertEqual(result, "Ready")
-
-    def test_get_alarm_label_truncation(self):
-        """Test alarm label truncation to 10 characters."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = {"state": "very_long_label"}
-            result = home_assistant.get_alarm_label("token", "entity", MagicMock())
-            self.assertEqual(result, "Very_Long_")
+        for state, expected in test_cases:
+            with self.subTest(state=state):
+                with patch('stations.home_assistant.get_sensor_data') as mock_get:
+                    mock_get.return_value = {"state": state}
+                    result = home_assistant.get_alarm_label("token", "entity", MagicMock())
+                    self.assertEqual(result, expected)
 
     def test_get_alarm_label_none(self):
         """Test alarm label when sensor data is None."""
         with patch('stations.home_assistant.get_sensor_data') as mock_get:
             mock_get.return_value = None
             result = home_assistant.get_alarm_label("token", "entity", MagicMock())
-            self.assertEqual(result, "")
+            self.assertEqual(result, "Disarmed")
 
     def test_get_alarm_status_armed(self):
         """Test alarm status when armed."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = {"state": "armed_home"}
-            result = home_assistant.get_alarm_status("token", "entity", MagicMock())
-            self.assertEqual(result, 1)
+        result = home_assistant.get_alarm_status("Armed away")
+        self.assertEqual(result, 1)
 
     def test_get_alarm_status_disarmed(self):
         """Test alarm status when disarmed."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = {"state": "disarmed"}
-            result = home_assistant.get_alarm_status("token", "entity", MagicMock())
-            self.assertEqual(result, 0)
+        result = home_assistant.get_alarm_status("Disarmed")
+        self.assertEqual(result, 0)
+
+    def test_get_alarm_status_disarmed_mixed_case(self):
+        """Test alarm status when disarmed label uses mixed case."""
+        result = home_assistant.get_alarm_status("dIsArMeD")
+        self.assertEqual(result, 0)
 
     def test_get_alarm_status_none(self):
-        """Test alarm status when sensor data is None."""
-        with patch('stations.home_assistant.get_sensor_data') as mock_get:
-            mock_get.return_value = None
-            result = home_assistant.get_alarm_status("token", "entity", MagicMock())
-            self.assertEqual(result, 0)
+        """Test alarm status when alarm label is None."""
+        result = home_assistant.get_alarm_status(None)
+        self.assertEqual(result, 0)
 
     def test_check_types_valid_type(self):
         """Test check_types with valid type."""
