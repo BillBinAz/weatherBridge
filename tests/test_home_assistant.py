@@ -265,8 +265,8 @@ class TestHomeAssistant(unittest.TestCase):
                 mock_data.return_value = sensor_data
                 mock_occ.return_value = 1
                 home_assistant.populate_ecobee_thermostat("token", mock_sensor, MagicMock())
-                self.assertEqual(mock_sensor.heat_set, 75)
-                self.assertEqual(mock_sensor.cool_set, 68)
+                self.assertEqual(mock_sensor.heat_set, 68)
+                self.assertEqual(mock_sensor.cool_set, 75)
                 self.assertEqual(mock_sensor.humidity, 45)
                 self.assertEqual(mock_sensor.temperature, 72.5)
 
