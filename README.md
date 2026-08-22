@@ -99,9 +99,22 @@ Each data source requires specific setup in 1Password:
 - **Ecobee**: Authorization token in 1Password vault
 - **Davis Weather Station**: Network access credentials
 - **Honeywell Alarm**: Authentication credentials
+- **Home Assistant**: Authentication credentials and configured alarm zones
 - **SensorPush**: API credentials and gateway ID
 - **ThermoWorks**: API access credentials
 - **AprilAire**: Cloud account credentials
+
+### Home Assistant Alarm States
+
+For Home Assistant contact zones, the `closed` value in the `/weather` response is:
+
+| Value | Meaning |
+| --- | --- |
+| `1` | Zone is closed or safe. |
+| `0` | Zone is open. |
+| `-1` | Zone state could not be collected. This does not mark `all_zones_closed` as open. |
+
+`all_zones_closed` is set to `0` only when a contact zone is confirmed open. A zone collection error leaves this summary state unchanged.
 
 ## 🧪 Testing
 
