@@ -15,7 +15,7 @@ import utilities.connect as connect
 import re
 
 from utilities import conversions
-from weather.data import AlarmZone, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
+from weather.data import AlarmZone, ALARM_ZONE_STATE_ERROR, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
     CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door, DEFAULT_TEMPERATURE,ZONE_TYPE_BASIC,CLIMATE_TYPE_HUMIDITY
 
 CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
@@ -82,7 +82,7 @@ def get_garage_door(bearer_token, key, s):
 def get_on_off_state(bearer_token, key, s):
     sensor_data = get_sensor_data(bearer_token, key, s)
     if sensor_data is None:
-        return 0
+        return ALARM_ZONE_STATE_ERROR
     if sensor_data["state"] == "off" or sensor_data["state"] == "Safe":
         return 1
     else:

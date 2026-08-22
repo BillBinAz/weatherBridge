@@ -139,7 +139,7 @@ class TestHomeAssistant(unittest.TestCase):
         with patch('stations.home_assistant.get_sensor_data') as mock_get:
             mock_get.return_value = None
             result = home_assistant.get_on_off_state("token", "entity", MagicMock())
-            self.assertEqual(result, 0)
+            self.assertEqual(result, data.ALARM_ZONE_STATE_ERROR)
 
     def test_get_locked_state_locked(self):
         """Test locked state when door is locked."""
@@ -487,6 +487,16 @@ class TestHomeAssistant(unittest.TestCase):
             mock_state.return_value = 0  # Open/not safe
             home_assistant.add_alarm_zone("token", "0|1|contact_sensor|Living Room", mock_home, MagicMock())
             self.assertEqual(mock_home.alarm.all_zones_closed, 0)
+
+    def test_add_alarm_zone_contact_failure_does_not_mark_open(self):
+        """Test a failed contact read does not change the alarm summary."""
+        mock_home = MagicMock()
+        mock_home.alarm.all_zones_closed = 1
+
+        with patch('stations.home_assistant.get_on_off_state', return_value=data.ALARM_ZONE_STATE_ERROR):
+            home_assistant.add_alarm_zone("token", "0|1|contact_sensor|Living Room", mock_home, MagicMock())
+
+        self.assertEqual(mock_home.alarm.all_zones_closed, 1)
 
     def test_add_alarm_zone_does_not_reset_open_contact_state(self):
         """Test later zones do not reset an open contact state."""
