@@ -122,8 +122,8 @@ def populate_ecobee_thermostat(bearer_token, climate_sensor, session):
     if sensor_data is None:
         return
 
-    climate_sensor.heat_set = sensor_data["attributes"]["target_temp_high"]
-    climate_sensor.cool_set = sensor_data["attributes"]["target_temp_low"]
+    climate_sensor.cool_set = sensor_data["attributes"]["target_temp_high"]
+    climate_sensor.heat_set = sensor_data["attributes"]["target_temp_low"]
     climate_sensor.humidity = sensor_data["attributes"]["current_humidity"]
     climate_sensor.fan = sensor_data["attributes"]["fan_mode"][:10].title().strip()
     climate_sensor.temperature = float(sensor_data["attributes"]["current_temperature"])
