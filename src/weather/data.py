@@ -3,6 +3,7 @@ import datetime as dt
 import json
 
 DEFAULT_TEMPERATURE = 'None'
+ALARM_ZONE_STATE_ERROR = -1
 ZONE_TYPE_CONTACT = 0
 ZONE_TYPE_MOTION = 1
 ZONE_TYPE_DOOR = 2
