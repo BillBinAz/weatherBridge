@@ -262,13 +262,17 @@ class TestHomeAssistant(unittest.TestCase):
         }
         with patch('stations.home_assistant.get_sensor_data') as mock_data:
             with patch('stations.home_assistant.get_occupancy') as mock_occ:
-                mock_data.return_value = sensor_data
-                mock_occ.return_value = 1
-                home_assistant.populate_ecobee_thermostat("token", mock_sensor, MagicMock())
-                self.assertEqual(mock_sensor.heat_set, 68)
-                self.assertEqual(mock_sensor.cool_set, 75)
-                self.assertEqual(mock_sensor.humidity, 45)
-                self.assertEqual(mock_sensor.temperature, 72.5)
+                with patch('stations.home_assistant.conversions.calculate_dew_point') as mock_dew_point:
+                    mock_data.return_value = sensor_data
+                    mock_occ.return_value = 1
+                    mock_dew_point.return_value = 49.9
+                    home_assistant.populate_ecobee_thermostat("token", mock_sensor, MagicMock())
+                    self.assertEqual(mock_sensor.heat_set, 68)
+                    self.assertEqual(mock_sensor.cool_set, 75)
+                    self.assertEqual(mock_sensor.humidity, 45)
+                    self.assertEqual(mock_sensor.temperature, 72.5)
+                    self.assertEqual(mock_sensor.dew_point, 49.9)
+                    mock_dew_point.assert_called_once_with(72.5, 45)
 
     def test_populate_ecobee_thermostat_none(self):
         """Test populate_ecobee_thermostat with None sensor data."""

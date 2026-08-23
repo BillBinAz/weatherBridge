@@ -38,6 +38,10 @@ class TestUtilities(unittest.TestCase):
         with self.assertRaises(ValueError):
             utilities.c_to_f("test")
 
+    def test_c_to_f_raw(self):
+        """Test unrounded Celsius to Fahrenheit conversion."""
+        self.assertAlmostEqual(utilities.c_to_f_raw(37.7778), 100.00004)
+
     def test_f_to_c(self):
         # Test 32F
         self.assertEqual(utilities.f_to_c(32), 0.0)
@@ -54,6 +58,15 @@ class TestUtilities(unittest.TestCase):
         # Test exception
         with self.assertRaises(TypeError):
             utilities.f_to_c("test")
+
+    def test_f_to_c_raw(self):
+        """Test unrounded Fahrenheit to Celsius conversion."""
+        self.assertAlmostEqual(utilities.f_to_c_raw(100), 37.7777777778)
+
+    def test_calculate_dew_point(self):
+        """Test dew point calculation from Fahrenheit and relative humidity."""
+        self.assertEqual(utilities.calculate_dew_point(72.5, 45), 49.9)
+        self.assertEqual(utilities.calculate_dew_point(72.5, 0), 0.0)
 
     # test compass direction deg_to_compass
     def test_deg_to_compass(self):

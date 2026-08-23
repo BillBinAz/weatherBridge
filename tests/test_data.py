@@ -95,6 +95,7 @@ class TestData(unittest.TestCase):
         thermo = data.SensorEcobeeThermostat("5|test_key|Test Thermostat")
         self.assertEqual(thermo.temperature, 'None')
         self.assertEqual(thermo.mode, "")
+        self.assertEqual(thermo.dew_point, 0.0)
         self.assertEqual(thermo.heat_set, 0.0)
         self.assertEqual(thermo.cool_set, 0.0)
 

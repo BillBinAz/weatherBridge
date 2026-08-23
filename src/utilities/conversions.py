@@ -1,31 +1,39 @@
 import logging
 import datetime as dt
 import sys
-from math import isnan
+from math import isnan, log
 
 
 def c_to_f(c_temp):
-    """Convert Celsius to Fahrenheit.
-    
-    Args:
-        c_temp: Temperature in Celsius
-        
-    Returns:
-        Temperature in Fahrenheit (rounded to 1 decimal place)
-    """
-    return round(9.0 / 5.0 * float(c_temp) + 32, 1)
+    """Convert Celsius to Fahrenheit, rounded to one decimal place."""
+    return round(c_to_f_raw(c_temp), 1)
+
+
+def c_to_f_raw(c_temp):
+    """Convert Celsius to Fahrenheit without rounding."""
+    return 9.0 / 5.0 * float(c_temp) + 32
 
 
 def f_to_c(f_temp):
-    """Convert Fahrenheit to Celsius.
-    
-    Args:
-        f_temp: Temperature in Fahrenheit
-        
-    Returns:
-        Temperature in Celsius (rounded to 1 decimal place)
-    """
-    return round(float(f_temp - 32) * 5.0 / 9.0, 1)
+    """Convert Fahrenheit to Celsius, rounded to one decimal place."""
+    return round(f_to_c_raw(f_temp), 1)
+
+
+def f_to_c_raw(f_temp):
+    """Convert Fahrenheit to Celsius without rounding."""
+    return float(f_temp - 32) * 5.0 / 9.0
+
+
+def calculate_dew_point(temperature, humidity):
+    """Calculate the Fahrenheit dew point from Fahrenheit temperature and relative humidity."""
+    humidity = float(humidity)
+    if humidity <= 0:
+        return 0.0
+
+    temperature_celsius = f_to_c_raw(float(temperature))
+    gamma = (17.27 * temperature_celsius) / (237.7 + temperature_celsius) + log(humidity / 100)
+    dew_point_celsius = (237.7 * gamma) / (17.27 - gamma)
+    return c_to_f(dew_point_celsius)
 
 
 def format_f(value, places=2):
