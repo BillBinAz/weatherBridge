@@ -55,6 +55,11 @@ class TestUtilities(unittest.TestCase):
         with self.assertRaises(TypeError):
             utilities.f_to_c("test")
 
+    def test_calculate_dew_point(self):
+        """Test dew point calculation from Fahrenheit and relative humidity."""
+        self.assertEqual(utilities.calculate_dew_point(72.5, 45), 49.9)
+        self.assertEqual(utilities.calculate_dew_point(72.5, 0), 0.0)
+
     # test compass direction deg_to_compass
     def test_deg_to_compass(self):
         # Test 0

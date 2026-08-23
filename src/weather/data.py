@@ -156,6 +156,7 @@ class SensorEcobeeThermostat(object):
         self.mode = ""
         self.state = 0
         self.humidity = 0.0
+        self.dew_point = 0.0
         self.heat_set = 0.0
         self.cool_set = 0.0
         self.occupied = 0

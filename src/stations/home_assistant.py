@@ -127,6 +127,10 @@ def populate_ecobee_thermostat(bearer_token, climate_sensor, session):
     climate_sensor.humidity = sensor_data["attributes"]["current_humidity"]
     climate_sensor.fan = sensor_data["attributes"]["fan_mode"][:10].title().strip()
     climate_sensor.temperature = float(sensor_data["attributes"]["current_temperature"])
+    climate_sensor.dew_point = conversions.calculate_dew_point(
+        climate_sensor.temperature,
+        climate_sensor.humidity,
+    )
     climate_sensor.state = sensor_data["attributes"]["hvac_action"][:10].title().strip()
 
     if sensor_data["state"] == "off":

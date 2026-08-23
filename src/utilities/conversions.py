@@ -1,7 +1,7 @@
 import logging
 import datetime as dt
 import sys
-from math import isnan
+from math import isnan, log
 
 
 def c_to_f(c_temp):
@@ -26,6 +26,18 @@ def f_to_c(f_temp):
         Temperature in Celsius (rounded to 1 decimal place)
     """
     return round(float(f_temp - 32) * 5.0 / 9.0, 1)
+
+
+def calculate_dew_point(temperature, humidity):
+    """Calculate the Fahrenheit dew point from Fahrenheit temperature and relative humidity."""
+    humidity = float(humidity)
+    if humidity <= 0:
+        return 0.0
+
+    temperature_celsius = f_to_c(float(temperature))
+    gamma = (17.27 * temperature_celsius) / (237.7 + temperature_celsius) + log(humidity / 100)
+    dew_point_celsius = (237.7 * gamma) / (17.27 - gamma)
+    return c_to_f(dew_point_celsius)
 
 
 def format_f(value, places=2):
