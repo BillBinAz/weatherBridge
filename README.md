@@ -116,6 +116,10 @@ For Home Assistant contact zones, the `closed` value in the `/weather` response 
 
 `all_zones_closed` is set to `0` only when a contact zone is confirmed open. A zone collection error leaves this summary state unchanged.
 
+### Home Assistant Climate Switches
+
+Configure a Home Assistant switch as a climate sensor with `CLIMATE_SENSOR_<N>=14|<switch_id>|<label>`. The `/weather` climate sensor entry exposes the switch's Home Assistant `state`, preserving values such as `on`, `climate`, and `off`.
+
 ## 🧪 Testing
 
 ### Run All Tests

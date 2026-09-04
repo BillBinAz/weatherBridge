@@ -244,6 +244,16 @@ class TestHomeAssistant(unittest.TestCase):
                 self.assertEqual(mock_sensor.temperature, 72.5)
                 self.assertEqual(mock_sensor.occupied, 1)
 
+    def test_populate_switch(self):
+        """Test populating a Home Assistant switch state."""
+        mock_sensor = MagicMock()
+        mock_sensor.key = "whole_house_fan"
+        with patch('stations.home_assistant.get_sensor_data', return_value={"state": "climate"}) as mock_data:
+            home_assistant.populate_switch("token", mock_sensor, MagicMock())
+
+        self.assertEqual(mock_sensor.state, "climate")
+        mock_data.assert_called_once_with("token", "switch.whole_house_fan", unittest.mock.ANY)
+
     def test_populate_ecobee_thermostat(self):
         """Test populating ecobee thermostat with full data."""
         mock_sensor = MagicMock()
@@ -431,6 +441,20 @@ class TestHomeAssistant(unittest.TestCase):
             result = home_assistant.add_climate_sensor("token", "6|1|sensor|label", mock_home, 0, 0, MagicMock())
             self.assertEqual(result, mock_sensor)
             mock_populate.assert_called_once()
+
+    def test_add_climate_sensor_switch(self):
+        """Test adding a Home Assistant switch climate sensor."""
+        mock_home = MagicMock()
+        mock_sensor = MagicMock(type=14, key="whole_house_fan")
+        mock_home.climate.create_sensor.return_value = mock_sensor
+
+        with patch('stations.home_assistant.populate_switch') as mock_populate:
+            result = home_assistant.add_climate_sensor(
+                "token", "14|whole_house_fan|Whole House Fan", mock_home, 0, 0, MagicMock()
+            )
+
+        self.assertEqual(result, mock_sensor)
+        mock_populate.assert_called_once()
 
     def test_add_climate_sensor_unknown_type(self):
         """Test adding climate sensor with unknown type."""
