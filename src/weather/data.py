@@ -18,7 +18,7 @@ CLIMATE_TYPE_THERMOWORKS_NODE_TWO_CHANNEL = 9
 CLIMATE_TYPE_SENSOR_PUSH = 10
 CLIMATE_TYPE_HUMIDITY = 11
 CLIMATE_TYPE_APRILAIRE = 13
-
+CLIMATE_TYPE_SWITCH = 14
 
 class AlarmZone(object):
     def __init__(self, config):
@@ -71,6 +71,8 @@ class Climate(object):
             return SensorHumidifier(config)
         elif sensor_type == CLIMATE_TYPE_APRILAIRE:
             return SensorAprilaire(config)
+        elif sensor_type == CLIMATE_TYPE_SWITCH:
+            return SensorSwitch(config)
         else:
             raise ValueError("Unknown sensor type")
 
@@ -126,6 +128,14 @@ class SensorAprilaire(object):
         self.alerts = {}
         self.fan_time_hours = 0
         self.filter_service = {}
+
+class SensorSwitch(object):
+    def __init__(self, config):
+        result = config.split('|')
+        self.type = int(result[0])
+        self.key = str(result[1])
+        self.label = str(result[2])
+        self.state = "off"
 
 class SensorDavisWeatherStation(object):
 

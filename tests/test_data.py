@@ -74,6 +74,9 @@ class TestData(unittest.TestCase):
         self.assertEqual(sensor_aprilaire.fan_time_hours, 0)
         self.assertEqual(sensor_aprilaire.filter_service, {})
 
+        sensor_switch = data.SensorSwitch("14|whole_house_fan|Whole House Fan")
+        self.assertEqual(sensor_switch.state, "off")
+
         sensor_davis = data.SensorDavisWeatherStation("4|Test Station|http://test.com")
         self.assertEqual(sensor_davis.wind_direction, "")
         self.assertEqual(sensor_davis.pressure, 0)
@@ -168,6 +171,12 @@ class TestData(unittest.TestCase):
         config = "13|device_id|Basement AprilAire"
         sensor = climate.create_sensor(config)
         self.assertIsInstance(sensor, data.SensorAprilaire)
+
+    def test_create_sensor_switch(self):
+        """Test Climate.create_sensor with Home Assistant switch type."""
+        climate = data.Climate()
+        sensor = climate.create_sensor("14|whole_house_fan|Whole House Fan")
+        self.assertIsInstance(sensor, data.SensorSwitch)
 
     def test_create_sensor_invalid_type(self):
         """Test Climate.create_sensor with invalid type."""

@@ -16,12 +16,14 @@ import re
 
 from utilities import conversions
 from weather.data import AlarmZone, ALARM_ZONE_STATE_ERROR, ZONE_TYPE_DOOR, ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, \
-    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door, DEFAULT_TEMPERATURE,ZONE_TYPE_BASIC,CLIMATE_TYPE_HUMIDITY
+    CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, Door, DEFAULT_TEMPERATURE,ZONE_TYPE_BASIC,CLIMATE_TYPE_HUMIDITY, \
+    CLIMATE_TYPE_SWITCH
 
 CONNECT_ITEM_ID = os.getenv("HOME_ASSISTANT_CONNECT_ITEM_ID")
 HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL")
 TYPES_PROCESSED = [CLIMATE_TYPE_ECOBEE_THERMOSTAT, CLIMATE_TYPE_ECOBEE_SENSOR, ZONE_TYPE_DOOR,
-                   ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, ZONE_TYPE_BASIC, CLIMATE_TYPE_HUMIDITY]
+                   ZONE_TYPE_MOTION, ZONE_TYPE_GARAGE_DOOR, ZONE_TYPE_CONTACT, ZONE_TYPE_BASIC, CLIMATE_TYPE_HUMIDITY,
+                   CLIMATE_TYPE_SWITCH]
 
 def get_bearer_token():
     try:
@@ -116,6 +118,11 @@ def populate_ecobee_sensor(bearer_token, climate_sensor, session):
     climate_sensor.temperature = get_value(bearer_token, "sensor." + climate_sensor.key + "_temperature", session)
     climate_sensor.occupied = get_occupancy(bearer_token, "binary_sensor." + climate_sensor.key + "_occupancy", session)
 
+def populate_switch(bearer_token, climate_sensor, session):
+    sensor_data = get_sensor_data(bearer_token, "switch." + climate_sensor.key, session)
+    if sensor_data is not None:
+        climate_sensor.state = sensor_data["state"]
+
 def populate_ecobee_thermostat(bearer_token, climate_sensor, session):
     sensor_data = get_sensor_data(bearer_token, climate_sensor.key, session)
 
@@ -163,6 +170,9 @@ def add_climate_sensor(bearer_token: Any | None, config_data: str, home, tempera
         return climate_sensor
     if climate_sensor.type == CLIMATE_TYPE_ECOBEE_SENSOR:
         populate_ecobee_sensor(bearer_token, climate_sensor, session)
+        return climate_sensor
+    if climate_sensor.type == CLIMATE_TYPE_SWITCH:
+        populate_switch(bearer_token, climate_sensor, session)
         return climate_sensor
     return None
 
